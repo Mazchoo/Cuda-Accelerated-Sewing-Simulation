@@ -1404,13 +1404,13 @@
         },
         {
             "from_piece": "L-1",
-            "from_tp_index_1": 1,
-            "from_tp_index_2": 2,
+            "from_tp_index_1": 2,
+            "from_tp_index_2": 1,
             "from_marker_start": 0.0,
             "from_marker_end": 1.0,
             "to_piece": "L-2",
-            "to_tp_index_1": 1,
-            "to_tp_index_2": 2,
+            "to_tp_index_1": 2,
+            "to_tp_index_2": 1,
             "to_marker_start": 0.0,
             "to_marker_end": 1.0
         },

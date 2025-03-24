@@ -35,11 +35,6 @@ def show_each_piece(clothing_data: dict, offset: tuple):
         turn_points = np.array(piece["turn_points"])
         turn_points += current_offset
         all_turn_points[key] = turn_points
-        xs, ys = turn_points[:, 0], turn_points[:, 1]
-
-        plt.scatter(xs, ys, marker='x', color='b')
-        for i, (x, y) in enumerate(turn_points):
-            plt.text(x - 4, y + 4, str(i), c='g')
 
         current_offset += offset
 
