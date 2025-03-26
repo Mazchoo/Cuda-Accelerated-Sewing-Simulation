@@ -1,12 +1,11 @@
 """ Show all pieces in 2D to inspect shape and turn-points """
-import json
-
 import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 import matplotlib.cm as cm
 
 from python_src.utils.geometry import points_along_contour
+from python_src.utils.file_io import read_json
 
 from python_src.parameters import NR_SEWING_POINTS
 
@@ -68,6 +67,5 @@ def show_each_piece(clothing_data: dict, offset: tuple):
 
 
 if __name__ == '__main__':
-    with open('./assets/sewing_shirt.json', 'r', encoding='utf-8') as f:
-        clothing_data = json.load(f)
+    clothing_data = read_json('./assets/sewing_shirt.json')
     show_each_piece(clothing_data, (100, 0))
