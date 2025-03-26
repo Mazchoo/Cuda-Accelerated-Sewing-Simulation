@@ -8,7 +8,7 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 
 - [x] Import sewing and contours into a json
 - [x] Extract 3D data from an .obj file and render it
-- [ ] Refactor sewing json to split "to" and "from" sewing
+- [x] Refactor sewing json to split "to" and "from" sewing
 - [ ] Create conversion function to mesh grid for clothing and render it on 3D plot
 - [ ] Add 3D positions for all sewing pieces
 - [ ] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation (just gravity for now)
