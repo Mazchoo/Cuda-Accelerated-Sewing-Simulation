@@ -15,6 +15,24 @@ def get_hsv_colors(n):
     return [cm.hsv(i / n) for i in range(n)]
 
 
+def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
+    contour = all_contours[sewing_line['piece']]
+    tp_start = all_turn_points[sewing_line['piece']][sewing_line['tp_index_start']]
+    tp_end = all_turn_points[sewing_line['piece']][sewing_line['tp_index_end']]
+    marker_start = sewing_line['marker_start']
+    marker_end = sewing_line['marker_end']
+
+    from_poly_exterior = Polygon(contour).exterior
+    from_sewing_pts = points_along_contour(from_poly_exterior, tp_start, tp_end,
+                                           marker_start, marker_end, NR_SEWING_POINTS)
+
+    xs, ys = zip(*[[p.x, p.y] for p in from_sewing_pts])
+    plt.plot(xs, ys, c=color, linestyle='--', lw=2)
+
+    plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
+                 arrowprops=dict(arrowstyle='->', color=color, lw=2))
+
+
 def show_each_piece(clothing_data: dict, offset: tuple):
     current_offset = np.array([0, 0], dtype=np.float64)
     all_contours = {}
@@ -39,40 +57,10 @@ def show_each_piece(clothing_data: dict, offset: tuple):
         current_offset += offset
 
     colors = get_hsv_colors(len(clothing_data["sewing"]))
-
-    # ToDo refactor to sewing and from sewing line into separate objects
     for i, sewing_pair in enumerate(clothing_data["sewing"]):
-        from_contour = all_contours[sewing_pair['from_piece']]
-        from_tp_start = all_turn_points[sewing_pair['from_piece']][sewing_pair['from_tp_index_1']]
-        from_tp_end = all_turn_points[sewing_pair['from_piece']][sewing_pair['from_tp_index_2']]
-        from_marker_start = sewing_pair['from_marker_start']
-        from_marker_end = sewing_pair['from_marker_end']
-
-        from_poly_exterior = Polygon(from_contour).exterior
-        from_sewing_pts = points_along_contour(from_poly_exterior, from_tp_start, from_tp_end,
-                                               from_marker_start, from_marker_end, NR_SEWING_POINTS)
-
-        xs, ys = zip(*[[p.x, p.y] for p in from_sewing_pts])
-        plt.plot(xs, ys, c=colors[i], linestyle='--', lw=2)
-
-        plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
-                     arrowprops=dict(arrowstyle='->', color=colors[i], lw=2))
-
-        to_contour = all_contours[sewing_pair['to_piece']]
-        to_tp_start = all_turn_points[sewing_pair['to_piece']][sewing_pair['to_tp_index_1']]
-        to_tp_end = all_turn_points[sewing_pair['to_piece']][sewing_pair['to_tp_index_2']]
-        to_marker_start = sewing_pair['to_marker_start']
-        to_marker_end = sewing_pair['to_marker_end']
-
-        to_poly_exterior = Polygon(to_contour).exterior
-        to_sewing_pts = points_along_contour(to_poly_exterior, to_tp_start, to_tp_end,
-                                             to_marker_start, to_marker_end, NR_SEWING_POINTS)
-
-        xs, ys = zip(*[[p.x, p.y] for p in to_sewing_pts])
-        plt.plot(xs, ys, c=colors[i], linestyle='--', lw=2)
-
-        plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
-                     arrowprops=dict(arrowstyle='->', color=colors[i], lw=2))
+        color = colors[i]
+        show_sewing_line(sewing_pair["from"], all_contours, all_turn_points, color)
+        show_sewing_line(sewing_pair["to"], all_contours, all_turn_points, color)
 
     plt.axis('equal')
     plt.grid(True)

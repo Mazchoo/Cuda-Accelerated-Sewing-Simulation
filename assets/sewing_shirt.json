@@ -1379,124 +1379,164 @@
     },
     "sewing": [
         {
-            "from_piece": "L-1",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 7,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 0,
-            "to_tp_index_2": 7,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-1",
+                "tp_index_start": 0,
+                "tp_index_end": 7,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 0,
+                "tp_index_end": 7,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-1",
-            "from_tp_index_1": 5,
-            "from_tp_index_2": 6,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 5,
-            "to_tp_index_2": 6,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-1",
+                "tp_index_start": 5,
+                "tp_index_end": 6,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 5,
+                "tp_index_end": 6,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-1",
-            "from_tp_index_1": 2,
-            "from_tp_index_2": 1,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 2,
-            "to_tp_index_2": 1,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-1",
+                "tp_index_start": 2,
+                "tp_index_end": 1,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 2,
+                "tp_index_end": 1,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-1",
-            "from_tp_index_1": 3,
-            "from_tp_index_2": 4,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 3,
-            "to_tp_index_2": 4,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-1",
+                "tp_index_start": 3,
+                "tp_index_end": 4,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 3,
+                "tp_index_end": 4,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 3,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-3",
-            "to_tp_index_1": 1,
-            "to_tp_index_2": 2,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3",
+                "tp_index_start": 0,
+                "tp_index_end": 3,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-3",
+                "tp_index_start": 1,
+                "tp_index_end": 2,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3-flip",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 3,
-            "from_marker_start": 0.0,
-            "from_marker_end": 1.0,
-            "to_piece": "L-3-flip",
-            "to_tp_index_1": 1,
-            "to_tp_index_2": 2,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3-flip",
+                "tp_index_start": 0,
+                "tp_index_end": 3,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-3-flip",
+                "tp_index_start": 1,
+                "tp_index_end": 2,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 1,
-            "from_marker_start": 0.0,
-            "from_marker_end": 0.5,
-            "to_piece": "L-1",
-            "to_tp_index_1": 5,
-            "to_tp_index_2": 4,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3",
+                "tp_index_start": 0,
+                "tp_index_end": 1,
+                "marker_start": 0.0,
+                "marker_end": 0.5
+            },
+            "to": {
+                "piece": "L-1",
+                "tp_index_start": 5,
+                "tp_index_end": 4,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 1,
-            "from_marker_start": 0.5,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 4,
-            "to_tp_index_2": 5,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3",
+                "tp_index_start": 0,
+                "tp_index_end": 1,
+                "marker_start": 0.5,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 4,
+                "tp_index_end": 5,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3-flip",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 1,
-            "from_marker_start": 0.0,
-            "from_marker_end": 0.5,
-            "to_piece": "L-1",
-            "to_tp_index_1": 0,
-            "to_tp_index_2": 1,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3-flip",
+                "tp_index_start": 0,
+                "tp_index_end": 1,
+                "marker_start": 0.0,
+                "marker_end": 0.5
+            },
+            "to": {
+                "piece": "L-1",
+                "tp_index_start": 0,
+                "tp_index_end": 1,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         },
         {
-            "from_piece": "L-3-flip",
-            "from_tp_index_1": 0,
-            "from_tp_index_2": 1,
-            "from_marker_start": 0.5,
-            "from_marker_end": 1.0,
-            "to_piece": "L-2",
-            "to_tp_index_1": 1,
-            "to_tp_index_2": 0,
-            "to_marker_start": 0.0,
-            "to_marker_end": 1.0
+            "from": {
+                "piece": "L-3-flip",
+                "tp_index_start": 0,
+                "tp_index_end": 1,
+                "marker_start": 0.5,
+                "marker_end": 1.0
+            },
+            "to": {
+                "piece": "L-2",
+                "tp_index_start": 1,
+                "tp_index_end": 0,
+                "marker_start": 0.0,
+                "marker_end": 1.0
+            }
         }
     ]
 }
