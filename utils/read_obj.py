@@ -19,7 +19,10 @@ def parse_texture_coord(line):
 
 
 def parse_face(line):
-    ''' parse face coordinates e.g. 4/4/4 5/5/5 6/6/6 '''
+    '''
+        parse face coordinates e.g. 4/4/4 5/5/5 6/6/6,
+        expect all three vertex, texture and normal coordinates to be present
+    '''
     face = [[int(x) for x in f.split('/')] for f in line.split(' ')]
 
     if len(face) not in [3, 4]:
@@ -48,8 +51,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
     ind = 0
     seen_faces = []
     for path, face_list in faces.items():
-        texture_data[path]['offset'] = ind
-        first_ind = ind
+        texture_data[path]['offset'] = len(index_data)
 
         for face in face_list:
             face_inds = []
@@ -66,7 +68,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
 
             index_data.append(face_inds)
 
-        texture_data[path]['count'] = ind - first_ind
+        texture_data[path]['count'] = len(index_data) - texture_data[path]['offset']
 
     return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.int32), texture_data
 
