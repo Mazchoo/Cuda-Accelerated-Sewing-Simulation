@@ -4,7 +4,7 @@ from typing import List
 import plotly.graph_objects as go
 import numpy as np
 
-from utils.read_obj import parse_obj
+from python_src.utils.read_obj import parse_obj
 
 
 def create_body_mesh(vertex_data: np.ndarray, index_data: np.ndarray,

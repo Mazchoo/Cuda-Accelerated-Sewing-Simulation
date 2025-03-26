@@ -6,9 +6,9 @@ import numpy as np
 from shapely.geometry import Polygon
 import matplotlib.cm as cm
 
-from utils.geometry import points_along_contour
+from python_src.utils.geometry import points_along_contour
 
-from parameters import NR_SEWING_POINTS
+from python_src.parameters import NR_SEWING_POINTS
 
 
 def get_hsv_colors(n):

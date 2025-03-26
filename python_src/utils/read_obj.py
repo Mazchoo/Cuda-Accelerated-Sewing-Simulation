@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from utils.read_mtl import parse_mtl, parse_vertex
+from python_src.utils.read_mtl import parse_mtl, parse_vertex
 
 
 def parse_texture_coord(line):
