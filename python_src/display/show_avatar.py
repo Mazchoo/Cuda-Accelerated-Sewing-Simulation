@@ -6,6 +6,8 @@ import numpy as np
 
 from python_src.utils.read_obj import parse_obj
 
+from python_src.parameters import AVATAR_SCALING
+
 
 def create_body_mesh(vertex_data: np.ndarray, index_data: np.ndarray,
                      color='lightblue') -> go.Mesh3d:
@@ -28,9 +30,9 @@ def show_meshes(meshes: List[go.Mesh3d]):
     fig = go.Figure(data=meshes)
     fig.update_layout(
         scene=dict(
-            xaxis=dict(nticks=4, range=[-1, 1],),
-            yaxis=dict(nticks=4, range=[-1, 1],),
-            zaxis=dict(nticks=4, range=[0, 3.2])),
+            xaxis=dict(nticks=4, range=[-0.7, 0.7],),
+            yaxis=dict(nticks=4, range=[-0.7, 0.7],),
+            zaxis=dict(nticks=4, range=[0, 2])),
         width=1200,
         margin=dict(r=20, l=10, b=10, t=10)
     )
@@ -39,5 +41,6 @@ def show_meshes(meshes: List[go.Mesh3d]):
 
 if __name__ == '__main__':
     vertex_data, index_data, _, _ = parse_obj('./assets/BodyMesh.obj')
+    vertex_data[:, :3] *= AVATAR_SCALING
     mesh = create_body_mesh(vertex_data, index_data)
     show_meshes([mesh])
