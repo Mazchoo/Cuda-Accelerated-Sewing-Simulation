@@ -4,6 +4,24 @@
 
 Models sewing using a .dxf clothing design and a dynamic avatar from an .obj file. Models tensile forces and sewing forces. Using Web-GPU hardware acceleration for display.
 
+## List of Stuff ToDo
+
+- [x] Import sewing and contours into a json
+- [x] Extract 3D data from an .obj file and render it
+- [ ] Refactor sewing json to split "to" and "from" sewing
+- [ ] Create conversion function to mesh grid for clothing and render it on 3D plot
+- [ ] Add 3D positions for all sewing pieces
+- [ ] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation (just gravity for now)
+- [ ] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
+- [ ] Model a falling piece with stretching forces but no collision
+- [ ] Model a falling piece with collision on the avatar
+- [ ] Add initialisation where piece "wraps" around body
+      - Take vertical line through center of the piece and match to closest points on the body
+      - Going progressively outwards from vertical line on each side of piece on each side
+      - Maintain a distance of a certain amount to the avatar by applying an offset
+      - Apply offset to all remaining vertices on each side
+- [ ] Model sewing forces with multiple pieces
+
 ## Some Pictures
 
 2D sewing view
