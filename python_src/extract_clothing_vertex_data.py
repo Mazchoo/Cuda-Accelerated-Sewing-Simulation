@@ -1,10 +1,11 @@
 """ Convert contours of clothing to grid of points """
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import numpy as np
 from shapely.geometry import Polygon, Point
 
 from python_src.utils.file_io import read_json
+from python_src.simulation.mesh import MeshData
 
 from python_src.parameters import VERTEX_RESOLUTION
 
@@ -33,18 +34,23 @@ def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
     return all_rows
 
 
-def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional[np.ndarray]]]):
+def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional[np.ndarray]]],
+                                            piece_data: dict) -> MeshData:
     """ Get 3d drawing information from a grid of points inside the contour """
     vertex_data = []
     faces = []
     next_vertex_data_ind = np.int32(0)
     vertex_indices = np.zeros((len(vertices_by_line), len(vertices_by_line[0])), dtype=np.int32)
 
+    (min_x, min_y), (max_x, max_y) = piece_data["bounding_box"]
+    width = max_x - min_x
+    height = max_y - min_y
+
     for i, row in enumerate(vertices_by_line):
         for j, vertex in enumerate(row):
             if vertex is None:
                 continue
-            vertex_row = [vertex[0], vertex[1], 0.]  # ToDo Could have texture data / normal as well
+            vertex_row = [vertex[0], vertex[1], 0., vertex[0] / width, vertex[1] / height, 0., 0., 1.]
 
             next_vertex_data_ind += 1
             vertex_data.append(vertex_row)
@@ -61,17 +67,26 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
                 if lower_left and lower_right:
                     faces.append([lower_right - 1, next_vertex_data_ind - 1, lower_left - 1])
 
-    return np.array(vertex_data, dtype=np.float32), np.array(faces, dtype=np.int32)
+    # Material data is just a single color for now
+    texture_data = {
+        (0.5, 0.5, 0.5): {'count': len(faces), 'offset': 0}
+    }
+
+    return MeshData(
+        np.array(vertex_data, dtype=np.float32) / 100,
+        np.array(faces, dtype=np.int32),
+        texture_data
+    )
 
 
-def extract_all_piece_vertices(clothing_data: dict):
+def extract_all_piece_vertices(clothing_data: dict) -> Dict[str, MeshData]:
     """ Get piece simulation and display data from every piece in clothing data """
     output = {}
 
     for key, piece_data in clothing_data["pieces"].items():
         vertices_by_line = extract_grid(piece_data)
-        vertex_data, index_data = convert_rows_of_vertices_into_triangles(vertices_by_line)
-        output[key] = {"vertex_data": vertex_data, "index_data": index_data}
+        mesh = convert_rows_of_vertices_into_triangles(vertices_by_line, piece_data)
+        output[key] = mesh
 
     return output
 

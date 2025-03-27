@@ -2,6 +2,7 @@
 import numpy as np
 
 from python_src.utils.read_mtl import parse_mtl, parse_vertex
+from python_src.simulation.mesh import MeshData
 
 
 def parse_texture_coord(line):
@@ -106,16 +107,16 @@ def parse_obj(file_path):
         faces, vertices, textures, normals
     )
 
-    return vertex_data, index_data, texture_data, mtl_dict
+    return MeshData(vertex_data, index_data, texture_data)
 
 
 if __name__ == '__main__':
-    vertex_data, index_data, texture_data, mtl_dict = parse_obj('./assets/BodyMesh.obj')
-    print(len(vertex_data), "vertice parsed")
-    x_min = vertex_data[:, 0].min()
-    x_max = vertex_data[:, 0].max()
-    y_min = vertex_data[:, 1].min()
-    y_max = vertex_data[:, 1].max()
-    z_min = vertex_data[:, 2].min()
-    z_max = vertex_data[:, 2].max()
+    mesh = parse_obj('./assets/BodyMesh.obj')
+    print(len(mesh._vertex_data), "vertice parsed")
+    x_min = mesh._vertex_data[:, 0].min()
+    x_max = mesh._vertex_data[:, 0].max()
+    y_min = mesh._vertex_data[:, 1].min()
+    y_max = mesh._vertex_data[:, 1].max()
+    z_min = mesh._vertex_data[:, 2].min()
+    z_max = mesh._vertex_data[:, 2].max()
     print(f"Vertex range x {x_max-x_min:.3f}, y: {y_max-y_min:.3f}, z: {z_max-z_min:.3f}")
