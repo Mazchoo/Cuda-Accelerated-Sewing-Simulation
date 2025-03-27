@@ -9,8 +9,9 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 - [x] Import sewing and contours into a json
 - [x] Extract 3D data from an .obj file and render it
 - [x] Refactor sewing json to split "to" and "from" sewing
-- [ ] Create conversion function to mesh grid for clothing and render it on 3D plot
-- [ ] Add 3D positions for all sewing pieces
+- [x] Create conversion function to mesh grid for clothing and render it on 3D plot
+- [ ] Add pairs of points to body and pieces to get initial positions for alignment
+      - e.g. (shoulder, wrist) on both body and piece => piece offsets to match shoulder and rotates to orient to wrist
 - [ ] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation (just gravity for now)
 - [ ] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
 - [ ] Model a falling piece with stretching forces but no collision
@@ -21,6 +22,7 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
       - Maintain a distance of a certain amount to the avatar by applying an offset
       - Apply offset to all remaining vertices on each side
 - [ ] Model sewing forces with multiple pieces
+- [ ] Bonus - automatically predict location of body parts on any humanoid mesh
 
 ## Some Pictures
 
