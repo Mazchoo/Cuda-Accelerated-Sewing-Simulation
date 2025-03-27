@@ -24,7 +24,7 @@ def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
         for x in x_range:
             point = Point(x, y)
             if polygon.contains(point):
-                row.append(np.array([y, x], dtype=np.float32))
+                row.append(np.array([x, y], dtype=np.float32))
             else:
                 row.append(None)
 
@@ -55,7 +55,7 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
                 lower_right = vertex_indices[i - 1, j]
                 upper_left = vertex_indices[i, j - 1]
 
-                if lower_left and lower_left:
+                if lower_left and upper_left:
                     faces.append([next_vertex_data_ind - 1, upper_left - 1, lower_left - 1])
 
                 if lower_left and lower_right:

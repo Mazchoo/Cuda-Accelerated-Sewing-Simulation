@@ -12,19 +12,20 @@ from python_src.parameters import AVATAR_SCALING
 
 
 def create_body_mesh(vertex_data: np.ndarray, index_data: np.ndarray,
-                     color='lightblue') -> go.Mesh3d:
+                     color='lightblue', name='body') -> go.Mesh3d:
     """ Create a plotly mesh for the body from vertex and index data,
         first 3 columns of vertex data should be coordinates """
     return go.Mesh3d(
-        x=vertex_data[:, 0],
-        y=vertex_data[:, 2],
+        x=vertex_data[:, 0] - vertex_data[:, 0].mean(),
+        y=vertex_data[:, 2] - vertex_data[:, 2].mean(),
         z=vertex_data[:, 1] - vertex_data[:, 1].min(),  # Height is z axis
         i=index_data[:, 0],
         j=index_data[:, 1],
         k=index_data[:, 2],
         opacity=1.0,
         color=color,
-        flatshading=True
+        flatshading=True,
+        name=name
     )
 
 
@@ -52,6 +53,6 @@ if __name__ == '__main__':
     clothing_display_data = extract_all_piece_vertices(clothing_data)
     vertex_data = clothing_display_data["L-1"]["vertex_data"] / 100.
     index_data = clothing_display_data["L-1"]["index_data"]
-    front_panel_mesh = create_body_mesh(vertex_data, index_data, color='lightgreen')
+    front_panel_mesh = create_body_mesh(vertex_data, index_data, color='red', name="L-1")
 
     show_meshes([mesh, front_panel_mesh])
