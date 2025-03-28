@@ -2,14 +2,17 @@
 import numpy as np
 
 from python_src.simulation.mesh import MeshData
+from python_src.simulation.vertex_relationships import VertexRelations
 
-from parameters import GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, TIME_DELTA
+from python_src.parameters import GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, TIME_DELTA
 
 
 class DynamicPiece:
     """ Simulated with physics helpers """
-    def __init__(self, mesh: MeshData):
+    def __init__(self, mesh: MeshData, vertex_realtions: VertexRelations):
         self.mesh = mesh
+        self.vertex_realtions = vertex_realtions
+
         self.velocity = np.zeros((self.mesh.nr_vertices, 3), dtype=np.float32)
         self.acceleration = np.zeros((self.mesh.nr_vertices, 3), dtype=np.float32)
         self.acceleration[:, 1] = -GRAVITY

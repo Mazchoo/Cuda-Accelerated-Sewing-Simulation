@@ -34,11 +34,11 @@ if __name__ == '__main__':
     clothing_data = read_json('./assets/sewing_shirt.json')
     clothing_display_data = extract_all_piece_vertices(clothing_data)
 
-    front_panel_mesh = clothing_display_data["L-1"]
+    front_panel_mesh = clothing_display_data["L-1"].mesh
     front_panel_mesh.offset_vertices([0, 1.2, 0.2])
     front_panel_plotly = front_panel_mesh.create_plotly_mesh(color='red', name="L-1", opacity=0.8)
 
-    back_panel_mesh = clothing_display_data["L-2"]
+    back_panel_mesh = clothing_display_data["L-2"].mesh
     back_panel_mesh.offset_vertices([0, 1.2, -0.2])
     back_panel_plotly = back_panel_mesh.create_plotly_mesh(color='green', name="L-2", opacity=0.8)
 
