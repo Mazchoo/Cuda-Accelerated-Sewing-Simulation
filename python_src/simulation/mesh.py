@@ -1,5 +1,5 @@
 """ Container class of mesh visualisation data """
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 import plotly.graph_objects as go
@@ -17,6 +17,11 @@ class MeshData:
         self._index_data = index_data
         self._texture_data = texture_data
 
+    @property
+    def nr_vertices(self) -> int:
+        """ Get number of vertices """
+        return len(self._vertex_data)
+
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()
@@ -27,7 +32,7 @@ class MeshData:
         """ Scale vertices by a constant """
         self._vertex_data[:, :3] *= scalar
 
-    def offset_vertices(self, offset: Tuple[float, float, float]):
+    def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray]):
         """ Update vertex locations in place by a fixed offset """
         self._vertex_data[:, :3] += offset
 
