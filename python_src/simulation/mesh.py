@@ -22,6 +22,16 @@ class MeshData:
         """ Get number of vertices """
         return len(self._vertex_data)
 
+    @property
+    def vertices_3d(self) -> np.ndarray:
+        """ Reference to 3d vertices """
+        return self._vertex_data[:, :3]
+
+    @property
+    def vertices_2d(self) -> np.ndarray:
+        """ Reference to 2d vertices (x, y only) """
+        return self._vertex_data[:, :2]
+
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()

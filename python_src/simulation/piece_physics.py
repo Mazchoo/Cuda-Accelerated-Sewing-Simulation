@@ -9,9 +9,9 @@ from python_src.parameters import GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, TIME
 
 class DynamicPiece:
     """ Simulated with physics helpers """
-    def __init__(self, mesh: MeshData, vertex_realtions: VertexRelations):
+    def __init__(self, mesh: MeshData, vertex_relations: VertexRelations):
         self.mesh = mesh
-        self.vertex_realtions = vertex_realtions
+        self.vertex_relations = vertex_relations
 
         self.velocity = np.zeros((self.mesh.nr_vertices, 3), dtype=np.float32)
         self.acceleration = np.zeros((self.mesh.nr_vertices, 3), dtype=np.float32)

@@ -1,20 +1,8 @@
 """ Show the mesh of a piece in matplotlib """
-import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
-
 from python_src.utils.file_io import read_json
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 
-
-def plot_line_collection(line_collection: LineCollection):
-    """ Plot a line collection """
-    _, ax = plt.subplots(1)
-    ax.add_collection(line_collection)
-
-    ax.autoscale()
-    ax.set_aspect('equal')
-
-    plt.show()
+from python_src.display.common import plot_line_collection
 
 
 if __name__ == '__main__':
