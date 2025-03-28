@@ -27,7 +27,6 @@ def show_meshes(meshes: List[go.Mesh3d]):
 
 if __name__ == '__main__':
     avatar_mesh = parse_obj('./assets/BodyMesh.obj')
-    avatar_mesh.place_at_origin()
     avatar_mesh.scale_vertices(AVATAR_SCALING)
     avatar_plotly = avatar_mesh.create_plotly_mesh(color='lightblue', name='avatar', opacity=1.0)
 
@@ -35,12 +34,10 @@ if __name__ == '__main__':
     clothing_display_data = extract_all_piece_vertices(clothing_data)
 
     front_panel_mesh = clothing_display_data["L-1"].mesh
-    front_panel_mesh.place_at_origin()
     front_panel_mesh.offset_vertices([0, 0.8, 0.2])
     front_panel_plotly = front_panel_mesh.create_plotly_mesh(color='red', name="L-1", opacity=0.8)
 
     back_panel_mesh = clothing_display_data["L-2"].mesh
-    front_panel_mesh.place_at_origin()
     back_panel_mesh.offset_vertices([0, 0.8, -0.2])
     back_panel_plotly = back_panel_mesh.create_plotly_mesh(color='green', name="L-2", opacity=0.8)
 

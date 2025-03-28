@@ -17,6 +17,8 @@ class MeshData:
         self._index_data = index_data
         self._texture_data = texture_data
 
+        self.place_at_origin()
+
     @property
     def nr_vertices(self) -> int:
         """ Get number of vertices """
