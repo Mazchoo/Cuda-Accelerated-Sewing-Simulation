@@ -4,7 +4,8 @@ import numpy as np
 from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
 
-from python_src.parameters import GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, TIME_DELTA
+from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY,
+                                   TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD)
 
 
 class DynamicPiece:
@@ -33,4 +34,16 @@ class DynamicPiece:
 
     def update_forces(self):
         """ Update forces from internal interactions within piece """
-        pass
+        vertices = self.mesh.vertices_3d
+        stress_relations = self.vertex_relations.stress_relations
+
+        stress_vectors = vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]
+        stress_distances = np.linalg.norm(stress_vectors, axis=1) / self.resting_straight_length
+
+        has_compress_force = stress_distances > 1 + STRESS_THRESHOLD
+        self.acceleration[stress_relations[:, 1][has_compress_force]] += stress_vectors * STRESS_WEIGHTING
+        self.acceleration[stress_relations[:, 0][has_compress_force]] -= stress_vectors * STRESS_WEIGHTING
+
+        has_expand_force = stress_distances < 1 - STRESS_THRESHOLD
+        self.acceleration[stress_relations[:, 1][has_expand_force]] -= stress_vectors * STRESS_WEIGHTING
+        self.acceleration[stress_relations[:, 0][has_expand_force]] += stress_vectors * STRESS_WEIGHTING
