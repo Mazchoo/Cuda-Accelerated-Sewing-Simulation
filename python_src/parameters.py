@@ -8,3 +8,5 @@ MAX_VELOCITY = 1  # Terminal velocity of a piece (may need something more sophis
 TIME_DELTA = 0.01  # Time increment to make update to each piece
 STRESS_WEIGHTING = 0.1  # Weight to apply to the stress force
 STRESS_THRESHOLD = 0.1  # Percantage of resting distance where stress starts applying
+SHEAR_WEIGHTING = 0.1
+SHEAR_THRESHOLD = 0.1

@@ -5,7 +5,8 @@ from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
 
 from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY,
-                                   TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD)
+                                   TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
+                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD)
 
 
 class DynamicPiece:
@@ -47,3 +48,16 @@ class DynamicPiece:
         has_expand_force = stress_distances < 1 - STRESS_THRESHOLD
         self.acceleration[stress_relations[:, 1][has_expand_force]] -= stress_vectors * STRESS_WEIGHTING
         self.acceleration[stress_relations[:, 0][has_expand_force]] += stress_vectors * STRESS_WEIGHTING
+
+        shear_relations = self.vertex_relations.shear_relations
+
+        shear_vectors = vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]
+        shear_distances = np.linalg.norm(stress_vectors, axis=1) / self.resting_diagonal_length
+
+        has_compress_force = shear_distances > 1 + SHEAR_THRESHOLD
+        self.acceleration[shear_relations[:, 1][has_compress_force]] += shear_vectors * SHEAR_WEIGHTING
+        self.acceleration[shear_relations[:, 0][has_compress_force]] -= shear_vectors * SHEAR_WEIGHTING
+
+        has_expand_force = shear_distances < 1 - SHEAR_THRESHOLD
+        self.acceleration[shear_relations[:, 1][has_expand_force]] -= shear_vectors * SHEAR_WEIGHTING
+        self.acceleration[shear_relations[:, 0][has_expand_force]] += shear_vectors * SHEAR_WEIGHTING
