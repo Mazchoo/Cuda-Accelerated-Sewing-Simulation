@@ -25,6 +25,7 @@ class DynamicPiece:
     def update_positions(self):
         """ Update positions from current velocities """
         self.mesh.offset_vertices(self.velocity * TIME_DELTA)
+        self.mesh.clamp_above_zero()
 
     def update_velocities(self):
         """ Update velocities from internal forces within piece """
