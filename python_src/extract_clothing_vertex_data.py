@@ -9,7 +9,7 @@ from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
 from python_src.simulation.piece_physics import DynamicPiece
 
-from python_src.parameters import VERTEX_RESOLUTION
+from python_src.parameters import VERTEX_RESOLUTION, CM_PER_M
 
 
 def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
@@ -79,7 +79,7 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
     }
 
     return MeshData(
-        np.array(vertex_data, dtype=np.float32) / 100,
+        np.array(vertex_data, dtype=np.float32) / CM_PER_M,
         np.array(faces, dtype=np.uint32),
         texture_data
     ), vertex_indices

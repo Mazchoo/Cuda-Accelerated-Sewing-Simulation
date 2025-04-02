@@ -49,8 +49,8 @@ class MeshData:
         self._vertex_data[:, :3] += offset
 
     def clamp_above_zero(self):
-        """ Ensure vertices are always above 0 """
-        self._vertex_data[:, :3] = np.maximum(self._vertex_data[:, :3], 0.)
+        """ Ensure y vertices are always above 0 """
+        self._vertex_data[:, 1] = np.maximum(self._vertex_data[:, 1], 0.)
 
     def create_plotly_mesh(self, **kwargs) -> go.Mesh3d:
         """ Create a plotly mesh for the mesh from vertex and index data """
