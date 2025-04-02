@@ -2,16 +2,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
-import matplotlib.cm as cm
 
 from python_src.utils.geometry import points_along_contour
 from python_src.utils.file_io import read_json
+from python_src.display.common import get_hsv_colors
 
 from python_src.parameters import NR_SEWING_POINTS
-
-
-def get_hsv_colors(n):
-    return [cm.hsv(i / n) for i in range(n)]
 
 
 def show_sewing_line(sewing_line, all_contours, all_turn_points, color):

@@ -75,3 +75,13 @@ class MeshData:
             lines.append([self._vertex_data[face[2]][:2], self._vertex_data[face[0]][:2]])
 
         return LineCollection(lines, **kwargs)
+
+    def create_scatter_plot(self, **kwargs) -> go.Scatter3d:
+        """ Create a scaltter plot from vertex locations """
+        return go.Scatter3d(
+            x=self._vertex_data[:, 0],
+            y=self._vertex_data[:, 2],
+            z=self._vertex_data[:, 1],
+            mode='markers',
+            **kwargs
+        )
