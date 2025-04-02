@@ -42,23 +42,27 @@ class DynamicPiece:
         stress_vectors = vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]
         stress_distances = np.linalg.norm(stress_vectors, axis=1) / self.resting_straight_length
 
-        has_compress_force = stress_distances > 1 + STRESS_THRESHOLD
-        self.acceleration[stress_relations[:, 1][has_compress_force]] += stress_vectors * STRESS_WEIGHTING
-        self.acceleration[stress_relations[:, 0][has_compress_force]] -= stress_vectors * STRESS_WEIGHTING
+        has_stress_compress_force = stress_distances > 1 + STRESS_THRESHOLD
+        stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING
+        self.acceleration[stress_relations[:, 1]][has_stress_compress_force] += stress_compress_force_update
+        self.acceleration[stress_relations[:, 0]][has_stress_compress_force] -= stress_compress_force_update
 
-        has_expand_force = stress_distances < 1 - STRESS_THRESHOLD
-        self.acceleration[stress_relations[:, 1][has_expand_force]] -= stress_vectors * STRESS_WEIGHTING
-        self.acceleration[stress_relations[:, 0][has_expand_force]] += stress_vectors * STRESS_WEIGHTING
+        has_stress_expand_force = stress_distances < 1 - STRESS_THRESHOLD
+        expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING
+        self.acceleration[stress_relations[:, 1]][has_stress_expand_force] -= expand_stress_force_update
+        self.acceleration[stress_relations[:, 0]][has_stress_expand_force] += expand_stress_force_update
 
         shear_relations = self.vertex_relations.shear_relations
 
         shear_vectors = vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]
-        shear_distances = np.linalg.norm(stress_vectors, axis=1) / self.resting_diagonal_length
+        shear_distances = np.linalg.norm(shear_vectors, axis=1) / self.resting_diagonal_length
 
-        has_compress_force = shear_distances > 1 + SHEAR_THRESHOLD
-        self.acceleration[shear_relations[:, 1][has_compress_force]] += shear_vectors * SHEAR_WEIGHTING
-        self.acceleration[shear_relations[:, 0][has_compress_force]] -= shear_vectors * SHEAR_WEIGHTING
+        has_shear_compress_force = shear_distances > 1 + SHEAR_THRESHOLD
+        shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING
+        self.acceleration[shear_relations[:, 1]][has_shear_compress_force] += shear_compress_force_update
+        self.acceleration[shear_relations[:, 0]][has_shear_compress_force] -= shear_compress_force_update
 
-        has_expand_force = shear_distances < 1 - SHEAR_THRESHOLD
-        self.acceleration[shear_relations[:, 1][has_expand_force]] -= shear_vectors * SHEAR_WEIGHTING
-        self.acceleration[shear_relations[:, 0][has_expand_force]] += shear_vectors * SHEAR_WEIGHTING
+        has_shear_expand_force = shear_distances < 1 - SHEAR_THRESHOLD
+        expand_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING
+        self.acceleration[shear_relations[:, 1]][has_shear_expand_force] -= expand_shear_force_update
+        self.acceleration[shear_relations[:, 0]][has_shear_expand_force] += expand_shear_force_update
