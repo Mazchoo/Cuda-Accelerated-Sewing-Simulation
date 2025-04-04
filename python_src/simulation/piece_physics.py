@@ -42,30 +42,34 @@ class DynamicPiece:
 
         stress_relations = self.vertex_relations.stress_relations
 
-        stress_vectors = vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]
-        stress_distances = np.linalg.norm(stress_vectors, axis=1) / self.resting_straight_length
+        stress_vectors = (vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]) / self.resting_straight_length
+        stress_distances = np.linalg.norm(stress_vectors, axis=1, keepdims=True)
+        normed_stress = stress_vectors / np.where(stress_distances == 0, 1, stress_distances)
+        stress_vectors -= normed_stress
 
-        has_stress_compress_force = stress_distances > 1 + STRESS_THRESHOLD
+        has_stress_compress_force = (stress_distances > 1 + STRESS_THRESHOLD).flatten()
         stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 1], -stress_compress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 0], stress_compress_force_update)
 
-        has_stress_expand_force = stress_distances < 1 - STRESS_THRESHOLD
+        has_stress_expand_force = (stress_distances < 1 - STRESS_THRESHOLD).flatten()
         expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 1], expand_stress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 0], -expand_stress_force_update)
 
         shear_relations = self.vertex_relations.shear_relations
 
-        shear_vectors = vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]
-        shear_distances = np.linalg.norm(shear_vectors, axis=1) / self.resting_diagonal_length
+        shear_vectors = (vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]) / self.resting_diagonal_length
+        shear_distances = np.linalg.norm(shear_vectors, axis=1, keepdims=True)
+        normed_shear = shear_vectors / np.where(shear_distances == 0, 1, shear_distances)
+        shear_vectors -= normed_shear
 
-        has_shear_compress_force = shear_distances > 1 + SHEAR_THRESHOLD
+        has_shear_compress_force = (shear_distances > 1 + SHEAR_THRESHOLD).flatten()
         shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 1], -shear_compress_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 0], shear_compress_force_update)
 
-        has_shear_expand_force = shear_distances < 1 - SHEAR_THRESHOLD
+        has_shear_expand_force = (shear_distances < 1 - SHEAR_THRESHOLD).flatten()
         shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)

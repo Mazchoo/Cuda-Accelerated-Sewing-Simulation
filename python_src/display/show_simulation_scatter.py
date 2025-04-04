@@ -7,7 +7,7 @@ from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 from python_src.simulation.simulation import FabricSimulation
 
 from python_src.parameters import AVATAR_SCALING
-NR_STEPS = 100
+NR_STEPS = 200
 
 
 def create_3d_simulation(simulation: FabricSimulation):
@@ -73,7 +73,9 @@ if __name__ == '__main__':
 
     clothing_data = read_json('./assets/sewing_shirt.json')
     all_pieces = extract_all_piece_vertices(clothing_data)
-    one_piece_dict = {"L1": all_pieces["L-1"]}
+    one_piece_dict = {"L-1": all_pieces["L-1"]}
+    front_panel_mesh = one_piece_dict["L-1"].mesh
+    front_panel_mesh.offset_vertices([0, 0.2, 0.2])
 
     simulation = FabricSimulation(avatar_mesh, one_piece_dict)
     simulation.step(NR_STEPS)
