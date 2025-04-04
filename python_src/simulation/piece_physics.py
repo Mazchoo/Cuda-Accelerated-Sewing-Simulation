@@ -6,7 +6,7 @@ from python_src.simulation.vertex_relationships import VertexRelations
 
 from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, CM_PER_M,
                                    TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
-                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD)
+                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT)
 
 
 class DynamicPiece:
@@ -40,6 +40,7 @@ class DynamicPiece:
         self.acceleration *= 0.
         self.acceleration[:, 1] = -GRAVITY
 
+        # Stress calculation
         stress_relations = self.vertex_relations.stress_relations
 
         stress_vectors = (vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]) / self.resting_straight_length
@@ -57,6 +58,7 @@ class DynamicPiece:
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 1], expand_stress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 0], -expand_stress_force_update)
 
+        # Shear calculation
         shear_relations = self.vertex_relations.shear_relations
 
         shear_vectors = (vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]) / self.resting_diagonal_length
@@ -73,3 +75,6 @@ class DynamicPiece:
         shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)
+
+        # Friction calculation
+        self.acceleration -= FRICTION_CONSTANT * self.velocity
