@@ -75,7 +75,7 @@ if __name__ == '__main__':
     all_pieces = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L-1": all_pieces["L-1"]}
     front_panel_mesh = one_piece_dict["L-1"].mesh
-    front_panel_mesh.offset_vertices([0, 0.2, 0.2])
+    front_panel_mesh.offset_vertices([0, 0, 0.2])
 
     simulation = FabricSimulation(avatar_mesh, one_piece_dict)
     simulation.step(NR_STEPS)

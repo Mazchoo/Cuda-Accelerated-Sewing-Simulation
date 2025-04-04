@@ -6,7 +6,8 @@ from python_src.simulation.vertex_relationships import VertexRelations
 
 from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, CM_PER_M,
                                    TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
-                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT)
+                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
+                                   BEND_WEIGHTING, BEND_THRESHOLD, VELOCITY_DAMPING)
 
 
 class DynamicPiece:
@@ -31,7 +32,7 @@ class DynamicPiece:
         """ Update velocities from internal forces within piece """
         self.velocity += self.acceleration * TIME_DELTA
         norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
-        scales = np.minimum(1.0, MAX_VELOCITY / norms)
+        scales = np.minimum(1.0, MAX_VELOCITY / norms) * VELOCITY_DAMPING
         self.velocity *= scales
 
     def update_forces(self):
@@ -78,3 +79,19 @@ class DynamicPiece:
 
         # Friction calculation
         self.acceleration -= FRICTION_CONSTANT * self.velocity
+
+        # Bending force
+        bend_relations = self.vertex_relations.bend_relations
+
+        bend_start = vertices[bend_relations[:, 0]]
+        bend_middle = vertices[bend_relations[:, 1]]
+        bend_end = vertices[bend_relations[:, 2]]
+
+        bend_direction = (bend_start + bend_end) * 0.5 - bend_middle
+        bend_amount = np.linalg.norm(bend_direction, axis=1)
+        has_bend_force = (bend_amount > BEND_THRESHOLD).flatten()
+
+        bend_force_update = BEND_WEIGHTING * bend_direction[has_bend_force]
+        np.add.at(self.acceleration, bend_relations[has_bend_force, 0], -bend_force_update * 0.5)
+        np.add.at(self.acceleration, bend_relations[has_bend_force, 1], bend_force_update)
+        np.add.at(self.acceleration, bend_relations[has_bend_force, 2], -bend_force_update * 0.5)
