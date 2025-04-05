@@ -26,6 +26,10 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 
 ## Some Pictures
 
+Fabric simulation with a point cloud
+
+![simulated_fabric](https://github.com/user-attachments/assets/c1230ca1-075e-434c-81d6-aa8ae8abe405)
+
 2D sewing view
 
 ![Figure_1](https://github.com/user-attachments/assets/d0678c08-eb7b-4471-add4-7a9fa208e130)
