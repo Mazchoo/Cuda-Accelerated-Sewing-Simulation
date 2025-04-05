@@ -16,6 +16,7 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 - [x] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
 - [x] Model a falling vertical piece with stretching forces and collision occurs at y=0
 - [ ] Model a falling piece with collision on the avatar
+- [ ] Added dampening schedule where damping increases over time
 - [ ] Add initialisation where piece "wraps" around body
       - Take vertical line through center of the piece and match to closest points on the body
       - Going progressively outwards from vertical line on each side of piece on each side
