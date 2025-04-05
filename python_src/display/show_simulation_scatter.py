@@ -69,7 +69,7 @@ def create_3d_simulation(simulation: FabricSimulation):
 
 if __name__ == '__main__':
     avatar_mesh = parse_obj('./assets/BodyMesh.obj')
-    avatar_mesh.scale_vertices(AVATAR_SCALING)
+    avatar_mesh.Scale(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
     all_pieces = extract_all_piece_vertices(clothing_data)

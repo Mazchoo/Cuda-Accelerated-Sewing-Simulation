@@ -15,9 +15,9 @@ def show_meshes(meshes: List[go.Mesh3d]):
     fig = go.Figure(data=meshes)
     fig.update_layout(
         scene=dict(
-                xaxis=dict(nticks=4, range=[-0.7, 0.7],),
-                yaxis=dict(nticks=4, range=[-0.7, 0.7],),
-                zaxis=dict(nticks=4, range=[0, 2])
+                xaxis=dict(nticks=20, range=[-0.7, 0.7],),
+                yaxis=dict(nticks=20, range=[-0.7, 0.7],),
+                zaxis=dict(nticks=20    , range=[0, 2])
             ),
         width=1200,
         margin=dict(r=20, l=10, b=10, t=10)
@@ -27,9 +27,10 @@ def show_meshes(meshes: List[go.Mesh3d]):
 
 if __name__ == '__main__':
     avatar_mesh = parse_obj('./assets/BodyMesh.obj')
-    avatar_mesh.scale_vertices(AVATAR_SCALING)
+    avatar_mesh.Scale(AVATAR_SCALING)
+    avatar_mesh.offset_vertices([0, 0, 0])
     avatar_plotly = avatar_mesh.create_plotly_mesh(color='lightblue', name='avatar', opacity=1.0)
-
+    
     clothing_data = read_json('./assets/sewing_shirt.json')
     clothing_display_data = extract_all_piece_vertices(clothing_data)
 

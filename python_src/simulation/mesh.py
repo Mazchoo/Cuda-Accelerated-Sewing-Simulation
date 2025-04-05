@@ -17,7 +17,7 @@ class MeshData:
         self._index_data = index_data
         self._texture_data = texture_data
 
-        self.place_at_origin()
+        self.Centering()
 
     @property
     def nr_vertices(self) -> int:
@@ -34,17 +34,17 @@ class MeshData:
         """ Reference to 2d vertices (x, y only) """
         return self._vertex_data[:, :2]
 
-    def place_at_origin(self):
+    def Centering(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()
         self._vertex_data[:, 1] -= self._vertex_data[:, 1].min()
         self._vertex_data[:, 2] -= self._vertex_data[:, 2].mean()
 
-    def scale_vertices(self, scalar: float):
+    def Scale(self, scalar: float):
         """ Scale vertices by a constant """
         self._vertex_data[:, :3] *= scalar
 
-    def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray]):
+    def Translate(self, offset: Union[Tuple[float, float, float], np.ndarray]):
         """ Update vertex locations in place by a fixed offset """
         self._vertex_data[:, :3] += offset
 

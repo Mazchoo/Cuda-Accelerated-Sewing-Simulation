@@ -1,0 +1,92 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e9f1f7; /* Light blue background */
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: #007BFF; /* Bright blue background */
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+h2 {
+    background-color: #B3D7EA; /* Light bluish background */
+    padding: 10px;
+    border-left: 5px solid #007BFF; /* Blue border */
+    margin-top: 20px;
+}
+
+h3 {
+    color: #0056b3; /* Darker blue color for function headings */
+    margin-top: 15px;
+    font-weight: bold; /* Make function headings bolder */
+}
+
+.shaper-title {
+    background-color: #d9edf7; /* Slightly darker light blue for Shaper titles */
+    padding: 8px;
+    border-radius: 4px;
+}
+
+h4 {
+    color: #555; /* Darker gray for subheadings */
+}
+
+p {
+    margin: 10px 0;
+}
+
+ul {
+    margin: 10px 0 10px 20px;
+}
+
+pre {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow-x: auto;
+    border-radius: 5px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+footer {
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #B3D7EA; /* Light bluish background for footer */
+}
+
+a {
+    color: #007BFF; /* Blue link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}

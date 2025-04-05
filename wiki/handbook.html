@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Documentation</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Project Documentation</h1>
+    </header>
+    <div class="container">
+        <p>This documentation provides an overview of the modules and their functions available in this project.</p>
+
+        <h2 id="Shapers">Shapers</h2>
+        <p>Shapers are responsible for transforming geometric objects.</p>
+
+        <h3 id="Translate" class="shaper-title">Translate</h3>
+        <code>translate(Tuple[float, float, float])</code>
+        <p>The <code>translate(Tuple[float, float, float])</code> function adjusts the position of the geometry by a specified input.</p>
+        
+        <h4>Parameters</h4>
+        <ul>
+            <li><code>offset</code>: A list or tuple representing the x, y, z offset values.</li>
+        </ul>
+        
+        <h4>Return Value</h4>
+        <p>This function returns <code>None</code> but modifies the geometry itself.</p>
+        
+        <h4>Example Usage</h4>
+        <pre><code>Geometry.translate([1.0, 0.0, 0.0])</code></pre>
+
+        <h3 id="Scale" class="shaper-title">Scale</h3>
+        <code>Scale(self, scalar: float)</code>
+        <p>The <code>Scale(self, scalar: float)</code> function scales the size of the geometry by a specified factor.</p>
+        
+        <h4>Parameters</h4>
+        <ul>
+            <li><code>scalar</code>: A float representing the scale factor.</li>
+        </ul>
+        
+        <h4>Return Value</h4>
+        <p>This function returns <code>The geometry itself</code> but modifies the size.</p>
+        
+        <h4>Example Usage</h4>
+        <pre><code>mesh.Scale(1.5)</code></pre>
+
+        <h3 id="Centering" class="shaper-title">Centering</h3>
+        <code>Centering(Geometry)</code>
+        <p>The <code>Scale(self, scalar: float)</code> fuThe Centering function adjusts the position of a 3D object 
+            within the coordinate system to ensure it stands upright and is centered around the origin</p>
+        
+        <h4>Parameters</h4>
+        <ul>
+            <li><code>scalar</code>:Geometry</li>
+        </ul>
+        
+        <h4>Return Value</h4>
+        <p>This function returns <code>The geometry itself</code> by relocating it to Center.</p>
+        
+        <h4>Example Usage</h4>
+        <pre><code>Geometry.Center(Geometry)</code></pre>
+
+
+        <h2 id="simulation-module">Simulation Module</h2>
+        <p>The Simulation Module handles various simulation operations.</p>
+
+        <h3 id="run-simulation-function">Run Simulation Function: <code>run_simulation()</code></h3>
+        <p>The <code>run_simulation()</code> function starts the simulation process.</p>
+        
+        <h4>Parameters</h4>
+        <ul>
+            <li><code>duration</code>: An integer representing the duration of the simulation in seconds.</li>
+        </ul>
+        
+        <h4>Return Value</h4>
+        <p>This function returns the results of the simulation.</p>
+        
+        <h4>Example Usage</h4>
+        <pre><code>results = run_simulation(10)</code></pre>
+
+        <footer>
+            <p>Documentation created for the project. Feel free to contribute or ask questions!</p>
+        </footer>
+    </div>
+</body>
+</html>
