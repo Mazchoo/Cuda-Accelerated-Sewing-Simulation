@@ -12,9 +12,9 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 - [x] Create conversion function to mesh grid for clothing and render it on 3D plot
 - [ ] Add pairs of points to body and pieces to get initial positions for alignment
       - e.g. (shoulder, wrist) on both body and piece => piece offsets to match shoulder and rotates to orient to wrist
-- [ ] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation
+- [x] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation
 - [x] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
-- [ ] Model a falling vertical piece with stretching forces and collision occurs at y=0
+- [x] Model a falling vertical piece with stretching forces and collision occurs at y=0
 - [ ] Model a falling piece with collision on the avatar
 - [ ] Add initialisation where piece "wraps" around body
       - Take vertical line through center of the piece and match to closest points on the body
