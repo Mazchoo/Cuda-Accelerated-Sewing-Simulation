@@ -1,6 +1,7 @@
 """ Play a 3d animation just with the points of different objects """
 import plotly.graph_objects as go
 
+from python_src.simulation.Geometry import Geometry
 from python_src.utils.read_obj import parse_obj
 from python_src.utils.file_io import read_json
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
@@ -69,15 +70,18 @@ def create_3d_simulation(simulation: FabricSimulation):
 
 if __name__ == '__main__':
     avatar_mesh = parse_obj('./assets/BodyMesh.obj')
-    avatar_mesh.Scale(AVATAR_SCALING)
+    geo_avatar = Geometry(avatar_mesh)
+    geo_avatar.Scale(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
     all_pieces = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L-1": all_pieces["L-1"]}
     front_panel_mesh = one_piece_dict["L-1"].mesh
-    front_panel_mesh.offset_vertices([0, 0.9, 0.2])
+    geo_front_panel = Geometry(front_panel_mesh)
 
-    simulation = FabricSimulation(avatar_mesh, one_piece_dict)
+    geo_front_panel.Translate([0, 0.9, 0.2])
+
+    simulation = FabricSimulation(geo_front_panel, one_piece_dict)
     simulation.step(NR_STEPS)
 
     create_3d_simulation(simulation)

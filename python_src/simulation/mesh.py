@@ -17,12 +17,22 @@ class MeshData:
         self._index_data = index_data
         self._texture_data = texture_data
 
-        self.Centering()
 
     @property
+    def vertex_data(self) -> np.ndarray:
+        return self._vertex_data
+    
+    @property
     def nr_vertices(self) -> int:
-        """ Get number of vertices """
-        return len(self._vertex_data)
+            """ Get number of vertices """
+            return len(self._vertex_data)
+    
+    
+    @property
+    def index_data(self) -> np.ndarray:
+        """Get the index data."""
+        return self._index_data
+
 
     @property
     def vertices_3d(self) -> np.ndarray:
@@ -34,19 +44,6 @@ class MeshData:
         """ Reference to 2d vertices (x, y only) """
         return self._vertex_data[:, :2]
 
-    def Centering(self):
-        """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
-        self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()
-        self._vertex_data[:, 1] -= self._vertex_data[:, 1].min()
-        self._vertex_data[:, 2] -= self._vertex_data[:, 2].mean()
-
-    def Scale(self, scalar: float):
-        """ Scale vertices by a constant """
-        self._vertex_data[:, :3] *= scalar
-
-    def Translate(self, offset: Union[Tuple[float, float, float], np.ndarray]):
-        """ Update vertex locations in place by a fixed offset """
-        self._vertex_data[:, :3] += offset
 
     def clamp_above_zero(self):
         """ Ensure y vertices are always above 0 """

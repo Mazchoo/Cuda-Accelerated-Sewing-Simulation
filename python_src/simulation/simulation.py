@@ -5,6 +5,7 @@ from time import perf_counter
 import plotly.graph_objects as go
 
 from python_src.display.common import get_hsv_colors, float_rgb_to_str
+from python_src.simulation.Geometry import Geometry
 from python_src.utils.read_obj import parse_obj
 from python_src.utils.file_io import read_json
 from python_src.simulation.mesh import MeshData
@@ -18,7 +19,7 @@ NUMBER_STEPS = 10
 
 class FabricSimulation:
     """ Run a fabric simulation and keep track of piece positions """
-    def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece]):
+    def __init__(self, body: Geometry, pieces: Dict[str, DynamicPiece]):
         self.body = body
         self.pieces = pieces
         self.frames = []
@@ -76,13 +77,14 @@ class FabricSimulation:
 
 if __name__ == '__main__':
     avatar_mesh = parse_obj('./assets/BodyMesh.obj')
-    avatar_mesh.Scale(AVATAR_SCALING)
+    geo_avatar = Geometry(avatar_mesh)
+    geo_avatar.Scale(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
     all_pieces = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L1": all_pieces["L-1"]}
 
-    simulation = FabricSimulation(avatar_mesh, one_piece_dict)
+    simulation = FabricSimulation(geo_avatar, one_piece_dict)
     start = perf_counter()
     simulation.step(100)
     print(f'Time taken to run {NUMBER_STEPS} = {perf_counter() - start:.3}')

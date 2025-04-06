@@ -1,6 +1,7 @@
 """ Class containing information to simulate a dynamic clothing mesh """
 import numpy as np
 
+from python_src.simulation.Geometry import Geometry
 from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
 
@@ -12,7 +13,7 @@ from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_VELOCITY, CM_
 
 class DynamicPiece:
     """ Simulated with physics helpers """
-    def __init__(self, mesh: MeshData, vertex_relations: VertexRelations):
+    def __init__(self, mesh: Geometry, vertex_relations: VertexRelations):
         self.mesh = mesh
         self.vertex_relations = vertex_relations
 
@@ -25,7 +26,7 @@ class DynamicPiece:
 
     def update_positions(self):
         """ Update positions from current velocities """
-        self.mesh.offset_vertices(self.velocity * TIME_DELTA)
+        self.mesh.Translate(self.velocity * TIME_DELTA)
         self.mesh.clamp_above_zero()
 
     def update_velocities(self):

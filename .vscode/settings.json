@@ -1,0 +1,10 @@
+{
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUndefinedVariable": "error",
+    "reportGeneralTypeIssues": "error",
+    "reportMissingImports": "warning",
+    "reportAttributeAccessIssue": "error",
+    "reportCallIssue": "error"
+  }
+}
