@@ -31,7 +31,7 @@ if __name__ == '__main__':
     geo_avatar = Geometry(avatar_mesh)
     geo_avatar.Scale(AVATAR_SCALING)
     geo_avatar.Translate([0, 0, 0])
-    avatar_plotly = avatar_mesh.create_plotly_mesh(color='lightblue', name='avatar', opacity=1.0)
+    avatar_plotly = geo_avatar.create_plotly_mesh()
     
     clothing_data = read_json('./assets/sewing_shirt.json')
     clothing_display_data = extract_all_piece_vertices(clothing_data)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
 
     geo_front_panel.Translate([0, 0.8, 0.2])
-    front_panel_plotly = front_panel_mesh.create_plotly_mesh(color='red', name="L-1", opacity=0.8)
+    front_panel_plotly = front_panel_mesh.create_plotly_mesh()
 
     back_panel_mesh = clothing_display_data["L-2"].mesh
     geo_back_panel = Geometry(mesh=back_panel_mesh, color='red', opacity=0.8)
