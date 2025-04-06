@@ -23,6 +23,12 @@ class Geometry:
     def vertices_3d(self) -> np.ndarray:
         """ Reference to 3d vertices """
         return self.mesh._vertex_data[:, :3]
+    
+    @property
+    def vertices_2d(self) -> np.ndarray:
+        """ Reference to 2d vertices (x, y only) """
+        return self.mesh._vertex_data[:, :2]
+
 
     def Centering(self):
         self.mesh.vertex_data[:, 0] -= self.mesh.vertex_data[:, 0].mean()
