@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from python_src.utils.geometry import points_along_contour
+from python_src.utils.geometry import points_along_contour, get_point_on_contour
 from python_src.utils.file_io import read_json
 from python_src.display.common import get_hsv_colors
 
@@ -28,10 +28,38 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
                  arrowprops=dict(arrowstyle='->', color=color, lw=2))
 
 
+def display_turnpoints(turn_points: np.ndarray):
+    for i, (x, y) in enumerate(turn_points):
+        plt.text(x, y, str(i))
+
+
+def display_alignment(contour, body_points, all_turn_points):
+    snap_tp_start = all_turn_points[body_points['snap']['tp_begin']]
+    snap_tp_end = all_turn_points[body_points['snap']['tp_end']]
+    snap_marker = body_points['snap']['marker']
+    snap_point = get_point_on_contour(contour, snap_tp_start,
+                                      snap_tp_end, snap_marker)
+
+    alignment_tp_start = all_turn_points[body_points['alignment']['tp_begin']]
+    alignment_tp_end = all_turn_points[body_points['alignment']['tp_end']]
+    alignment_marker = body_points['alignment']['marker']
+    alignment_point = get_point_on_contour(contour, alignment_tp_start,
+                                           alignment_tp_end, alignment_marker)
+
+    xs = [snap_point.x, alignment_point.x]
+    ys = [snap_point.y, alignment_point.y]
+    plt.plot(xs, ys, c='grey', linestyle=':', lw=2)
+
+    arrow_style = '-[' if body_points['alignment']['flip'] else '->'
+    plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
+                 arrowprops=dict(arrowstyle=arrow_style, color='grey', lw=2))
+
+
 def show_each_piece(clothing_data: dict, offset: tuple):
     current_offset = np.array([0, 0], dtype=np.float64)
     all_contours = {}
     all_turn_points = {}
+    all_body_points = {}
 
     for key, piece in clothing_data['pieces'].items():
         contour = np.array(piece["contour"], dtype=np.float64)
@@ -47,7 +75,10 @@ def show_each_piece(clothing_data: dict, offset: tuple):
 
         turn_points = np.array(piece["turn_points"])
         turn_points += current_offset
+        display_turnpoints(turn_points)
+
         all_turn_points[key] = turn_points
+        all_body_points[key] = piece['body_points']
 
         current_offset += offset
 
@@ -56,6 +87,12 @@ def show_each_piece(clothing_data: dict, offset: tuple):
         color = colors[i]
         show_sewing_line(sewing_pair["from"], all_contours, all_turn_points, color)
         show_sewing_line(sewing_pair["to"], all_contours, all_turn_points, color)
+
+    for key, contour_points in all_contours.items():
+        contour = Polygon(contour_points).exterior
+        body_points = all_body_points[key]
+        turn_points = all_turn_points[key]
+        display_alignment(contour, body_points, turn_points)
 
     plt.axis('equal')
     plt.grid(True)

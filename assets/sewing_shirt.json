@@ -462,7 +462,22 @@
                     27.37015447729639,
                     38.85557430907163
                 ]
-            ]
+            ],
+            "body_points": {
+                "snap": {
+                    "name": "bust-l",
+                    "tp_begin": 0,
+                    "tp_end": 7,
+                    "marker": 0.0
+                },
+                "alignment": {
+                    "name": "bust-r",
+                    "tp_begin": 5,
+                    "tp_end": 6,
+                    "marker": 0.0,
+                    "flip": true
+                }
+            }
         },
         "L-2": {
             "contour": [
@@ -878,7 +893,22 @@
                     27.50538772641152,
                     38.59352052084268
                 ]
-            ]
+            ],
+            "body_points": {
+                "snap": {
+                    "name": "bust-r",
+                    "tp_begin": 5,
+                    "tp_end": 6,
+                    "marker": 0.0
+                },
+                "alignment": {
+                    "name": "bust-l",
+                    "tp_begin": 0,
+                    "tp_end": 7,
+                    "marker": 0.0,
+                    "flip": false
+                }
+            }
         },
         "L-3": {
             "contour": [
@@ -1126,7 +1156,22 @@
                     29.403036834922418,
                     28.096583443212076
                 ]
-            ]
+            ],
+            "body_points": {
+                "snap": {
+                    "name": "shoulder",
+                    "tp_begin": 0,
+                    "tp_end": 1,
+                    "marker": 0.5
+                },
+                "alignment": {
+                    "name": "wrist",
+                    "tp_begin": 2,
+                    "tp_end": 3,
+                    "marker": 0.5,
+                    "flip": false
+                }
+            }
         },
         "L-3-flip": {
             "contour": [
@@ -1374,7 +1419,22 @@
                     29.40303655678793,
                     28.096583443212076
                 ]
-            ]
+            ],
+            "body_points": {
+                "snap": {
+                    "name": "shoulder",
+                    "tp_begin": 0,
+                    "tp_end": 1,
+                    "marker": 0.5
+                },
+                "alignment": {
+                    "name": "wrist",
+                    "tp_begin": 2,
+                    "tp_end": 3,
+                    "marker": 0.5,
+                    "flip": false
+                }
+            }
         }
     },
     "sewing": [
