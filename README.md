@@ -6,17 +6,19 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 
 ## List of Stuff ToDo
 
+### Python Mockup
+
 - [x] Import sewing and contours into a json
 - [x] Extract 3D data from an .obj file and render it
 - [x] Refactor sewing json to split "to" and "from" sewing
 - [x] Create conversion function to mesh grid for clothing and render it on 3D plot
-- [ ] Add pairs of points to body and pieces to get initial positions for alignment
+- [x] Add pairs of points to body and pieces to get initial positions for alignment
       - e.g. (shoulder, wrist) on both body and piece => piece offsets to match shoulder and rotates to orient to wrist
 - [x] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation
 - [x] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
 - [x] Model a falling vertical piece with stretching forces and collision occurs at y=0
-- [ ] Model a falling piece with collision on the avatar
 - [ ] Added dampening schedule where damping increases over time
+- [ ] Model a falling piece with collision on the avatar
 - [ ] Add initialisation where piece "wraps" around body
       - Take vertical line through center of the piece and match to closest points on the body
       - Going progressively outwards from vertical line on each side of piece on each side
@@ -24,6 +26,10 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
       - Apply offset to all remaining vertices on each side
 - [ ] Model sewing forces with multiple pieces
 - [ ] Bonus - automatically predict location of body parts on any humanoid mesh
+
+### Web-gpu deployment
+
+- [ ] Convert input to only use dxf compatible standard
 
 ## Some Pictures
 
