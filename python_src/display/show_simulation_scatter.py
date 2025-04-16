@@ -21,7 +21,7 @@ def create_3d_simulation(simulation: FabricSimulation):
             scene=dict(aspectmode='cube',
                        xaxis=dict(nticks=4, range=[-0.7, 0.7], autorange=False),
                        yaxis=dict(nticks=4, range=[-0.7, 0.7], autorange=False),
-                       zaxis=dict(nticks=4, range=[0, 2], autorange=False)),
+                       zaxis=dict(nticks=4, range=[0, 3], autorange=False)),
             updatemenus=[{
                 "type": "buttons",
                 "buttons": [
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     all_pieces = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L-1": all_pieces["L-1"]}
     front_panel_mesh = one_piece_dict["L-1"].mesh
-    front_panel_mesh.offset_vertices([0, 0.9, 0.2])
+    front_panel_mesh.offset_vertices([0, 1.8, 0])
 
     simulation = FabricSimulation(avatar_mesh, one_piece_dict)
     simulation.step(NR_STEPS)

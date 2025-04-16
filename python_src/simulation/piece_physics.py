@@ -1,5 +1,6 @@
 """ Class containing information to simulate a dynamic clothing mesh """
 import numpy as np
+from trimesh import Trimesh
 
 from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
@@ -28,7 +29,7 @@ class DynamicPiece:
     def update_positions(self):
         """ Update positions from current velocities """
         self.mesh.offset_vertices(self.velocity * TIME_DELTA)
-        self.mesh.clamp_above_zero()
+        self.mesh.clamp_above_zero()  # floor in y direction should always be positive
 
     def update_velocities(self, step: int):
         """ Update velocities from internal forces within piece """
@@ -103,3 +104,14 @@ class DynamicPiece:
         np.add.at(self.acceleration, bend_relations[has_bend_force, 0], -bend_force_update * 0.5)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 1], bend_force_update)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 2], -bend_force_update * 0.5)
+
+    def body_collision_adjustment(self, body_trimesh: Trimesh):
+        vertices = self.mesh.vertices_3d
+
+        is_inside_mesh = body_trimesh.contains(vertices)
+        if not is_inside_mesh.any():
+            return
+
+        _, distances, triangle_ids = body_trimesh.nearest.on_surface(vertices[is_inside_mesh])
+        adjustment = body_trimesh.face_normals[triangle_ids] * distances[:, np.newaxis]
+        self.mesh.offset_vertices(adjustment, mask=is_inside_mesh)

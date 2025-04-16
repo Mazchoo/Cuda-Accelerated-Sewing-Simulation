@@ -12,8 +12,7 @@ from python_src.simulation.piece_physics import DynamicPiece
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
-from python_src.parameters import AVATAR_SCALING
-NUMBER_STEPS = 10
+from python_src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECTION
 
 
 class FabricSimulation:
@@ -39,11 +38,12 @@ class FabricSimulation:
                 piece.update_forces()
 
             # ToDo - sewing forces
-            # ToDo - body collision
 
             for piece in self.pieces.values():
                 piece.update_velocities(step)
                 piece.update_positions()
+                if RUN_COLLISION_DETECTION:
+                    piece.body_collision_adjustment(self.body.trimesh)
 
             self.add_vertices_to_frames()
 
@@ -84,4 +84,4 @@ if __name__ == '__main__':
     simulation = FabricSimulation(avatar_mesh, one_piece_dict)
     start = perf_counter()
     simulation.step(100)
-    print(f'Time taken to run {NUMBER_STEPS} = {perf_counter() - start:.3}')
+    print(f'Time taken to run 1 piece {NR_STEPS} steps = {perf_counter() - start:.3}')

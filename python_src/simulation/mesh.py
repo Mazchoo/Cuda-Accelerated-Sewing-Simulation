@@ -1,7 +1,8 @@
 """ Container class of mesh visualisation data """
-from typing import Tuple, Union
+from typing import Tuple, Union, Optional
 
 import numpy as np
+from trimesh import Trimesh
 import plotly.graph_objects as go
 from matplotlib.collections import LineCollection
 
@@ -16,6 +17,7 @@ class MeshData:
         self._vertex_data = vertex_data
         self._index_data = index_data
         self._texture_data = texture_data
+        self._trimesh = None
 
         self.place_at_origin()
 
@@ -34,6 +36,15 @@ class MeshData:
         """ Reference to 2d vertices (x, y only) """
         return self._vertex_data[:, :2]
 
+    @property
+    def trimesh(self) -> Trimesh:
+        """ Create compute structure for collision detection """
+        if self._trimesh is None:
+            self._trimesh = Trimesh(vertices=self._vertex_data[:, :3],
+                                    faces=self._index_data,
+                                    process=True, validate=True)
+        return self._trimesh
+
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()
@@ -44,9 +55,13 @@ class MeshData:
         """ Scale vertices by a constant """
         self._vertex_data[:, :3] *= scalar
 
-    def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray]):
+    def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray],
+                        mask: Optional[np.ndarray] = None):
         """ Update vertex locations in place by a fixed offset """
-        self._vertex_data[:, :3] += offset
+        if mask is None:
+            self._vertex_data[:, :3] += offset
+        else:
+            self._vertex_data[mask, :3] += offset
 
     def clamp_above_zero(self):
         """ Ensure y vertices are always above 0 """
