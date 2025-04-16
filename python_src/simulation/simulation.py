@@ -34,16 +34,15 @@ class FabricSimulation:
 
     def step(self, nr_steps: int = 1):
         ''' Run simulation for one time step '''
-        for _ in range(nr_steps):
+        for step in range(nr_steps):
             for piece in self.pieces.values():
                 piece.update_forces()
 
-            # ToDo - bend forces
             # ToDo - sewing forces
             # ToDo - body collision
 
             for piece in self.pieces.values():
-                piece.update_velocities()
+                piece.update_velocities(step)
                 piece.update_positions()
 
             self.add_vertices_to_frames()

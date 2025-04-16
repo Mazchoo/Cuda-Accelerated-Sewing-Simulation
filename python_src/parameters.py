@@ -16,4 +16,5 @@ BEND_WEIGHTING = 100  # Weight to apply to bend force
 BEND_THRESHOLD = 0.001  # Sin of angle where bending is applied
 CM_PER_M = 100  # Scale of coordinates in clothing to world coordinates
 FRICTION_CONSTANT = 0.05  # Constant of velocity resisting acceleration
-VELOCITY_DAMPING = 0.9  # Amount to reduce velocity by in every step
+VELOCITY_DAMPING_START = 1.0  # Amount to reduce velocity by in every step at the beginning
+VELOCITY_DAMPING_END = 0.5  # Amount to reduce velocity by in every step at the end

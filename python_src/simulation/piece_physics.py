@@ -7,7 +7,8 @@ from python_src.simulation.vertex_relationships import VertexRelations
 from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY, MAX_GRAVITY_VELOCITY,
                                    CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
                                    SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
-                                   BEND_WEIGHTING, BEND_THRESHOLD, VELOCITY_DAMPING)
+                                   BEND_WEIGHTING, BEND_THRESHOLD,
+                                   VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS)
 
 
 class DynamicPiece:
@@ -22,17 +23,21 @@ class DynamicPiece:
 
         self.resting_straight_length = VERTEX_RESOLUTION / CM_PER_M
         self.resting_diagonal_length = np.sqrt(2) * VERTEX_RESOLUTION / CM_PER_M
+        self.dampening_constant = np.pi / NR_STEPS
 
     def update_positions(self):
         """ Update positions from current velocities """
         self.mesh.offset_vertices(self.velocity * TIME_DELTA)
         self.mesh.clamp_above_zero()
 
-    def update_velocities(self):
+    def update_velocities(self, step: int):
         """ Update velocities from internal forces within piece """
         self.velocity += self.acceleration * TIME_DELTA
         norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
-        scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * VELOCITY_DAMPING
+        dampening_cosine = 0.5 - 0.5 * np.cos(self.dampening_constant * step)  # Value between 0 and 1
+        dampening = VELOCITY_DAMPING_START + (VELOCITY_DAMPING_END - VELOCITY_DAMPING_START) * dampening_cosine
+
+        scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * dampening
         self.velocity *= scales
 
         # Apply gravity indenpently
