@@ -1,10 +1,12 @@
 """ Common place to put all parameters of simulation """
 
+NR_STEPS = 200  # Number of time steps to simulate for a sample
 NR_SEWING_POINTS = 10  # Number of points to used to pull to sewn lines together
 AVATAR_SCALING = 0.5627  # Amount to change avatar by
 VERTEX_RESOLUTION = 1  # Resolution to take number of points
 GRAVITY = 9.81  # Acceleration downwards due to gravity
-MAX_VELOCITY = 0.5  # Terminal velocity of a piece (may need something more sophisticated with dampening)
+MAX_TENSILE_VELOCITY = 0.5  # Terminal velocity from tensile forces
+MAX_GRAVITY_VELOCITY = 0.5  # Terminal velocity from falling
 TIME_DELTA = 0.01  # Time increment to make update to each piece
 STRESS_WEIGHTING = 100  # Weight to apply to the stress force
 STRESS_THRESHOLD = 0.001  # Percentage of resting distance where stress starts applying

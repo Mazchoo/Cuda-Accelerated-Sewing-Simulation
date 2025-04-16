@@ -6,8 +6,7 @@ from python_src.utils.file_io import read_json
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 from python_src.simulation.simulation import FabricSimulation
 
-from python_src.parameters import AVATAR_SCALING
-NR_STEPS = 200
+from python_src.parameters import AVATAR_SCALING, NR_STEPS
 
 
 def create_3d_simulation(simulation: FabricSimulation):
