@@ -19,3 +19,4 @@ FRICTION_CONSTANT = 0.05  # Constant of velocity resisting acceleration
 VELOCITY_DAMPING_START = 1.0  # Amount to reduce velocity by in every step at the beginning
 VELOCITY_DAMPING_END = 0.5  # Amount to reduce velocity by in every step at the end
 RUN_COLLISION_DETECTION = True  # This is slow, so it can be turned off
+DISTANCE_FROM_BODY = 0.1  # Default distance along normal of alignment point on avatar
