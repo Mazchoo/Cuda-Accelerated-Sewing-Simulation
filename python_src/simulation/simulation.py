@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from python_src.display.common import get_hsv_colors, float_rgb_to_str
 from python_src.utils.read_obj import parse_obj
 from python_src.utils.file_io import read_json
-from python_src.simulation.mesh import MeshData
+from python_src.simulation.mesh import MeshData, create_mesh_scatter_plot
 from python_src.simulation.piece_physics import DynamicPiece
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 
@@ -23,8 +23,8 @@ class FabricSimulation:
         self.frames = []
         self.add_vertices_to_frames()
 
-        self.body_scatter_plot = self.body.create_scatter_plot(marker=dict(color='grey', size=6),
-                                                               name='Body')
+        self.body_scatter_plot = create_mesh_scatter_plot(self.body, marker=dict(color='grey', size=6),
+                                                          name='Body')
         self.colors = [float_rgb_to_str(c) for c in get_hsv_colors(len(self.pieces))]
 
     def add_vertices_to_frames(self):

@@ -3,8 +3,6 @@ from typing import Tuple, Union, Optional
 
 import numpy as np
 from trimesh import Trimesh
-import plotly.graph_objects as go
-from matplotlib.collections import LineCollection
 
 
 class MeshData:
@@ -17,7 +15,9 @@ class MeshData:
         self._vertex_data = vertex_data
         self._index_data = index_data
         self._texture_data = texture_data
+
         self._trimesh = None
+        self._annotations = {}
 
         self.place_at_origin()
 
@@ -47,13 +47,25 @@ class MeshData:
 
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
-        self._vertex_data[:, 0] -= self._vertex_data[:, 0].mean()
-        self._vertex_data[:, 1] -= self._vertex_data[:, 1].min()
-        self._vertex_data[:, 2] -= self._vertex_data[:, 2].mean()
+        x_mean = self._vertex_data[:, 0].mean()
+        y_min = self._vertex_data[:, 1].min()
+        z_mean = self._vertex_data[:, 2].mean()
+
+        self._vertex_data[:, 0] -= x_mean
+        self._vertex_data[:, 1] -= y_min
+        self._vertex_data[:, 2] -= z_mean
+
+        for annotation_point in self._annotations.values():
+            annotation_point[0] -= x_mean
+            annotation_point[1] -= y_min
+            annotation_point[2] -= z_mean
 
     def scale_vertices(self, scalar: float):
         """ Scale vertices by a constant """
         self._vertex_data[:, :3] *= scalar
+
+        for annotation_point in self._annotations.values():
+            annotation_point *= scalar
 
     def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray],
                         mask: Optional[np.ndarray] = None):
@@ -63,40 +75,23 @@ class MeshData:
         else:
             self._vertex_data[mask, :3] += offset
 
+        for annotation_point in self._annotations.values():
+            annotation_point += offset
+
     def clamp_above_zero(self):
         """ Ensure y vertices are always above 0 """
         self._vertex_data[:, 1] = np.maximum(self._vertex_data[:, 1], 0.)
 
-    def create_plotly_mesh(self, **kwargs) -> go.Mesh3d:
-        """ Create a plotly mesh for the mesh from vertex and index data """
-        return go.Mesh3d(
-            x=self._vertex_data[:, 0],
-            y=self._vertex_data[:, 2],
-            z=self._vertex_data[:, 1],  # Height is z axis in plot
-            i=self._index_data[:, 0],
-            j=self._index_data[:, 1],
-            k=self._index_data[:, 2],
-            flatshading=True,
-            **kwargs
-        )
+    def flip_x(self):
+        """ Flip over x coordinates in place over mean x coordinate """
+        mean_x = self._vertex_data[:, 0].mean()
+        self._vertex_data[:, 0] *= -1
+        self._vertex_data[:, 0] += mean_x * 2
 
-    def create_line_collection(self, **kwargs) -> LineCollection:
-        """ Create matplotlib line collection from a mesh """
-        lines = []
+        for annotation_point in self._annotations.values():
+            annotation_point *= -1
+            annotation_point += mean_x * 2
 
-        for face in self._index_data:
-            lines.append([self._vertex_data[face[0]][:2], self._vertex_data[face[1]][:2]])
-            lines.append([self._vertex_data[face[1]][:2], self._vertex_data[face[2]][:2]])
-            lines.append([self._vertex_data[face[2]][:2], self._vertex_data[face[0]][:2]])
-
-        return LineCollection(lines, **kwargs)
-
-    def create_scatter_plot(self, **kwargs) -> go.Scatter3d:
-        """ Create a scaltter plot from vertex locations """
-        return go.Scatter3d(
-            x=self._vertex_data[:, 0],
-            y=self._vertex_data[:, 2],
-            z=self._vertex_data[:, 1],
-            mode='markers',
-            **kwargs
-        )
+    def add_annotation(self, name: str, point: np.ndarray):
+        """ Add a 3d point as an annotated point """
+        self._annotations[name] = point
