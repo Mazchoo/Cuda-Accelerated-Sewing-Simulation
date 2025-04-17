@@ -33,22 +33,23 @@ def display_turnpoints(turn_points: np.ndarray):
         plt.text(x, y, str(i))
 
 
-def display_alignment(contour, body_points, all_turn_points):
-    snap_tp_start = all_turn_points[body_points['snap']['tp_begin']]
-    snap_tp_end = all_turn_points[body_points['snap']['tp_end']]
-    snap_marker = body_points['snap']['marker']
-    snap_point = get_point_on_contour(contour, snap_tp_start,
-                                      snap_tp_end, snap_marker)
+def get_point_location(point_data, contour, all_turn_points):
+    tp_start = all_turn_points[point_data['tp_begin']]
+    tp_end = all_turn_points[point_data['tp_end']]
+    snap_marker = point_data['marker']
+    return get_point_on_contour(contour, tp_start,
+                                tp_end, snap_marker)
 
-    alignment_tp_start = all_turn_points[body_points['alignment']['tp_begin']]
-    alignment_tp_end = all_turn_points[body_points['alignment']['tp_end']]
-    alignment_marker = body_points['alignment']['marker']
-    alignment_point = get_point_on_contour(contour, alignment_tp_start,
-                                           alignment_tp_end, alignment_marker)
+
+def display_alignment(contour, body_points, all_turn_points):
+    snap_point = get_point_location(body_points['snap'], contour, all_turn_points)
+    alignment_point = get_point_location(body_points['alignment'], contour, all_turn_points)
 
     xs = [snap_point.x, alignment_point.x]
     ys = [snap_point.y, alignment_point.y]
     plt.plot(xs, ys, c='grey', linestyle=':', lw=2)
+    plt.text(snap_point.x, snap_point.y, body_points['snap']['name'])
+    plt.text(alignment_point.x, alignment_point.y, body_points['alignment']['name'])
 
     arrow_style = '-[' if body_points['alignment']['flip'] else '->'
     plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),

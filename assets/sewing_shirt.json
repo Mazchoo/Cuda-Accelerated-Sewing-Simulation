@@ -465,13 +465,13 @@
             ],
             "body_points": {
                 "snap": {
-                    "name": "bust-l",
+                    "name": "bust-left",
                     "tp_begin": 0,
                     "tp_end": 7,
                     "marker": 0.0
                 },
                 "alignment": {
-                    "name": "bust-r",
+                    "name": "bust-right",
                     "tp_begin": 5,
                     "tp_end": 6,
                     "marker": 0.0,
@@ -896,16 +896,16 @@
             ],
             "body_points": {
                 "snap": {
-                    "name": "bust-r",
-                    "tp_begin": 5,
-                    "tp_end": 6,
-                    "marker": 0.0
+                    "name": "back-neck",
+                    "tp_begin": 2,
+                    "tp_end": 3,
+                    "marker": 0.5
                 },
                 "alignment": {
-                    "name": "bust-l",
-                    "tp_begin": 0,
+                    "name": "back-low-hip",
+                    "tp_begin": 6,
                     "tp_end": 7,
-                    "marker": 0.0,
+                    "marker": 0.5,
                     "flip": false
                 }
             }
@@ -1159,13 +1159,13 @@
             ],
             "body_points": {
                 "snap": {
-                    "name": "shoulder",
+                    "name": "shoulder-right",
                     "tp_begin": 0,
                     "tp_end": 1,
                     "marker": 0.5
                 },
                 "alignment": {
-                    "name": "wrist",
+                    "name": "wrist-right",
                     "tp_begin": 2,
                     "tp_end": 3,
                     "marker": 0.5,
@@ -1422,13 +1422,13 @@
             ],
             "body_points": {
                 "snap": {
-                    "name": "shoulder",
+                    "name": "shoulder-left",
                     "tp_begin": 0,
                     "tp_end": 1,
                     "marker": 0.5
                 },
                 "alignment": {
-                    "name": "wrist",
+                    "name": "wrist-left",
                     "tp_begin": 2,
                     "tp_end": 3,
                     "marker": 0.5,
