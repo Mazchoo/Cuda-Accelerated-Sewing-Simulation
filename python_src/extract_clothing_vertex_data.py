@@ -5,7 +5,7 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 
 from python_src.utils.file_io import read_json
-from python_src.simulation.mesh import MeshData
+from python_src.simulation.mesh import MeshData, annotate_mesh_from_piece_data
 from python_src.simulation.vertex_relationships import VertexRelations
 from python_src.simulation.piece_physics import DynamicPiece
 
@@ -138,6 +138,7 @@ def extract_all_piece_vertices(clothing_data: dict) -> Dict[str, DynamicPiece]:
         vertices_by_line = extract_grid(piece_data)
         mesh, grid_indices = convert_rows_of_vertices_into_triangles(vertices_by_line, piece_data)
         vertex_relations = get_all_vertex_relationships(vertices_by_line, grid_indices)
+        annotate_mesh_from_piece_data(mesh, piece_data)
         output[key] = DynamicPiece(mesh, vertex_relations)
 
     return output

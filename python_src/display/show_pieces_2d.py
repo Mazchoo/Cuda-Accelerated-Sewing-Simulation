@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from python_src.utils.geometry import points_along_contour, get_point_on_contour
+from python_src.utils.geometry import points_along_contour
 from python_src.utils.file_io import read_json
 from python_src.display.common import get_hsv_colors
+from python_src.simulation.mesh import get_point_location
 
 from python_src.parameters import NR_SEWING_POINTS
 
@@ -31,14 +32,6 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
 def display_turnpoints(turn_points: np.ndarray):
     for i, (x, y) in enumerate(turn_points):
         plt.text(x, y, str(i))
-
-
-def get_point_location(point_data, contour, all_turn_points):
-    tp_start = all_turn_points[point_data['tp_begin']]
-    tp_end = all_turn_points[point_data['tp_end']]
-    snap_marker = point_data['marker']
-    return get_point_on_contour(contour, tp_start,
-                                tp_end, snap_marker)
 
 
 def display_alignment(contour, body_points, all_turn_points):
@@ -74,7 +67,7 @@ def show_each_piece(clothing_data: dict, offset: tuple):
         cog += current_offset
         plt.text(*cog, key, c='r')
 
-        turn_points = np.array(piece["turn_points"])
+        turn_points = np.array(piece["turn_points"], dtype=np.float64)
         turn_points += current_offset
         display_turnpoints(turn_points)
 
