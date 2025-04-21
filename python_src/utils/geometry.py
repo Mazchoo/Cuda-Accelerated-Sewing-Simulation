@@ -33,3 +33,60 @@ def points_along_contour(contour: LineString, start: list, end: list,
         output.append(contour.interpolate(marker))
 
     return output
+
+
+def rotation_matrix_from_vectors(v1: np.ndarray, v2: np.ndarray) -> np.ndarray:
+    """
+    Returns the rotation matrix that aligns v1 to v2.
+
+    Parameters
+    ----------
+    v1 : array_like, shape (3,)
+        Source vector.
+    v2 : array_like, shape (3,)
+        Target vector.
+
+    Returns
+    -------
+    R : ndarray, shape (3, 3)
+        Rotation matrix satisfying R @ v1 ≈ v2.
+    """
+    # Normalize input vectors
+    a = v1 / np.linalg.norm(v1)
+    b = v2 / np.linalg.norm(v2)
+
+    # Cross product and dot product
+    v = np.cross(a, b)
+    c = np.dot(a, b)
+    s = np.linalg.norm(v)
+
+    # If vectors are parallel (cross product ~ 0)
+    if np.isclose(s, 0):
+        if c > 0:
+            # Same direction: identity rotation
+            return np.eye(3)
+        else:
+            # Opposite direction: 180° rotation around any perpendicular axis
+            # Find an arbitrary orthogonal axis
+            axis = np.array([1, 0, 0])
+            if np.allclose(a, axis):
+                axis = np.array([0, 1, 0])
+            v = np.cross(a, axis)
+            v /= np.linalg.norm(v)
+            K = np.array([
+                [0, -v[2], v[1]],
+                [v[2], 0, -v[0]],
+                [-v[1], v[0], 0]
+            ], dtype=np.float64)
+            # Rodrigues for 180°: R = I + 2 K^2
+            return np.eye(3) + 2 * (K @ K)
+
+    # General case
+    K = np.array([
+        [0, -v[2], v[1]],
+        [v[2], 0, -v[0]],
+        [-v[1], v[0], 0]
+    ], dtype=np.float64)
+    # Rodrigues' rotation formula
+    R = np.eye(3) + K + (K @ K) * ((1 - c) / (s**2))
+    return R
