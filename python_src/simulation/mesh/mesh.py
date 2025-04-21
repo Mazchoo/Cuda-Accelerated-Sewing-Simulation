@@ -11,13 +11,14 @@ class MeshData:
         Index data list of integer triplets for each triangle
         Texture data indicates where to use in each material in a render pass
     """
-    def __init__(self, vertex_data: np.ndarray, index_data: np.ndarray, texture_data: dict):
+    def __init__(self, vertex_data: np.ndarray, index_data: np.ndarray,
+                 texture_data: dict, annotations: Optional[dict] = None):
         self._vertex_data = vertex_data
         self._index_data = index_data
         self._texture_data = texture_data
 
         self._trimesh = None
-        self._annotations = {}
+        self._annotations = annotations if annotations is not None else {}
 
         self.place_at_origin()
 
@@ -44,6 +45,11 @@ class MeshData:
                                     faces=self._index_data,
                                     process=True, validate=True)
         return self._trimesh
+
+    @property
+    def annotations(self) -> dict:
+        """ Get dictionary of named point to location """
+        return self._annotations
 
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
@@ -75,8 +81,15 @@ class MeshData:
         else:
             self._vertex_data[mask, :3] += offset
 
+        # Assumption: If all positions are changing, annotations only change by the average
+        # This does not matter much if the annotations are not re-used
+        if isinstance(offset, np.ndarray) and len(offset.shape) == 2:
+            annotation_offset = offset.mean(axis=0)
+        else:
+            annotation_offset = offset
+
         for annotation_point in self._annotations.values():
-            annotation_point += offset
+            annotation_point += annotation_offset
 
     def clamp_above_zero(self):
         """ Ensure y vertices are always above 0 """
@@ -89,9 +102,9 @@ class MeshData:
         self._vertex_data[:, 0] += mean_x * 2
 
         for annotation_point in self._annotations.values():
-            annotation_point *= -1
-            annotation_point += mean_x * 2
+            annotation_point[0] *= -1
+            annotation_point[0] += mean_x * 2
 
-    def add_annotation(self, name: str, point: np.ndarray):
-        """ Add a 3d point as an annotated point """
-        self._annotations[name] = point
+    def get_annotation(self, name: str) -> np.ndarray:
+        """ Get 3d location by name or None """
+        return self._annotations.get(name)

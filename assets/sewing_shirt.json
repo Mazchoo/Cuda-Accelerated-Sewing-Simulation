@@ -465,16 +465,16 @@
             ],
             "body_points": {
                 "snap": {
-                    "name": "bust-left",
-                    "tp_begin": 0,
-                    "tp_end": 7,
-                    "marker": 0.0
+                    "name": "front-neck",
+                    "tp_begin": 2,
+                    "tp_end": 3,
+                    "marker": 0.5
                 },
                 "alignment": {
-                    "name": "bust-right",
-                    "tp_begin": 5,
-                    "tp_end": 6,
-                    "marker": 0.0,
+                    "name": "front-low-hip",
+                    "tp_begin": 6,
+                    "tp_end": 7,
+                    "marker": 0.5,
                     "flip": true
                 }
             }

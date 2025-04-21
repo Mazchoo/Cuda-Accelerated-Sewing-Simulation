@@ -5,7 +5,7 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 
 from python_src.utils.file_io import read_json
-from python_src.simulation.mesh import MeshData, annotate_mesh_from_piece_data
+from python_src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_piece_to_body
 from python_src.simulation.vertex_relationships import VertexRelations
 from python_src.simulation.piece_physics import DynamicPiece
 
@@ -78,11 +78,16 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
         (0.5, 0.5, 0.5): {'count': len(faces), 'offset': 0}
     }
 
-    return MeshData(
+    mesh = MeshData(
         np.array(vertex_data, dtype=np.float32) / CM_PER_M,
         np.array(faces, dtype=np.uint32),
-        texture_data
-    ), vertex_indices
+        texture_data,
+        annotations=get_annotation_dict_from_piece_data(piece_data)
+    )
+    if piece_data["body_points"]["alignment"]["flip"]:
+        mesh.flip_x()
+
+    return mesh, vertex_indices
 
 
 def get_all_vertex_relationships(vertices_by_line: List[List[Optional[np.ndarray]]],
@@ -130,7 +135,8 @@ def get_all_vertex_relationships(vertices_by_line: List[List[Optional[np.ndarray
     )
 
 
-def extract_all_piece_vertices(clothing_data: dict) -> Dict[str, DynamicPiece]:
+def extract_all_piece_vertices(clothing_data: dict,
+                               body_mesh: Optional[MeshData] = None) -> Dict[str, DynamicPiece]:
     """ Get piece simulation and display data from every piece in clothing data """
     output = {}
 
@@ -138,8 +144,13 @@ def extract_all_piece_vertices(clothing_data: dict) -> Dict[str, DynamicPiece]:
         vertices_by_line = extract_grid(piece_data)
         mesh, grid_indices = convert_rows_of_vertices_into_triangles(vertices_by_line, piece_data)
         vertex_relations = get_all_vertex_relationships(vertices_by_line, grid_indices)
-        annotate_mesh_from_piece_data(mesh, piece_data)
-        output[key] = DynamicPiece(mesh, vertex_relations)
+        new_piece = DynamicPiece(mesh, vertex_relations,
+                                 piece_data["body_points"]["snap"]["name"],
+                                 piece_data["body_points"]["alignment"]["name"])
+        if body_mesh is not None:
+            snap_piece_to_body(new_piece, body_mesh)
+
+        output[key] = new_piece
 
     return output
 

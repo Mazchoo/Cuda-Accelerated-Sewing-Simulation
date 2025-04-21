@@ -67,14 +67,13 @@ def create_3d_simulation(simulation: FabricSimulation):
 
 
 if __name__ == '__main__':
-    avatar_mesh = parse_obj('./assets/BodyMesh.obj')
+    avatar_mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    all_pieces = extract_all_piece_vertices(clothing_data)
+    all_pieces = extract_all_piece_vertices(clothing_data, avatar_mesh)
     one_piece_dict = {"L-1": all_pieces["L-1"]}
     front_panel_mesh = one_piece_dict["L-1"].mesh
-    front_panel_mesh.offset_vertices([0, 1.8, 0])
 
     simulation = FabricSimulation(avatar_mesh, one_piece_dict)
     simulation.step(NR_STEPS)

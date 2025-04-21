@@ -1,8 +1,9 @@
 
 import numpy as np
 
+from python_src.utils.file_io import read_json
 from python_src.utils.read_mtl import parse_mtl, parse_vertex
-from python_src.simulation.mesh import MeshData
+from python_src.simulation.mesh import MeshData, get_annotated_locations_from_dict
 
 
 def parse_texture_coord(line):
@@ -74,9 +75,10 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
     return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.int32), texture_data
 
 
-def parse_obj(file_path):
+def parse_obj(file_path: str, annotation_path: str):
     ''' Parse every line of an .obj file into material dict and vertex numpy array '''
     mtl_dict = parse_mtl(file_path)
+    annotations = read_json(annotation_path)
 
     faces = {}
     current_texture = ''
@@ -107,11 +109,14 @@ def parse_obj(file_path):
         faces, vertices, textures, normals
     )
 
-    return MeshData(vertex_data, index_data, texture_data)
+    mesh = MeshData(vertex_data, index_data, texture_data,
+                    annotations=get_annotated_locations_from_dict(annotations))
+
+    return mesh
 
 
 if __name__ == '__main__':
-    mesh = parse_obj('./assets/BodyMesh.obj')
+    mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
     print(len(mesh._vertex_data), "vertice parsed")
     x_min = mesh._vertex_data[:, 0].min()
     x_max = mesh._vertex_data[:, 0].max()

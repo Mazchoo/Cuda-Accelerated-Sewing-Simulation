@@ -40,3 +40,20 @@ def create_mesh_scatter_plot(mesh: MeshData, **kwargs) -> go.Scatter3d:
         mode='markers',
         **kwargs
     )
+
+
+def add_annotations_to_plotly_fig(mesh: MeshData, fig: go.Figure, **kwargs):
+    """ Add annotations as text to figure """
+    labels, xs, ys, zs = [], [], [], []
+    for name, point in mesh.annotations.items():
+        labels.append(name)
+        xs.append(point[0])
+        ys.append(point[1])
+        zs.append(point[2])
+
+    fig.add_trace(go.Scatter3d(
+        x=xs, y=zs, z=ys,
+        mode='markers+text',
+        text=labels,
+        **kwargs
+    ))

@@ -14,7 +14,8 @@ from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOC
 
 class DynamicPiece:
     """ Simulated with physics helpers """
-    def __init__(self, mesh: MeshData, vertex_relations: VertexRelations):
+    def __init__(self, mesh: MeshData, vertex_relations: VertexRelations,
+                 snap_point_name: str, alignment_point_name: str):
         self.mesh = mesh
         self.vertex_relations = vertex_relations
 
@@ -25,6 +26,30 @@ class DynamicPiece:
         self.resting_straight_length = VERTEX_RESOLUTION / CM_PER_M
         self.resting_diagonal_length = np.sqrt(2) * VERTEX_RESOLUTION / CM_PER_M
         self.dampening_constant = np.pi / NR_STEPS
+
+        self._snap_point_name = snap_point_name
+        self._alignment_point_name = alignment_point_name
+
+    @property
+    def snap_point(self) -> np.ndarray:
+        """ Return point to snap to body by offset """
+        return self.mesh.get_annotation(self._snap_point_name)
+
+    @property
+    def snap_point_name(self) -> str:
+        """ Get name of point to snap to on body by offset """
+        return self._snap_point_name
+
+    @property
+    def alignment_point(self) -> np.ndarray:
+        """ Return point to rotate other point to so matches orientation of body
+            i.e. snap to alignment vector on piece matches snap to alignment on body """
+        return self.mesh.get_annotation(self._alignment_point_name)
+
+    @property
+    def alignment_point_name(self) -> str:
+        """ Get name of alignment point """
+        return self._alignment_point_name
 
     def update_positions(self):
         """ Update positions from current velocities """
