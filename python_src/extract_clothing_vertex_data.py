@@ -5,7 +5,7 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 
 from python_src.utils.file_io import read_json
-from python_src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_piece_to_body
+from python_src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_and_align_piece_to_body
 from python_src.simulation.vertex_relationships import VertexRelations
 from python_src.simulation.piece_physics import DynamicPiece
 
@@ -148,7 +148,7 @@ def extract_all_piece_vertices(clothing_data: dict,
                                  piece_data["body_points"]["snap"]["name"],
                                  piece_data["body_points"]["alignment"]["name"])
         if body_mesh is not None:
-            snap_piece_to_body(new_piece, body_mesh)
+            snap_and_align_piece_to_body(new_piece, body_mesh)
 
         output[key] = new_piece
 

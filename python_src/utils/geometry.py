@@ -35,58 +35,39 @@ def points_along_contour(contour: LineString, start: list, end: list,
     return output
 
 
-def rotation_matrix_from_vectors(v1: np.ndarray, v2: np.ndarray) -> np.ndarray:
+def orthonormal_basis(v: np.ndarray, p: np.ndarray) -> np.ndarray:
     """
-    Returns the rotation matrix that aligns v1 to v2.
-
-    Parameters
-    ----------
-    v1 : array_like, shape (3,)
-        Source vector.
-    v2 : array_like, shape (3,)
-        Target vector.
-
-    Returns
-    -------
-    R : ndarray, shape (3, 3)
-        Rotation matrix satisfying R @ v1 ≈ v2.
+    Construct an orthonormal basis given a vector v and a perpendicular vector p.
+    Returns a 3x3 matrix with columns [v̂, û, ŵ] where:
+    - v̂ is the normalized v
+    - û is the normalized component of p orthogonal to v
+    - ŵ = v̂ x û
     """
-    # Normalize input vectors
-    a = v1 / np.linalg.norm(v1)
-    b = v2 / np.linalg.norm(v2)
+    v_hat = v / np.linalg.norm(v)
+    p_proj = p - np.dot(p, v_hat) * v_hat
+    u_hat = p_proj / np.linalg.norm(p_proj)
+    w_hat = np.cross(v_hat, u_hat)
+    return np.stack([v_hat, u_hat, w_hat], axis=1)
 
-    # Cross product and dot product
-    v = np.cross(a, b)
-    c = np.dot(a, b)
-    s = np.linalg.norm(v)
 
-    # If vectors are parallel (cross product ~ 0)
-    if np.isclose(s, 0):
-        if c > 0:
-            # Same direction: identity rotation
-            return np.eye(3)
-        else:
-            # Opposite direction: 180° rotation around any perpendicular axis
-            # Find an arbitrary orthogonal axis
-            axis = np.array([1, 0, 0])
-            if np.allclose(a, axis):
-                axis = np.array([0, 1, 0])
-            v = np.cross(a, axis)
-            v /= np.linalg.norm(v)
-            K = np.array([
-                [0, -v[2], v[1]],
-                [v[2], 0, -v[0]],
-                [-v[1], v[0], 0]
-            ], dtype=np.float64)
-            # Rodrigues for 180°: R = I + 2 K^2
-            return np.eye(3) + 2 * (K @ K)
+def get_alignment_matrix(v1, p1, v2):
+    """
+    Compute a unique rotation matrix that aligns:
+    - v1 -> v2
+    - p1 -> a perpendicular vector in the same relative orientation
+    """
+    B1 = orthonormal_basis(v1, p1)
+    B2 = orthonormal_basis(v2, B1[:, 1])
 
-    # General case
-    K = np.array([
-        [0, -v[2], v[1]],
-        [v[2], 0, -v[0]],
-        [-v[1], v[0], 0]
-    ], dtype=np.float64)
-    # Rodrigues' rotation formula
-    R = np.eye(3) + K + (K @ K) * ((1 - c) / (s**2))
+    R = B1 @ B2.T
     return R
+
+
+if __name__ == '__main__':
+    v1 = np.array([0, -1, 0], dtype=np.float64)
+    p1 = np.array([1, 0, 0], dtype=np.float64)
+    v2 = np.array([3/5, 0, 4/5], dtype=np.float64)
+    R = get_alignment_matrix(v1, p1, v2)
+    v1 @= R
+    p1 @= R
+    print(v1, p1)

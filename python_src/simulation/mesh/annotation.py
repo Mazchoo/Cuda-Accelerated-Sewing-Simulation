@@ -27,7 +27,7 @@ def get_annotation_dict_from_piece_data(piece_data: dict) -> dict:
         [snap_point.x, snap_point.y, 0], dtype=np.float64
     ) / CM_PER_M
 
-    alignment_point = get_point_location(piece_data["body_points"]["snap"], contour, turn_points)
+    alignment_point = get_point_location(piece_data["body_points"]["alignment"], contour, turn_points)
     output[piece_data["body_points"]["alignment"]["name"]] = np.array(
         [alignment_point.x, alignment_point.y, 0], dtype=np.float64
     ) / CM_PER_M
