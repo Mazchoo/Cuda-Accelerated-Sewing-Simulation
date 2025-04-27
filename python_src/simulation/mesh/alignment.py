@@ -15,7 +15,7 @@ def snap_and_align_piece_to_body(piece: DynamicPiece, body_mesh: MeshData):
     body_snap_point = body_mesh.get_annotation(snap_point_name)
 
     if body_snap_point is None:
-        return KeyError(f"Body does not contain snap-point {snap_point_name}")
+        print(f"Body does not contain snap-point {snap_point_name}")
 
     body_trimesh = body_mesh.trimesh
     (closest_point,), _, (triangle_id,) = body_trimesh.nearest.on_surface([body_snap_point])
@@ -30,17 +30,15 @@ def snap_and_align_piece_to_body(piece: DynamicPiece, body_mesh: MeshData):
     body_align_point = body_mesh.get_annotation(align_point_name)
 
     if body_align_point is None:
-        return KeyError(f"Body does not contain align-point {align_point_name}")
+        print(f"Body does not contain align-point {align_point_name}")
 
     (closest_point,), _, (triangle_id,) = body_trimesh.nearest.on_surface([body_align_point])
     normal_to_surface = body_trimesh.face_normals[triangle_id]
-    align_target = closest_point + DISTANCE_FROM_BODY * normal_to_surface
+    # align_target = closest_point + DISTANCE_FROM_BODY * normal_to_surface
 
     piece_align_vector = piece_align_point - piece_snap_point
-    piece_perpendicular = np.array(
-        [-piece_align_vector[1], piece_align_vector[0], piece_align_vector[2]], dtype=np.float64
-    )
-    body_align_vector = align_target - offset_target
+    # body_align_vector = align_target - offset_target
+    piece_normal = np.array([0, 0, 1], dtype=np.float64)
 
-    rotation_matrix = get_alignment_matrix(piece_align_vector, piece_perpendicular, body_align_vector)
+    rotation_matrix = get_alignment_matrix(piece_normal, piece_align_vector, normal_to_surface)
     piece.mesh.matrix_multiply(rotation_matrix, offset_target)
