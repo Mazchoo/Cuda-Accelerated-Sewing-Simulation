@@ -43,4 +43,4 @@ def snap_and_align_piece_to_body(piece: DynamicPiece, body_mesh: MeshData):
     body_align_vector = align_target - offset_target
 
     rotation_matrix = get_alignment_matrix(piece_align_vector, piece_perpendicular, body_align_vector)
-    piece.mesh.matrix_multiply(rotation_matrix)
+    piece.mesh.matrix_multiply(rotation_matrix, offset_target)

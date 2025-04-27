@@ -105,9 +105,11 @@ class MeshData:
             annotation_point[0] *= -1
             annotation_point[0] += mean_x * 2
 
-    def matrix_multiply(self, matrix: np.ndarray):
+    def matrix_multiply(self, matrix: np.ndarray, origin: np.ndarray):
         """ Apply a matrix to vertices """
         self._vertex_data[:, :3] @= matrix
+        offset = origin - origin @ matrix
+        self._vertex_data[:, :3] += offset
 
     def get_annotation(self, name: str) -> np.ndarray:
         """ Get 3d location by name or None """
