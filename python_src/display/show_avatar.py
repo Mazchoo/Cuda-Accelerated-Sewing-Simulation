@@ -7,10 +7,10 @@ from python_src.utils.read_obj import parse_obj
 from python_src.utils.file_io import read_json
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 
-from python_src.simulation.mesh import (MeshData, create_plotly_mesh,
-                                        add_annotations_to_plotly_fig, add_sewing_points_to_plotly_fig)
+from python_src.simulation.mesh import MeshData, create_plotly_mesh, add_annotations_to_plotly_fig
 from python_src.simulation.piece_physics import DynamicPiece
 from python_src.simulation.sewing_forces import SewingForces
+from python_src.simulation.sewing_display import add_sewing_points_to_plotly_fig
 
 from python_src.parameters import AVATAR_SCALING
 
@@ -95,11 +95,3 @@ if __name__ == '__main__':
     show_meshes_with_sewing_points([avatar_plotly, front_panel_plotly,
                                     back_panel_plotly, sleeve_right_plotly, sleeve_left_plotly],
                                    dynamic_pieces, sewing_forces)
-
-    '''
-    show_meshes_with_annotations([avatar_plotly, front_panel_plotly,
-                                  back_panel_plotly, sleeve_right_plotly, sleeve_left_plotly],
-                                 [avatar_mesh],
-                                 marker=dict(size=4, color='black'),
-                                 textfont=dict(size=14, color='black'))
-    '''

@@ -71,9 +71,9 @@ if __name__ == '__main__':
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    all_pieces, _ = extract_all_piece_vertices(clothing_data, avatar_mesh)
+    all_pieces, sewing = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
-    simulation = FabricSimulation(avatar_mesh, all_pieces)
+    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing)
     simulation.step(NR_STEPS)
 
     create_3d_simulation(simulation)

@@ -2,10 +2,11 @@
 import numpy as np
 from trimesh import Trimesh
 
+from python_src.simulation.common import DistanceAdjustment
 from python_src.simulation.mesh import MeshData
 from python_src.simulation.vertex_relationships import VertexRelations
 
-from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY, MAX_GRAVITY_VELOCITY,
+from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
                                    CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
                                    SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
                                    BEND_WEIGHTING, BEND_THRESHOLD,
@@ -66,14 +67,11 @@ class DynamicPiece:
         scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * dampening
         self.velocity *= scales
 
-        # Apply gravity indenpently
-        self.velocity[:, 1] -= GRAVITY * TIME_DELTA
-        self.velocity[:, 1] = np.clip(self.velocity[:, 1], -MAX_GRAVITY_VELOCITY, MAX_GRAVITY_VELOCITY)
-
     def update_internal_forces(self):
         """ Update forces from internal interactions within piece """
         vertices = self.mesh.vertices_3d
         self.acceleration *= 0.
+        self.acceleration[:, 1] = -GRAVITY
 
         # Stress calculation
         stress_relations = self.vertex_relations.stress_relations
@@ -84,12 +82,12 @@ class DynamicPiece:
         stress_vectors -= normed_stress
 
         has_stress_compress_force = (stress_distances > 1 + STRESS_THRESHOLD).flatten()
-        stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING
+        stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING * CM_PER_M
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 1], -stress_compress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 0], stress_compress_force_update)
 
         has_stress_expand_force = (stress_distances < 1 - STRESS_THRESHOLD).flatten()
-        expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING
+        expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING * CM_PER_M
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 1], expand_stress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 0], -expand_stress_force_update)
 
@@ -102,12 +100,12 @@ class DynamicPiece:
         shear_vectors -= normed_shear
 
         has_shear_compress_force = (shear_distances > 1 + SHEAR_THRESHOLD).flatten()
-        shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING
+        shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING * CM_PER_M
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 1], -shear_compress_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 0], shear_compress_force_update)
 
         has_shear_expand_force = (shear_distances < 1 - SHEAR_THRESHOLD).flatten()
-        shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING
+        shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING * CM_PER_M
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)
 
@@ -125,7 +123,7 @@ class DynamicPiece:
         bend_amount = np.linalg.norm(bend_direction, axis=1)
         has_bend_force = (bend_amount > BEND_THRESHOLD).flatten()
 
-        bend_force_update = BEND_WEIGHTING * bend_direction[has_bend_force]
+        bend_force_update = BEND_WEIGHTING * CM_PER_M * bend_direction[has_bend_force]
         np.add.at(self.acceleration, bend_relations[has_bend_force, 0], -bend_force_update * 0.5)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 1], bend_force_update)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 2], -bend_force_update * 0.5)
@@ -140,3 +138,8 @@ class DynamicPiece:
         _, distances, triangle_ids = body_trimesh.nearest.on_surface(vertices[is_inside_mesh])
         adjustment = body_trimesh.face_normals[triangle_ids] * distances[:, np.newaxis]
         self.mesh.offset_vertices(adjustment, mask=is_inside_mesh)
+
+    def apply_adjustment(self, adjustment: DistanceAdjustment):
+        """ Apply a series of vertex adjustments to positions from external source """
+        for inds, amount in adjustment:
+            self.mesh.offset_vertices(amount, inds)

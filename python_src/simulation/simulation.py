@@ -39,13 +39,17 @@ class FabricSimulation:
         for step in range(nr_steps):
             for piece in self.pieces.values():
                 piece.update_internal_forces()
-            # Add sewing forces here
 
             for piece in self.pieces.values():
                 piece.update_velocities(step)
                 piece.update_positions()
                 if RUN_COLLISION_DETECTION:
                     piece.body_collision_adjustment(self.body.trimesh)
+
+            self.sewing_forces.recalculate_adjustment(self.pieces)
+            for piece_key, piece in self.pieces.items():
+                adjustment = self.sewing_forces.get_adjustment_for_piece(piece_key)
+                piece.apply_adjustment(adjustment)
 
             self.add_vertices_to_frames()
 
