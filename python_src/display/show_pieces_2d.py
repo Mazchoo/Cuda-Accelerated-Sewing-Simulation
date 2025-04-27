@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from python_src.utils.geometry import points_along_contour
+from python_src.utils.geometry import points_along_contour, length_along_contour
 from python_src.utils.file_io import read_json
 from python_src.display.common import get_hsv_colors
 from python_src.simulation.mesh import get_point_location
 
-from python_src.parameters import NR_SEWING_POINTS
+NR_SEWING_POINTS = 10
 
 
 def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
@@ -18,11 +18,12 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
     marker_start = sewing_line['marker_start']
     marker_end = sewing_line['marker_end']
 
-    from_poly_exterior = Polygon(contour).exterior
-    from_sewing_pts = points_along_contour(from_poly_exterior, tp_start, tp_end,
-                                           marker_start, marker_end, NR_SEWING_POINTS)
+    poly_exterior = Polygon(contour).exterior
+    sewing_pts = points_along_contour(poly_exterior, tp_start, tp_end,
+                                      marker_start, marker_end, NR_SEWING_POINTS)
+    print(length_along_contour(poly_exterior, tp_start, tp_end, marker_start, marker_end))
 
-    xs, ys = zip(*[[p.x, p.y] for p in from_sewing_pts])
+    xs, ys = zip(*[[p.x, p.y] for p in sewing_pts])
     plt.plot(xs, ys, c=color, linestyle='--', lw=2)
 
     plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
@@ -79,6 +80,7 @@ def show_each_piece(clothing_data: dict, offset: tuple):
     colors = get_hsv_colors(len(clothing_data["sewing"]))
     for i, sewing_pair in enumerate(clothing_data["sewing"]):
         color = colors[i]
+        print("Sewing from", sewing_pair["from"], "to", sewing_pair["to"])
         show_sewing_line(sewing_pair["from"], all_contours, all_turn_points, color)
         show_sewing_line(sewing_pair["to"], all_contours, all_turn_points, color)
 

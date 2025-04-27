@@ -54,7 +54,7 @@ if __name__ == '__main__':
     avatar_plotly = create_plotly_mesh(avatar_mesh, color='lightblue', name='avatar', opacity=1.0)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    clothing_display_data = extract_all_piece_vertices(clothing_data, avatar_mesh)
+    clothing_display_data, _ = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
     front_panel_mesh = clothing_display_data["L-1"].mesh
     front_panel_plotly = create_plotly_mesh(front_panel_mesh, color='red', name="L-1", opacity=0.8)

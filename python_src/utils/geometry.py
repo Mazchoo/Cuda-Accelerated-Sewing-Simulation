@@ -35,6 +35,17 @@ def points_along_contour(contour: LineString, start: list, end: list,
     return output
 
 
+def length_along_contour(contour: LineString, start: list, end: list,
+                         start_fraction: float, end_fraction: float) -> float:
+    """
+        Using a contour start and end find length along contour
+    """
+    marker_distance = contour.project(Point(end)) - contour.project(Point(start))
+    fraction_difference = end_fraction - start_fraction
+
+    return abs(marker_distance * fraction_difference)
+
+
 def orthonormal_basis(v: np.ndarray, p: np.ndarray) -> np.ndarray:
     """
     Construct an orthonormal basis given a vector v and a perpendicular vector p.

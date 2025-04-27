@@ -70,7 +70,7 @@ class DynamicPiece:
         self.velocity[:, 1] -= GRAVITY * TIME_DELTA
         self.velocity[:, 1] = np.clip(self.velocity[:, 1], -MAX_GRAVITY_VELOCITY, MAX_GRAVITY_VELOCITY)
 
-    def update_forces(self):
+    def update_internal_forces(self):
         """ Update forces from internal interactions within piece """
         vertices = self.mesh.vertices_3d
         self.acceleration *= 0.

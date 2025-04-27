@@ -9,6 +9,7 @@ from python_src.utils.read_obj import parse_obj
 from python_src.utils.file_io import read_json
 from python_src.simulation.mesh import MeshData, create_mesh_scatter_plot
 from python_src.simulation.piece_physics import DynamicPiece
+from python_src.simulation.sewing_forces import SewingForces
 from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
@@ -17,9 +18,11 @@ from python_src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECT
 
 class FabricSimulation:
     """ Run a fabric simulation and keep track of piece positions """
-    def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece]):
+    def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece], sewing_forces: SewingForces):
         self.body = body
         self.pieces = pieces
+        self.sewing_forces = sewing_forces
+
         self.frames = []
         self.add_vertices_to_frames()
 
@@ -35,9 +38,8 @@ class FabricSimulation:
         ''' Run simulation for one time step '''
         for step in range(nr_steps):
             for piece in self.pieces.values():
-                piece.update_forces()
-
-            # ToDo - sewing forces
+                piece.update_internal_forces()
+            # Add sewing forces here
 
             for piece in self.pieces.values():
                 piece.update_velocities(step)
@@ -78,10 +80,10 @@ if __name__ == '__main__':
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    all_pieces = extract_all_piece_vertices(clothing_data)
+    all_pieces, sewing_forces = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L1": all_pieces["L-1"]}
 
-    simulation = FabricSimulation(avatar_mesh, one_piece_dict)
+    simulation = FabricSimulation(avatar_mesh, one_piece_dict, sewing_forces)
     start = perf_counter()
     simulation.step(100)
     print(f'Time taken to run 1 piece {NR_STEPS} steps = {perf_counter() - start:.3}')

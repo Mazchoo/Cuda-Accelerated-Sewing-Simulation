@@ -8,7 +8,7 @@ from python_src.display.common import plot_line_collection
 
 if __name__ == '__main__':
     clothing_data = read_json('./assets/sewing_shirt.json')
-    clothing_display_data = extract_all_piece_vertices(clothing_data)
+    clothing_display_data, _ = extract_all_piece_vertices(clothing_data)
 
     mesh = clothing_display_data["L-1"].mesh
     line_collection = create_mesh_line_collection(mesh, colors='blue', linewidths=2)
