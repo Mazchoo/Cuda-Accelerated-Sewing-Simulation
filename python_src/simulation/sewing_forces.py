@@ -1,5 +1,5 @@
 ''' Handles calculation of sewing forces between pieces '''
-from typing import List
+from typing import List, Iterator
 
 import numpy as np
 
@@ -23,3 +23,11 @@ class SewingForces:
     """ Calculates resultant forces for a piece resulting from sewing """
     def __init__(self, relations: List[SewingPairRelations]):
         self.relations = relations
+
+    def __iter__(self) -> Iterator[SewingPairRelations]:
+        """ Iterate through all sewing pairs """
+        yield from self.relations
+
+    def __len__(self) -> int:
+        """ Get number of sewing pairs """
+        return len(self.relations)

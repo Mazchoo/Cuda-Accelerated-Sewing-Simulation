@@ -1536,7 +1536,7 @@
         },
         {
             "from": {
-                "piece": "L-3",
+                "piece": "L-3-flip",
                 "tp_index_start": 0,
                 "tp_index_end": 1,
                 "marker_start": 0.0,
@@ -1552,7 +1552,7 @@
         },
         {
             "from": {
-                "piece": "L-3",
+                "piece": "L-3-flip",
                 "tp_index_start": 0,
                 "tp_index_end": 1,
                 "marker_start": 0.5,
@@ -1568,7 +1568,7 @@
         },
         {
             "from": {
-                "piece": "L-3-flip",
+                "piece": "L-3",
                 "tp_index_start": 0,
                 "tp_index_end": 1,
                 "marker_start": 0.0,
@@ -1584,7 +1584,7 @@
         },
         {
             "from": {
-                "piece": "L-3-flip",
+                "piece": "L-3",
                 "tp_index_start": 0,
                 "tp_index_end": 1,
                 "marker_start": 0.5,
