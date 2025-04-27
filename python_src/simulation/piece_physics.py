@@ -82,12 +82,12 @@ class DynamicPiece:
         stress_vectors -= normed_stress
 
         has_stress_compress_force = (stress_distances > 1 + STRESS_THRESHOLD).flatten()
-        stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING * CM_PER_M
+        stress_compress_force_update = stress_vectors[has_stress_compress_force] * STRESS_WEIGHTING
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 1], -stress_compress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_compress_force, 0], stress_compress_force_update)
 
         has_stress_expand_force = (stress_distances < 1 - STRESS_THRESHOLD).flatten()
-        expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING * CM_PER_M
+        expand_stress_force_update = stress_vectors[has_stress_expand_force] * STRESS_WEIGHTING
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 1], expand_stress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 0], -expand_stress_force_update)
 
@@ -100,12 +100,12 @@ class DynamicPiece:
         shear_vectors -= normed_shear
 
         has_shear_compress_force = (shear_distances > 1 + SHEAR_THRESHOLD).flatten()
-        shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING * CM_PER_M
+        shear_compress_force_update = shear_vectors[has_shear_compress_force] * SHEAR_WEIGHTING
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 1], -shear_compress_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_compress_force, 0], shear_compress_force_update)
 
         has_shear_expand_force = (shear_distances < 1 - SHEAR_THRESHOLD).flatten()
-        shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING * CM_PER_M
+        shear_shear_force_update = shear_vectors[has_shear_expand_force] * SHEAR_WEIGHTING
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)
 
@@ -123,7 +123,7 @@ class DynamicPiece:
         bend_amount = np.linalg.norm(bend_direction, axis=1)
         has_bend_force = (bend_amount > BEND_THRESHOLD).flatten()
 
-        bend_force_update = BEND_WEIGHTING * CM_PER_M * bend_direction[has_bend_force]
+        bend_force_update = BEND_WEIGHTING * bend_direction[has_bend_force]
         np.add.at(self.acceleration, bend_relations[has_bend_force, 0], -bend_force_update * 0.5)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 1], bend_force_update)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 2], -bend_force_update * 0.5)
