@@ -50,14 +50,14 @@ def orthonormal_basis(v: np.ndarray, p: np.ndarray) -> np.ndarray:
     return np.stack([v_hat, u_hat, w_hat], axis=1)
 
 
-def get_alignment_matrix(v1, p1, v2):
+def get_alignment_matrix(v1, p1, v2, p2):
     """
     Compute a unique rotation matrix that aligns:
     - v1 -> v2
     - p1 -> a perpendicular vector in the same relative orientation
     """
     B1 = orthonormal_basis(v1, p1)
-    B2 = orthonormal_basis(v2, B1[:, 1])
+    B2 = orthonormal_basis(v2, p2)
 
     R = B1 @ B2.T
     return R
@@ -67,7 +67,8 @@ if __name__ == '__main__':
     v1 = np.array([0, -1, 0], dtype=np.float64)
     p1 = np.array([1, 0, 0], dtype=np.float64)
     v2 = np.array([3/5, 0, 4/5], dtype=np.float64)
-    R = get_alignment_matrix(v1, p1, v2)
+    p2 = np.array([-4/5, 0, 3/5], dtype=np.float64)
+    R = get_alignment_matrix(v1, p1, v2, p2)
     v1 @= R
     p1 @= R
     print(v1, p1)

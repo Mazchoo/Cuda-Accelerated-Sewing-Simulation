@@ -16,9 +16,10 @@ def show_meshes(meshes: List[go.Mesh3d]):
     fig = go.Figure(data=meshes)
     fig.update_layout(
         scene=dict(
-                xaxis=dict(nticks=4, range=[-0.7, 0.7],),
-                yaxis=dict(nticks=4, range=[-0.7, 0.7],),
-                zaxis=dict(nticks=4, range=[0, 2])
+                xaxis=dict(nticks=4, range=[-1, 1],),
+                yaxis=dict(nticks=4, range=[-1, 1],),
+                zaxis=dict(nticks=4, range=[0, 2]),
+                aspectmode='cube',
             ),
         width=1200,
         margin=dict(r=20, l=10, b=10, t=10)
@@ -36,9 +37,10 @@ def show_meshes_with_annotations(plotly_meshes: List[go.Mesh3d],
 
     fig.update_layout(
         scene=dict(
-                xaxis=dict(nticks=4, range=[-2, 2],),
-                yaxis=dict(nticks=4, range=[-2, 2],),
-                zaxis=dict(nticks=4, range=[-2, 4])
+                xaxis=dict(nticks=4, range=[-1, 1],),
+                yaxis=dict(nticks=4, range=[-1, 1],),
+                zaxis=dict(nticks=4, range=[0, 2]),
+                aspectmode='cube',
             ),
         width=1200,
         margin=dict(r=20, l=10, b=10, t=10)
