@@ -3,10 +3,10 @@ from typing import List, Iterator, Dict
 
 import numpy as np
 
-from python_src.simulation.common import DistanceAdjustment
-from python_src.simulation.piece_physics import DynamicPiece
+from src.simulation.common import DistanceAdjustment
+from src.simulation.piece_physics import DynamicPiece
 
-from python_src.parameters import SEWING_ADJUSTMENT_STEP, TIME_DELTA
+from src.parameters import SEWING_ADJUSTMENT_STEP, TIME_DELTA
 
 
 class SewingPairRelations:

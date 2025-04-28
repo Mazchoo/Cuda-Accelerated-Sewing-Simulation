@@ -3,16 +3,16 @@ from typing import List, Dict
 
 import plotly.graph_objects as go
 
-from python_src.utils.read_obj import parse_obj
-from python_src.utils.file_io import read_json
-from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
+from src.utils.read_obj import parse_obj
+from src.utils.file_io import read_json
+from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
-from python_src.simulation.mesh import MeshData, create_plotly_mesh, add_annotations_to_plotly_fig
-from python_src.simulation.piece_physics import DynamicPiece
-from python_src.simulation.sewing_forces import SewingForces
-from python_src.simulation.sewing_display import add_sewing_points_to_plotly_fig
+from src.simulation.mesh import MeshData, create_plotly_mesh, add_annotations_to_plotly_fig
+from src.simulation.piece_physics import DynamicPiece
+from src.simulation.sewing_forces import SewingForces
+from src.display.show_sewing import add_sewing_points_to_plotly_fig
 
-from python_src.parameters import AVATAR_SCALING
+from src.parameters import AVATAR_SCALING
 
 
 def show_meshes(meshes: List[go.Mesh3d]):

@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from python_src.utils.geometry import points_along_contour, length_along_contour
-from python_src.utils.file_io import read_json
-from python_src.display.common import get_hsv_colors
-from python_src.simulation.mesh import get_point_location
+from src.utils.geometry import points_along_contour, length_along_contour
+from src.utils.file_io import read_json
+from src.display.common import get_hsv_colors
+from src.simulation.mesh import get_point_location
 
 NR_SEWING_POINTS = 10
 

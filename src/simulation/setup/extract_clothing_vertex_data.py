@@ -4,14 +4,14 @@ from typing import List, Optional, Dict, Tuple
 import numpy as np
 from shapely.geometry import Polygon, Point
 
-from python_src.utils.file_io import read_json
-from python_src.utils.geometry import length_along_contour, points_along_contour
-from python_src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_and_align_piece_to_body
-from python_src.simulation.vertex_relationships import VertexRelations
-from python_src.simulation.piece_physics import DynamicPiece
-from python_src.simulation.sewing_forces import SewingPairRelations, SewingForces
+from src.utils.file_io import read_json
+from src.utils.geometry import length_along_contour, points_along_contour
+from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_and_align_piece_to_body
+from src.simulation.setup.vertex_relationships import VertexRelations
+from src.simulation.piece_physics import DynamicPiece
+from src.simulation.sewing_forces import SewingPairRelations, SewingForces
 
-from python_src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING
+from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING
 
 
 def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:

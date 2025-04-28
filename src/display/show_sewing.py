@@ -3,9 +3,9 @@ from typing import Dict
 
 import plotly.graph_objects as go
 
-from python_src.simulation.sewing_forces import SewingForces
-from python_src.simulation.piece_physics import DynamicPiece
-from python_src.display.common import get_hsv_colors, float_rgb_to_str
+from src.simulation.sewing_forces import SewingForces
+from src.simulation.piece_physics import DynamicPiece
+from src.display.common import get_hsv_colors, float_rgb_to_str
 
 
 def add_sewing_points_to_plotly_fig(pieces: Dict[str, DynamicPiece], sewing: SewingForces,

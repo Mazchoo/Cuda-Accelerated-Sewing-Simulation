@@ -1,5 +1,5 @@
 """ Parse material file """
-from python_src.utils.file_io import check_mtl_file_exists, parse_material
+from src.utils.file_io import check_mtl_file_exists, parse_material
 
 
 def parse_vertex(line):

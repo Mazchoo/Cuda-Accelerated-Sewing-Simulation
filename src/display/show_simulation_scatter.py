@@ -1,12 +1,12 @@
 """ Play a 3d animation just with the points of different objects """
 import plotly.graph_objects as go
 
-from python_src.utils.read_obj import parse_obj
-from python_src.utils.file_io import read_json
-from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
-from python_src.simulation.simulation import FabricSimulation
+from src.utils.read_obj import parse_obj
+from src.utils.file_io import read_json
+from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
+from src.simulation.simulation import FabricSimulation
 
-from python_src.parameters import AVATAR_SCALING, NR_STEPS
+from src.parameters import AVATAR_SCALING, NR_STEPS
 
 
 def create_3d_simulation(simulation: FabricSimulation):

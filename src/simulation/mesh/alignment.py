@@ -1,11 +1,11 @@
 """ Functions that deal with aligning a mesh to target points on another mesh """
 import numpy as np
 
-from python_src.simulation.piece_physics import DynamicPiece
-from python_src.simulation.mesh import MeshData
-from python_src.utils.geometry import get_alignment_matrix
+from src.simulation.piece_physics import DynamicPiece
+from src.simulation.mesh import MeshData
+from src.utils.geometry import get_alignment_matrix
 
-from python_src.parameters import DISTANCE_FROM_BODY
+from src.parameters import DISTANCE_FROM_BODY
 
 
 def snap_and_align_piece_to_body(piece: DynamicPiece, body_mesh: MeshData):

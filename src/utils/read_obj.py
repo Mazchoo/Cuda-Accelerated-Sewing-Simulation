@@ -1,9 +1,9 @@
 
 import numpy as np
 
-from python_src.utils.file_io import read_json
-from python_src.utils.read_mtl import parse_mtl, parse_vertex
-from python_src.simulation.mesh import MeshData, get_annotated_locations_from_dict
+from src.utils.file_io import read_json
+from src.utils.read_mtl import parse_mtl, parse_vertex
+from src.simulation.mesh import MeshData, get_annotated_locations_from_dict
 
 
 def parse_texture_coord(line):

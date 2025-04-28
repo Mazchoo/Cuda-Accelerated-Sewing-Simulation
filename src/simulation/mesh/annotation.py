@@ -1,10 +1,10 @@
 """ Dispatch to annotate a mesh from different sources """
 import numpy as np
 
-from python_src.utils.geometry import get_point_on_contour
+from src.utils.geometry import get_point_on_contour
 from shapely.geometry import Polygon
 
-from python_src.parameters import CM_PER_M
+from src.parameters import CM_PER_M
 
 
 def get_point_location(point_data, contour, all_turn_points):

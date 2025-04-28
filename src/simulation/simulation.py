@@ -4,16 +4,16 @@ from time import perf_counter
 
 import plotly.graph_objects as go
 
-from python_src.display.common import get_hsv_colors, float_rgb_to_str
-from python_src.utils.read_obj import parse_obj
-from python_src.utils.file_io import read_json
-from python_src.simulation.mesh import MeshData, create_mesh_scatter_plot
-from python_src.simulation.piece_physics import DynamicPiece
-from python_src.simulation.sewing_forces import SewingForces
-from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
+from src.display.common import get_hsv_colors, float_rgb_to_str
+from src.utils.read_obj import parse_obj
+from src.utils.file_io import read_json
+from src.simulation.mesh import MeshData, create_mesh_scatter_plot
+from src.simulation.piece_physics import DynamicPiece
+from src.simulation.sewing_forces import SewingForces
+from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
-from python_src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECTION
+from src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECTION
 
 
 class FabricSimulation:

@@ -1,8 +1,8 @@
 """ Module to display vertex relationships as line collections """
-from python_src.utils.file_io import read_json
-from python_src.extract_clothing_vertex_data import extract_all_piece_vertices
+from src.utils.file_io import read_json
+from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
-from python_src.display.common import plot_line_collection
+from src.display.common import plot_line_collection
 
 
 if __name__ == '__main__':

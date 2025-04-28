@@ -2,11 +2,11 @@
 import numpy as np
 from trimesh import Trimesh
 
-from python_src.simulation.common import DistanceAdjustment
-from python_src.simulation.mesh import MeshData
-from python_src.simulation.vertex_relationships import VertexRelations
+from src.simulation.common import DistanceAdjustment
+from src.simulation.mesh import MeshData
+from src.simulation.setup.vertex_relationships import VertexRelations
 
-from python_src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
+from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
                                    CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
                                    SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
                                    BEND_WEIGHTING, BEND_THRESHOLD,
