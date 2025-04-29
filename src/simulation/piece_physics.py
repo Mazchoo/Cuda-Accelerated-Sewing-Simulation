@@ -7,10 +7,10 @@ from src.simulation.mesh import MeshData
 from src.simulation.setup.vertex_relationships import VertexRelations
 
 from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
-                                   CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
-                                   SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
-                                   BEND_WEIGHTING, BEND_THRESHOLD,
-                                   VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS)
+                            CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
+                            SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
+                            BEND_WEIGHTING, BEND_THRESHOLD,
+                            VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS)
 
 
 class DynamicPiece:

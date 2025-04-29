@@ -1,7 +1,8 @@
 ''' Helper geometry functions '''
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
+from trimesh import Trimesh
 from shapely.geometry import LineString, Point
 
 
@@ -72,6 +73,15 @@ def get_alignment_matrix(v1, p1, v2, p2):
 
     R = B1 @ B2.T
     return R
+
+
+def get_closest_normal_on_mesh(trimesh: Trimesh, query_point: np.ndarray,
+                               distance: float = 0.) -> Tuple[np.ndarray, np.ndarray]:
+    """ Get offset by normal to closest point on trimesh """
+    (closest_point,), _, (triangle_id,) = trimesh.nearest.on_surface([query_point])
+    normal_to_surface = trimesh.face_normals[triangle_id]
+    offset_point = closest_point + distance * normal_to_surface
+    return offset_point, normal_to_surface
 
 
 if __name__ == '__main__':

@@ -6,12 +6,16 @@ from shapely.geometry import Polygon, Point
 
 from src.utils.file_io import read_json
 from src.utils.geometry import length_along_contour, points_along_contour
-from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data, snap_and_align_piece_to_body
+from src.utils.read_obj import parse_obj
+
+from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data
+from src.simulation.setup.alignment import snap_and_align_piece_to_body
 from src.simulation.setup.vertex_relationships import VertexRelations
+from src.simulation.setup.bend_piece_over_body import bend_piece_over_body
 from src.simulation.piece_physics import DynamicPiece
 from src.simulation.sewing_forces import SewingPairRelations, SewingForces
 
-from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING
+from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING, AVATAR_SCALING
 
 
 def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
@@ -219,10 +223,13 @@ def extract_all_piece_vertices(clothing_data: dict,
     if body_mesh is not None:
         for new_piece in output.values():
             snap_and_align_piece_to_body(new_piece, body_mesh)
+            # bend_piece_over_body(new_piece, body_mesh, VERTEX_RESOLUTION / (CM_PER_M * 2))
 
     return output, sewing_forces
 
 
 if __name__ == '__main__':
     clothing_data = read_json('./assets/sewing_shirt.json')
-    extract_all_piece_vertices(clothing_data)
+    avatar_mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
+    avatar_mesh.scale_vertices(AVATAR_SCALING)
+    extract_all_piece_vertices(clothing_data, avatar_mesh)
