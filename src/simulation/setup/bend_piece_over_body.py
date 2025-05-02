@@ -1,5 +1,6 @@
 """ Bend piece over mesh by using the normals of the mesh """
 import numpy as np
+from trimesh import Trimesh
 
 from src.simulation.piece_physics import DynamicPiece
 from src.simulation.mesh import MeshData
@@ -28,6 +29,36 @@ def get_query_point_projections(query_points: np.ndarray, query_line_origins: np
     """ Get projection amount on line """
     offset_points = query_points - query_line_origins
     return np.dot(offset_points, line_vector)
+
+
+def bend_point_over_mesh(current_point: np.ndarray, prev_point: np.ndarray,
+                         total_adjustment: np.ndarray, trimesh: Trimesh) -> np.ndarray:
+    """
+        Get adjustment to adjust point, assuming previous point has been adjusted by running total
+        Returns new running total and adjusts current point in place
+    """
+    current_point += total_adjustment
+
+    vector = current_point - prev_point
+
+    point_distance = np.linalg.norm(vector)
+    if point_distance == 0.:
+        print("Warning!: Two points on mesh appear at same location")
+        return total_adjustment
+
+    _, normal_to_mesh = get_closest_normal_on_mesh(trimesh, current_point)
+    parallel_vector = vector - np.dot(vector, normal_to_mesh) * normal_to_mesh
+
+    parallel_norm = np.linalg.norm(parallel_vector)
+    if parallel_norm == 0.:
+        print("Warning!: Adusting point parallel to norm")
+        return total_adjustment
+
+    adjustment = parallel_vector / parallel_norm * point_distance
+    current_point += adjustment
+    total_adjustment += adjustment
+
+    return total_adjustment
 
 
 def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: float) -> np.ndarray:
@@ -70,14 +101,16 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
     positive_proj_inds = np.where(projections_sorted > 0)[0]
     postive_ind = len(projections) if len(positive_proj_inds) == 0 else positive_proj_inds[0]
     query_inds = np.where(~on_line_mask)[0]
-    query_inds_sorted = query_inds[projections_sort_inds]
     query_to_line_inds_sorted = query_point_to_line_index[projections_sort_inds]
 
     for i, origin_point in enumerate(line_points):
         query_points_mask = query_to_line_inds_sorted[postive_ind:] == i
         query_inds_to_adjust = query_inds[postive_ind:][query_points_mask]
-        query_points_projections = projections_sorted[postive_ind:][query_points_mask]
 
         running_total_adjustment = np.zeros(3, dtype=np.float64)
-        for j, query_ind in enumerate(query_inds_to_adjust):
-            pass  # ToDo continue here
+        last_point = origin_point
+        for query_ind in query_inds_to_adjust:
+            running_total_adjustment = bend_point_over_mesh(
+                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh
+            )
+            last_point = vertices_3d[query_ind]
