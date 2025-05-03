@@ -37,6 +37,7 @@ class FabricSimulation:
     def step(self, nr_steps: int = 1):
         ''' Run simulation for one time step '''
         for step in range(nr_steps):
+            print(f"Running step {step + 1}/{nr_steps}")
             for piece in self.pieces.values():
                 piece.update_internal_forces()
 

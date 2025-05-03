@@ -32,7 +32,8 @@ def get_query_point_projections(query_points: np.ndarray, query_line_origins: np
 
 
 def bend_point_over_mesh(current_point: np.ndarray, prev_point: np.ndarray,
-                         total_adjustment: np.ndarray, trimesh: Trimesh) -> np.ndarray:
+                         total_adjustment: np.ndarray, trimesh: Trimesh,
+                         apply_gravity_to_bend: bool) -> np.ndarray:
     """
         Get adjustment to adjust point, assuming previous point has been adjusted by running total
         Returns new running total and adjusts current point in place
@@ -46,15 +47,54 @@ def bend_point_over_mesh(current_point: np.ndarray, prev_point: np.ndarray,
         print("Warning!: Two points on mesh appear at same location")
         return total_adjustment
 
-    _, normal_to_mesh = get_closest_normal_on_mesh(trimesh, current_point)
-    parallel_vector = vector - np.dot(vector, normal_to_mesh) * normal_to_mesh
+    closest_point, normal_to_mesh = get_closest_normal_on_mesh(trimesh, current_point)
+    closest_vector = closest_point - prev_point
 
-    parallel_norm = np.linalg.norm(parallel_vector)
-    if parallel_norm == 0.:
-        print("Warning!: Adusting point parallel to norm")
+    if apply_gravity_to_bend:
+        downward_vector = np.array([0, -np.linalg.norm(closest_vector), 0], dtype=np.float64)
+        adjustment_vector = closest_vector * 0.25 + downward_vector * 0.75
+    else:
+        # ToDo - fix this by just not bending certain pieces based on input data
+        adjustment_vector = np.array([0, 0, 0], dtype=np.float64)
+
+    adjustment_vector_norm = np.linalg.norm(adjustment_vector)
+    if adjustment_vector_norm == 0.:
+        # print("Warning!: Adusting point parallel to norm")
         return total_adjustment
 
-    adjustment = parallel_vector / parallel_norm * point_distance
+    adjustment = adjustment_vector / adjustment_vector_norm * point_distance
+    current_point += adjustment
+    total_adjustment += adjustment
+
+    return total_adjustment
+
+
+def bend_point_round_line(current_point: np.ndarray, prev_point: np.ndarray, total_adjustment: np.ndarray,
+                          theta: float, line_origin: np.ndarray, line_vector: np.ndarray):
+    """ Adjust point to rotate in plane perpendicular to line """
+    current_point += total_adjustment
+
+    vector = current_point - prev_point
+
+    point_distance = np.linalg.norm(vector)
+    if point_distance == 0.:
+        print("Warning!: Two points on mesh appear at same location")
+        return total_adjustment
+
+    offset_point = current_point - line_origin
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    rotated_current_point = offset_point * cos_theta + sin_theta * np.cross(point_distance, line_vector)
+    rotated_current_point += line_vector + np.dot(offset_point, line_vector) * (1 - cos_theta)
+    target_point = line_origin + offset_point
+
+    target_point_vector = target_point - prev_point
+    target_point_vector_norm = np.linalg.norm(target_point_vector)
+    if target_point_vector_norm == 0.:
+        # print("Warning!: Adusting point parallel to norm")
+        return total_adjustment
+
+    adjustment = target_point_vector / target_point_vector_norm * point_distance
     current_point += adjustment
     total_adjustment += adjustment
 
@@ -62,7 +102,11 @@ def bend_point_over_mesh(current_point: np.ndarray, prev_point: np.ndarray,
 
 
 def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: float) -> np.ndarray:
-    """ Use normal to body mesh at every point perpendicular to the alignment vector """
+    """
+        Use closest point on body and gravity to get a better initialisation for sleeve
+        Generic way of doing this is to associate each point with a bone line
+        and then rotate around the bone line
+    """
     piece_snap_point = piece.snap_point
     piece_align_point = piece.alignment_point
     align_vector = piece_align_point - piece_snap_point
@@ -103,14 +147,32 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
     query_inds = np.where(~on_line_mask)[0]
     query_to_line_inds_sorted = query_point_to_line_index[projections_sort_inds]
 
+    # indices of points perpendicular to alignment on positve side of alignment line
+    # sorted by their projection (or distance) from the alignment line
+    postive_sorted_query_inds = query_inds[projections_sort_inds][postive_ind:]
+    negative_sorted_query_inds = query_inds[projections_sort_inds][:postive_ind]
+
     for i, origin_point in enumerate(line_points):
         query_points_mask = query_to_line_inds_sorted[postive_ind:] == i
-        query_inds_to_adjust = query_inds[postive_ind:][query_points_mask]
+        query_inds_to_adjust = postive_sorted_query_inds[query_points_mask]
 
         running_total_adjustment = np.zeros(3, dtype=np.float64)
         last_point = origin_point
         for query_ind in query_inds_to_adjust:
             running_total_adjustment = bend_point_over_mesh(
-                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh
+                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh,
+                'shoulder' in piece.snap_point_name
+            )
+            last_point = vertices_3d[query_ind]
+
+        query_points_mask = query_to_line_inds_sorted[:postive_ind] == i
+        query_inds_to_adjust = negative_sorted_query_inds[query_points_mask]
+
+        running_total_adjustment = np.zeros(3, dtype=np.float64)
+        last_point = origin_point
+        for query_ind in query_inds_to_adjust[::-1]:
+            running_total_adjustment = bend_point_over_mesh(
+                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh,
+                'shoulder' in piece.snap_point_name
             )
             last_point = vertices_3d[query_ind]

@@ -223,7 +223,7 @@ def extract_all_piece_vertices(clothing_data: dict,
     if body_mesh is not None:
         for new_piece in output.values():
             snap_and_align_piece_to_body(new_piece, body_mesh)
-            # bend_piece_over_body(new_piece, body_mesh, VERTEX_RESOLUTION / (CM_PER_M * 2))
+            bend_piece_over_body(new_piece, body_mesh, VERTEX_RESOLUTION / CM_PER_M)
             new_piece.body_collision_adjustment(body_mesh.trimesh)
 
     return output, sewing_forces
