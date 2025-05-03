@@ -47,15 +47,10 @@ def bend_point_over_mesh(current_point: np.ndarray, prev_point: np.ndarray,
         print("Warning!: Two points on mesh appear at same location")
         return total_adjustment
 
-    closest_point, normal_to_mesh = get_closest_normal_on_mesh(trimesh, current_point)
+    closest_point, _ = get_closest_normal_on_mesh(trimesh, current_point)
     closest_vector = closest_point - prev_point
-
-    if apply_gravity_to_bend:
-        downward_vector = np.array([0, -np.linalg.norm(closest_vector), 0], dtype=np.float64)
-        adjustment_vector = closest_vector * 0.25 + downward_vector * 0.75
-    else:
-        # ToDo - fix this by just not bending certain pieces based on input data
-        adjustment_vector = np.array([0, 0, 0], dtype=np.float64)
+    downward_vector = np.array([0, -np.linalg.norm(closest_vector), 0], dtype=np.float64)
+    adjustment_vector = closest_vector * 0.25 + downward_vector * 0.75
 
     adjustment_vector_norm = np.linalg.norm(adjustment_vector)
     if adjustment_vector_norm == 0.:
@@ -84,9 +79,9 @@ def bend_point_round_line(current_point: np.ndarray, prev_point: np.ndarray, tot
     offset_point = current_point - line_origin
     cos_theta = np.cos(theta)
     sin_theta = np.sin(theta)
-    rotated_current_point = offset_point * cos_theta + sin_theta * np.cross(point_distance, line_vector)
-    rotated_current_point += line_vector + np.dot(offset_point, line_vector) * (1 - cos_theta)
-    target_point = line_origin + offset_point
+    rotated_current_point = offset_point * cos_theta + sin_theta * np.cross(line_vector, offset_point)
+    rotated_current_point += line_vector * np.dot(line_vector, offset_point) * (1 - cos_theta)
+    target_point = line_origin + rotated_current_point
 
     target_point_vector = target_point - prev_point
     target_point_vector_norm = np.linalg.norm(target_point_vector)
@@ -107,6 +102,9 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
         Generic way of doing this is to associate each point with a bone line
         and then rotate around the bone line
     """
+    if 'shoulder' not in piece.snap_point_name:
+        return
+
     piece_snap_point = piece.snap_point
     piece_align_point = piece.alignment_point
     align_vector = piece_align_point - piece_snap_point
@@ -159,9 +157,9 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
         running_total_adjustment = np.zeros(3, dtype=np.float64)
         last_point = origin_point
         for query_ind in query_inds_to_adjust:
-            running_total_adjustment = bend_point_over_mesh(
-                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh,
-                'shoulder' in piece.snap_point_name
+            running_total_adjustment = bend_point_round_line(
+                vertices_3d[query_ind], last_point, running_total_adjustment,
+                -0.4, origin_point, align_vector
             )
             last_point = vertices_3d[query_ind]
 
@@ -171,8 +169,8 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
         running_total_adjustment = np.zeros(3, dtype=np.float64)
         last_point = origin_point
         for query_ind in query_inds_to_adjust[::-1]:
-            running_total_adjustment = bend_point_over_mesh(
-                vertices_3d[query_ind], last_point, running_total_adjustment, body_mesh.trimesh,
-                'shoulder' in piece.snap_point_name
+            running_total_adjustment = bend_point_round_line(
+                vertices_3d[query_ind], last_point, running_total_adjustment,
+                0.4, origin_point, align_vector
             )
             last_point = vertices_3d[query_ind]
