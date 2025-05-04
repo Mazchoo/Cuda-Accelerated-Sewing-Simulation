@@ -1171,7 +1171,8 @@
                     "marker": 0.5,
                     "flip": false
                 }
-            }
+            },
+            "wraps_around_body": true
         },
         "L-3-flip": {
             "contour": [
@@ -1434,7 +1435,8 @@
                     "marker": 0.5,
                     "flip": false
                 }
-            }
+            },
+            "wraps_around_body": true
         }
     },
     "sewing": [
