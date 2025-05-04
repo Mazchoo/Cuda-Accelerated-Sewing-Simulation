@@ -19,9 +19,9 @@ def create_3d_simulation(simulation: FabricSimulation):
         data=frames[0].data,
         layout=go.Layout(
             scene=dict(aspectmode='cube',
-                       xaxis=dict(nticks=4, range=[-0.7, 0.7], autorange=False),
-                       yaxis=dict(nticks=4, range=[-0.7, 0.7], autorange=False),
-                       zaxis=dict(nticks=4, range=[0, 2], autorange=False)),
+                       xaxis=dict(nticks=4, range=[-0.8, 0.8], autorange=False),
+                       yaxis=dict(nticks=4, range=[-0.8, 0.8], autorange=False),
+                       zaxis=dict(nticks=4, range=[0, 2.4], autorange=False)),
             updatemenus=[{
                 "type": "buttons",
                 "buttons": [

@@ -1,7 +1,7 @@
 """ Common place to put all parameters of simulation """
 
 NR_STEPS = 200  # Number of time steps to simulate for a sample
-AVATAR_SCALING = 0.6  # Amount to change avatar by
+AVATAR_SCALING = 0.7  # Amount to change avatar by
 VERTEX_RESOLUTION = 1  # Resolution to take number of points
 GRAVITY = 9.81  # Acceleration downwards due to gravity
 MAX_TENSILE_VELOCITY = 0.5  # Terminal velocity from tensile forces
@@ -20,3 +20,4 @@ RUN_COLLISION_DETECTION = True  # This is slow, so it can be turned off
 DISTANCE_FROM_BODY = 0.025  # Default distance along normal of alignment point on avatar
 SEWING_SPACING = 0.01  # Spacing between two points while doing sewing
 SEWING_ADJUSTMENT_STEP = 12  # Maximum distance per second to get closer to sewing adjustment
+BEND_OVER_PIECE_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap

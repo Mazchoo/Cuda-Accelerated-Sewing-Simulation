@@ -52,6 +52,11 @@ class DynamicPiece:
         """ Get name of alignment point """
         return self._alignment_point_name
 
+    @property
+    def align_vector(self) -> np.ndarray:
+        """ Get alignment vector from snap-point to alignment point """
+        return self.alignment_point - self.snap_point
+
     def update_positions(self):
         """ Update positions from current velocities """
         self.mesh.offset_vertices(self.velocity * TIME_DELTA)

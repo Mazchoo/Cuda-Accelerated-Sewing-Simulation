@@ -221,7 +221,7 @@ def extract_all_piece_vertices(clothing_data: dict,
     sewing_forces = SewingForces(all_sewing)
 
     if body_mesh is not None:
-        for key, new_piece in output.values():
+        for key, new_piece in output.items():
             snap_and_align_piece_to_body(new_piece, body_mesh)
 
             if clothing_data["pieces"][key].get("wraps_around_body"):

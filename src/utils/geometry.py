@@ -84,6 +84,32 @@ def get_closest_normal_on_mesh(trimesh: Trimesh, query_point: np.ndarray,
     return offset_point, normal_to_surface
 
 
+def get_each_point_distance_to_3d_line(points: np.ndarray, vector: np.ndarray,
+                                       origin: np.ndarray) -> np.ndarray:
+    """ Get distance for every point in points to a 3d line """
+    offset_points = points - origin
+    cross_prod = np.cross(offset_points, vector)
+    return np.linalg.norm(cross_prod, axis=1)
+
+
+def get_closest_line_origin_for_each_point(points: np.ndarray,
+                                           line_origins: np.ndarray, line_vector: np.ndarray):
+    """ Return the index of the closest line starting at origin for each query point """
+    distances = np.array([
+        get_each_point_distance_to_3d_line(points, line_vector, origin) for origin in line_origins
+    ], dtype=np.float64)
+    return np.argmin(distances, axis=0)
+
+
+def get_projections_onto_line_origins(points: np.ndarray, line_origins: np.ndarray,
+                                      line_vector: np.ndarray) -> np.ndarray:
+    """ Get projection (distance postive or negative)
+        along different lines with varying origins but the same vector
+    """
+    offset_points = points - line_origins
+    return np.dot(offset_points, line_vector)
+
+
 if __name__ == '__main__':
     v1 = np.array([0, -1, 0], dtype=np.float64)
     p1 = np.array([1, 0, 0], dtype=np.float64)
