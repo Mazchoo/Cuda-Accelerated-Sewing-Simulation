@@ -102,8 +102,6 @@ def bend_piece_over_body(piece: DynamicPiece, body_mesh: MeshData, threshold: fl
         Generic way of doing this is to associate each point with a bone line
         and then rotate around the bone line
     """
-    if 'shoulder' not in piece.snap_point_name:
-        return
 
     piece_snap_point = piece.snap_point
     piece_align_point = piece.alignment_point
