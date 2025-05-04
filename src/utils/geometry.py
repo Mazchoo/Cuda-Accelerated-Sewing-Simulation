@@ -1,9 +1,17 @@
 ''' Helper geometry functions '''
-from typing import List, Tuple
+from typing import List, Tuple, NamedTuple
 
 import numpy as np
 from trimesh import Trimesh
 from shapely.geometry import LineString, Point
+
+
+class RotationPlaneData(NamedTuple):
+    """ Pre-computed information to rotate a point in plane perpendicular to 3d line """
+    cos_theta: np.float64
+    sin_theta: np.float64
+    line_origin: np.ndarray
+    line_vector: np.ndarray
 
 
 def get_point_on_contour(contour: LineString, start: list, end: list, marker: float) -> Point:
@@ -108,6 +116,41 @@ def get_projections_onto_line_origins(points: np.ndarray, line_origins: np.ndarr
     """
     offset_points = points - line_origins
     return np.dot(offset_points, line_vector)
+
+
+def rotate_point_in_3d_plane(point: np.ndarray, plane: RotationPlaneData):
+    """ Rotate a point on plane perpendicular to 3d line using Rodrigues rotation formula """
+    point_vector = point - plane.line_origin
+
+    rotated_current_point = point_vector * plane.cos_theta
+    rotated_current_point += plane.sin_theta * np.cross(plane.line_vector, point_vector)
+    rotated_current_point += plane.line_vector * np.dot(plane.line_vector, point_vector) * (1 - plane.cos_theta)
+
+    return plane.line_origin + rotated_current_point
+
+
+def get_bend_round_line_adjustment(current_point: np.ndarray, prev_point: np.ndarray,
+                                   rotate_plane_data: RotationPlaneData):
+    """
+        Return adjustment amount for point to rotate in plane perpendicular to line
+        On failure, zero adjustment is returned
+    """
+    vector = current_point - prev_point
+
+    point_distance = np.linalg.norm(vector)
+    if point_distance == 0.:
+        print("Warning!: Two points on mesh appear at same location")
+        return np.zeros(3, dtype=np.float64)
+
+    target_point = rotate_point_in_3d_plane(current_point, rotate_plane_data)
+    target_point_vector = target_point - prev_point
+
+    target_point_vector_norm = np.linalg.norm(target_point_vector)
+    if target_point_vector_norm == 0.:
+        print("Warning!: Adusting point parallel to norm")
+        return np.zeros(3, dtype=np.float64)
+
+    return target_point_vector / target_point_vector_norm * point_distance
 
 
 if __name__ == '__main__':

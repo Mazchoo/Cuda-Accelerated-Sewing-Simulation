@@ -20,4 +20,4 @@ RUN_COLLISION_DETECTION = True  # This is slow, so it can be turned off
 DISTANCE_FROM_BODY = 0.025  # Default distance along normal of alignment point on avatar
 SEWING_SPACING = 0.01  # Spacing between two points while doing sewing
 SEWING_ADJUSTMENT_STEP = 12  # Maximum distance per second to get closer to sewing adjustment
-BEND_OVER_PIECE_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
+WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
