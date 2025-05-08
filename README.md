@@ -28,7 +28,11 @@ Models sewing of a pattern using a dynamic avatar from an .obj file. Models tens
 
 ## Some Pictures
 
-Fabric simulation with a point cloud
+Sewing simulation with full shirt
+
+![final_sewing](https://github.com/user-attachments/assets/98973501-09cb-43b7-a47f-05412fa55682)
+
+Fabric simulation with a point cloud with sagging material
 
 ![simulated_fabric](https://github.com/user-attachments/assets/c1230ca1-075e-434c-81d6-aa8ae8abe405)
 
