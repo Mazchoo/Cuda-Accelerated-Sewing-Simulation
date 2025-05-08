@@ -1,8 +1,8 @@
-# Pyscript-Sewing-Simulation
+# Python Sewing Simulation
 
 ## Basic Description
 
-Models sewing using a .dxf clothing design and a dynamic avatar from an .obj file. Models tensile forces and sewing forces. Using Web-GPU hardware acceleration for display.
+Models sewing of a pattern using a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints.
 
 ## List of Stuff ToDo
 
@@ -19,16 +19,12 @@ Models sewing using a .dxf clothing design and a dynamic avatar from an .obj fil
 - [x] Model a falling vertical piece with stretching forces and collision occurs at y=0
 - [x] Added dampening schedule where damping increases over time
 - [x] Model a falling piece with collision on the avatar
-- [ ] Add initialisation where piece "wraps" around body
-      - Take vertical line through center of the piece and match to closest points on the body
-      - Going progressively outwards from vertical line on each side of piece on each side
-      - Maintain a distance of a certain amount to the avatar by applying an offset
-      - Apply offset to all remaining vertices on each side
+- [x] Add initialisation where piece "wraps" around body
 - [x] Model sewing forces with multiple pieces
 
-### Web-gpu deployment
+### Hardware acceleration
 
-- [ ] Convert input to only use dxf compatible standard
+### Fabric visulisation using texture images
 
 ## Some Pictures
 
