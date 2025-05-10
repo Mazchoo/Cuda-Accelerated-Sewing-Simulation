@@ -62,9 +62,8 @@ class DynamicPiece:
         self.mesh.offset_vertices(self.velocity * TIME_DELTA)
         self.mesh.clamp_above_zero()  # floor in y direction should always be positive
 
-    def update_velocities(self, step: int):
-        """ Update velocities from internal forces within piece """
-        self.velocity += self.acceleration * TIME_DELTA
+    def apply_dampening_to_velocity(self, step: int):
+        """ Apply energy reductiont to the system depending on the step """
         norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
         dampening_cosine = 0.5 - 0.5 * np.cos(self.dampening_constant * step)  # Value between 0 and 1
         dampening = VELOCITY_DAMPING_START + (VELOCITY_DAMPING_END - VELOCITY_DAMPING_START) * dampening_cosine
@@ -72,13 +71,18 @@ class DynamicPiece:
         scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * dampening
         self.velocity *= scales
 
-    def update_internal_forces(self):
-        """ Update forces from internal interactions within piece """
-        vertices = self.mesh.vertices_3d
-        self.acceleration *= 0.
+    def update_velocities(self, step: int):
+        """ Update velocities from internal forces within piece """
+        self.velocity += self.acceleration * TIME_DELTA
+        self.apply_dampening_to_velocity(step)
+
+    def apply_gravity(self):
+        """ Apply downward gravity force """
         self.acceleration[:, 1] = -GRAVITY
 
-        # Stress calculation
+    def apply_stress_force(self):
+        """ Apply resistance to distrubance from resting length in horizontal and vertical direction """
+        vertices = self.mesh.vertices_3d
         stress_relations = self.vertex_relations.stress_relations
 
         stress_vectors = (vertices[stress_relations[:, 1]] - vertices[stress_relations[:, 0]]) / self.resting_straight_length
@@ -96,7 +100,9 @@ class DynamicPiece:
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 1], expand_stress_force_update)
         np.add.at(self.acceleration, stress_relations[has_stress_expand_force, 0], -expand_stress_force_update)
 
-        # Shear calculation
+    def apply_shear_force(self):
+        """ Apply resistance to distrubance from resting length in diagonal directions """
+        vertices = self.mesh.vertices_3d
         shear_relations = self.vertex_relations.shear_relations
 
         shear_vectors = (vertices[shear_relations[:, 1]] - vertices[shear_relations[:, 0]]) / self.resting_diagonal_length
@@ -114,10 +120,13 @@ class DynamicPiece:
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)
 
-        # Friction calculation
+    def apply_friction(self):
+        """ Apply friction in the oposite direction of velocity """
         self.acceleration -= FRICTION_CONSTANT * self.velocity
 
-        # Bending force
+    def apply_bend_forces(self):
+        """ Apply resistance to straight lines disturbed from rest """
+        vertices = self.mesh.vertices_3d
         bend_relations = self.vertex_relations.bend_relations
 
         bend_start = vertices[bend_relations[:, 0]]
@@ -132,6 +141,16 @@ class DynamicPiece:
         np.add.at(self.acceleration, bend_relations[has_bend_force, 0], -bend_force_update * 0.5)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 1], bend_force_update)
         np.add.at(self.acceleration, bend_relations[has_bend_force, 2], -bend_force_update * 0.5)
+
+    def update_internal_forces(self):
+        """ Update forces from internal interactions within piece """
+        self.acceleration *= 0.
+        self.apply_gravity()
+
+        self.apply_stress_force()
+        self.apply_shear_force()
+        self.apply_bend_forces()
+        self.apply_friction()
 
     def body_collision_adjustment(self, body_trimesh: Trimesh):
         vertices = self.mesh.vertices_3d
