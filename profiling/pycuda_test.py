@@ -1,4 +1,4 @@
-import pycuda.autoinit
+import pycuda.autoinit  # noqa
 import pycuda.driver as drv
 import numpy as np
 from pycuda.compiler import SourceModule
