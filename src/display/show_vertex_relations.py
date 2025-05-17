@@ -12,8 +12,7 @@ if __name__ == '__main__':
     vertices = clothing_display_data["L-1"].mesh.vertices_2d
     vertex_relations = clothing_display_data["L-1"].vertex_relations
 
-    stress_lines = vertex_relations.stress_line_collection(vertices, colors='blue', linewidths=4)
+    stress_lines = vertex_relations.stress_line_collection(vertices, colors='blue', linewidths=1)
     shear_lines = vertex_relations.shear_line_collection(vertices, colors='red', linewidths=1)
-    bend_lines = vertex_relations.bend_line_collection(vertices, colors='green', linewidths=2)
 
-    plot_line_collection(stress_lines, shear_lines, bend_lines)
+    plot_line_collection(stress_lines, shear_lines)

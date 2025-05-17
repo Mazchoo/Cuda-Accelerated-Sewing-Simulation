@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from src.utils.geometry import points_along_contour, length_along_contour
+from src.utils.geometry import points_along_contour
 from src.utils.file_io import read_json
 from src.display.common import get_hsv_colors
 from src.simulation.mesh import get_point_location
 
 NR_SEWING_POINTS = 10
+FONT_SIZE = 16
 
 
 def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
@@ -21,7 +22,6 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
     poly_exterior = Polygon(contour).exterior
     sewing_pts = points_along_contour(poly_exterior, tp_start, tp_end,
                                       marker_start, marker_end, NR_SEWING_POINTS)
-    print(length_along_contour(poly_exterior, tp_start, tp_end, marker_start, marker_end))
 
     xs, ys = zip(*[[p.x, p.y] for p in sewing_pts])
     plt.plot(xs, ys, c=color, linestyle='--', lw=2)
@@ -42,15 +42,15 @@ def display_alignment(contour, body_points, all_turn_points):
     xs = [snap_point.x, alignment_point.x]
     ys = [snap_point.y, alignment_point.y]
     plt.plot(xs, ys, c='grey', linestyle=':', lw=2)
-    plt.text(snap_point.x, snap_point.y, body_points['snap']['name'])
-    plt.text(alignment_point.x, alignment_point.y, body_points['alignment']['name'])
+    plt.text(snap_point.x, snap_point.y, body_points['snap']['name'], fontsize=FONT_SIZE)
+    plt.text(alignment_point.x, alignment_point.y, body_points['alignment']['name'], fontsize=FONT_SIZE)
 
     arrow_style = '-[' if body_points['alignment']['flip'] else '->'
     plt.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
                  arrowprops=dict(arrowstyle=arrow_style, color='grey', lw=2))
 
 
-def show_each_piece(clothing_data: dict, offset: tuple):
+def show_pattern(clothing_data: dict, offset: tuple):
     current_offset = np.array([0, 0], dtype=np.float64)
     all_contours = {}
     all_turn_points = {}
@@ -66,7 +66,7 @@ def show_each_piece(clothing_data: dict, offset: tuple):
 
         cog = np.array(piece["cog"], dtype=np.float64)
         cog += current_offset
-        plt.text(*cog, key, c='r')
+        plt.text(*cog, key, c='r', fontsize=FONT_SIZE)
 
         turn_points = np.array(piece["turn_points"], dtype=np.float64)
         turn_points += current_offset
@@ -80,7 +80,6 @@ def show_each_piece(clothing_data: dict, offset: tuple):
     colors = get_hsv_colors(len(clothing_data["sewing"]))
     for i, sewing_pair in enumerate(clothing_data["sewing"]):
         color = colors[i]
-        print("Sewing from", sewing_pair["from"], "to", sewing_pair["to"])
         show_sewing_line(sewing_pair["from"], all_contours, all_turn_points, color)
         show_sewing_line(sewing_pair["to"], all_contours, all_turn_points, color)
 
@@ -97,4 +96,4 @@ def show_each_piece(clothing_data: dict, offset: tuple):
 
 if __name__ == '__main__':
     clothing_data = read_json('./assets/sewing_shirt.json')
-    show_each_piece(clothing_data, (100, 0))
+    show_pattern(clothing_data, (100, 0))

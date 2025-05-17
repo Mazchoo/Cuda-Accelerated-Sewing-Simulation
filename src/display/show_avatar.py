@@ -63,22 +63,20 @@ def show_meshes_with_sewing_points(plotly_meshes: List[go.Mesh3d],
         scene=dict(
                 xaxis=dict(nticks=4, range=[-1, 1],),
                 yaxis=dict(nticks=4, range=[-1, 1],),
-                zaxis=dict(nticks=4, range=[0, 2]),
+                zaxis=dict(nticks=4, range=[0, 2.5]),
                 aspectmode='cube',
             ),
         width=1200,
         margin=dict(r=20, l=10, b=10, t=10)
     )
     fig.show()
+    return fig
 
 
-if __name__ == '__main__':
-    avatar_mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
-    avatar_mesh.scale_vertices(AVATAR_SCALING)
+def show_each_mesh_different_colors(avatar_mesh: MeshData,
+                                    dynamic_pieces: Dict[str, DynamicPiece],
+                                    sewing_forces: SewingForces):
     avatar_plotly = create_plotly_mesh(avatar_mesh, color='lightblue', name='avatar', opacity=1.0)
-
-    clothing_data = read_json('./assets/sewing_shirt.json')
-    dynamic_pieces, sewing_forces = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
     front_panel_mesh = dynamic_pieces["L-1"].mesh
     front_panel_plotly = create_plotly_mesh(front_panel_mesh, color='red', name="L-1", opacity=0.8)
@@ -92,6 +90,16 @@ if __name__ == '__main__':
     sleeve_left_mesh = dynamic_pieces["L-3-flip"].mesh
     sleeve_left_plotly = create_plotly_mesh(sleeve_left_mesh, color='yellow', name="L-3-flip", opacity=0.8)
 
-    show_meshes_with_sewing_points([avatar_plotly, front_panel_plotly,
-                                    back_panel_plotly, sleeve_right_plotly, sleeve_left_plotly],
-                                   dynamic_pieces, sewing_forces)
+    return show_meshes_with_sewing_points([avatar_plotly, front_panel_plotly,
+                                           back_panel_plotly, sleeve_right_plotly, sleeve_left_plotly],
+                                          dynamic_pieces, sewing_forces)
+
+
+if __name__ == '__main__':
+    avatar_mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
+    avatar_mesh.scale_vertices(AVATAR_SCALING)
+
+    clothing_data = read_json('./assets/sewing_shirt.json')
+    dynamic_pieces, sewing_forces = extract_all_piece_vertices(clothing_data, avatar_mesh)
+
+    show_each_mesh_different_colors(avatar_mesh, dynamic_pieces, sewing_forces)
