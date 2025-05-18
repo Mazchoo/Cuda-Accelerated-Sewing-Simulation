@@ -1,32 +1,10 @@
-# Python Sewing Simulation
+# Cuda Accelerated Sewing Simulation
 
-## Basic Description
+## Project Goal
 
-Models sewing of a pattern using a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints.
+Models sewing form a basic pattern using a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints. Use Cuda acceleration to acheive real time simulation. Displays result in OpenGL rendering context. 
 
-## List of Stuff ToDo
-
-### Python Mockup
-
-- [x] Import sewing and contours into a json
-- [x] Extract 3D data from an .obj file and render it
-- [x] Refactor sewing json to split "to" and "from" sewing
-- [x] Create conversion function to mesh grid for clothing and render it on 3D plot
-- [x] Add pairs of points to body and pieces to get initial positions for alignment
-      - e.g. (shoulder, wrist) on both body and piece => piece offsets to match shoulder and rotates to orient to wrist
-- [x] Create 3D plot that shows pieces and avatar as vertices in different colors that can update steps in a simulation
-- [x] Extract all horizontal, vertical and diagonal grid pairs for forces modelling
-- [x] Model a falling vertical piece with stretching forces and collision occurs at y=0
-- [x] Added dampening schedule where damping increases over time
-- [x] Model a falling piece with collision on the avatar
-- [x] Add initialisation where piece "wraps" around body
-- [x] Model sewing forces with multiple pieces
-
-### Hardware acceleration
-
-### Fabric visulisation using texture images
-
-## Some Pictures
+## Demonstration with pictures
 
 Sewing simulation with full shirt
 
@@ -40,7 +18,7 @@ Fabric simulation with a point cloud with sagging material
 
 ![Figure_1](https://github.com/user-attachments/assets/d0678c08-eb7b-4471-add4-7a9fa208e130)
 
-Project avatar view in plotly (left), external OpenGL viewer (right)
+Project avatar view in plotly (left), OpenGL viewer (right)
 
 <span>
 <img src="https://github.com/user-attachments/assets/8ce24b74-0122-4266-8c19-ca209e1b0b4e" alt="Plotly Avatar" width="400">
