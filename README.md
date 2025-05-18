@@ -4,7 +4,7 @@
 
 Models sewing form a basic pattern using a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints. Use Cuda acceleration to acheive real time simulation. Displays result in OpenGL rendering context. 
 
-## Some Pictures
+## Demonstration with pictures
 
 Sewing simulation with full shirt
 
