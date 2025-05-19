@@ -34,10 +34,9 @@ class FabricSimulation:
         """ Update stored positions in animation buffer """
         self.frames.append({k: piece.mesh.vertices_3d.copy() for k, piece in self.pieces.items()})
 
-    def step(self, nr_steps: int = 1):
+    def step(self, nr_steps: int = 1, logging: bool = True):
         ''' Run simulation for one time step '''
         for step in range(nr_steps):
-            print(f"Running step {step + 1}/{nr_steps}")
             for piece in self.pieces.values():
                 piece.update_internal_forces()
 
@@ -53,6 +52,8 @@ class FabricSimulation:
                 piece.apply_adjustment(adjustment)
 
             self.add_vertices_to_frames()
+            if logging:
+                print(f"Running step {step + 1}/{nr_steps}")
 
     @property
     def nr_frames(self) -> int:

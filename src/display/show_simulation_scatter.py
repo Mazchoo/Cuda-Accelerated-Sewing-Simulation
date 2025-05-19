@@ -9,7 +9,7 @@ from src.simulation.simulation import FabricSimulation
 from src.parameters import AVATAR_SCALING, NR_STEPS
 
 
-def create_3d_simulation(simulation: FabricSimulation):
+def show_3d_scatter_simulation(simulation: FabricSimulation):
     """ Create scatter plot animation from saved frames of a simulation """
 
     frames = [simulation.get_scatter_at_frame(i) for i in range(simulation.nr_frames)]
@@ -76,4 +76,4 @@ if __name__ == '__main__':
     simulation = FabricSimulation(avatar_mesh, all_pieces, sewing)
     simulation.step(NR_STEPS)
 
-    create_3d_simulation(simulation)
+    show_3d_scatter_simulation(simulation)
