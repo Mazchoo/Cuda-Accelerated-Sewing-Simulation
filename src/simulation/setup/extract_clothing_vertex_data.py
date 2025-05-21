@@ -13,7 +13,7 @@ from src.simulation.setup.alignment import snap_and_align_piece_to_body
 from src.simulation.setup.vertex_relationships import VertexRelations
 from src.simulation.setup.bend_piece_over_body import bend_piece_over_body
 from src.simulation.piece_physics import DynamicPiece
-from src.simulation.sewing_forces import SewingPairRelations, SewingForces
+from src.simulation.sewing_constraints import SewingPairRelations, SewingConstraints
 
 from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING, AVATAR_SCALING
 
@@ -203,7 +203,7 @@ def get_indices_for_one_sewing_pair(sewing_pair: dict, pieces: Dict[str, Dynamic
 
 
 def extract_all_piece_vertices(clothing_data: dict,
-                               body_mesh: Optional[MeshData] = None) -> Tuple[Dict[str, DynamicPiece], SewingForces]:
+                               body_mesh: Optional[MeshData] = None) -> Tuple[Dict[str, DynamicPiece], SewingConstraints]:
     """ Get piece simulation and display data from every piece in clothing data """
     output = {}
 
@@ -218,7 +218,7 @@ def extract_all_piece_vertices(clothing_data: dict,
     all_sewing = [
         get_indices_for_one_sewing_pair(sew_pair, output, clothing_data) for sew_pair in clothing_data["sewing"]
     ]
-    sewing_forces = SewingForces(all_sewing)
+    sewing_constraints = SewingConstraints(all_sewing)
 
     if body_mesh is not None:
         for key, new_piece in output.items():
@@ -229,7 +229,7 @@ def extract_all_piece_vertices(clothing_data: dict,
 
             new_piece.body_collision_adjustment(body_mesh.trimesh)
 
-    return output, sewing_forces
+    return output, sewing_constraints
 
 
 if __name__ == '__main__':

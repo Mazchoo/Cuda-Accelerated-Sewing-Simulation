@@ -9,7 +9,7 @@ from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_
 
 from src.simulation.mesh import MeshData, create_plotly_mesh, add_annotations_to_plotly_fig
 from src.simulation.piece_physics import DynamicPiece
-from src.simulation.sewing_forces import SewingForces
+from src.simulation.sewing_constraints import SewingConstraints
 from src.display.show_sewing import add_sewing_points_to_plotly_fig
 
 from src.parameters import AVATAR_SCALING
@@ -54,7 +54,7 @@ def show_meshes_with_annotations(plotly_meshes: List[go.Mesh3d],
 
 def show_meshes_with_sewing_points(plotly_meshes: List[go.Mesh3d],
                                    dynamic_pieces: Dict[str, DynamicPiece],
-                                   sewing: SewingForces):
+                                   sewing: SewingConstraints):
     """ Display plotly 3D meshes with annotated points """
     fig = go.Figure(data=plotly_meshes)
     add_sewing_points_to_plotly_fig(dynamic_pieces, sewing, fig)
@@ -75,7 +75,7 @@ def show_meshes_with_sewing_points(plotly_meshes: List[go.Mesh3d],
 
 def show_each_mesh_different_colors(avatar_mesh: MeshData,
                                     dynamic_pieces: Dict[str, DynamicPiece],
-                                    sewing_forces: SewingForces):
+                                    sewing_constraints: SewingConstraints):
     avatar_plotly = create_plotly_mesh(avatar_mesh, color='lightblue', name='avatar', opacity=1.0)
 
     front_panel_mesh = dynamic_pieces["L-1"].mesh
@@ -92,7 +92,7 @@ def show_each_mesh_different_colors(avatar_mesh: MeshData,
 
     return show_meshes_with_sewing_points([avatar_plotly, front_panel_plotly,
                                            back_panel_plotly, sleeve_right_plotly, sleeve_left_plotly],
-                                          dynamic_pieces, sewing_forces)
+                                          dynamic_pieces, sewing_constraints)
 
 
 if __name__ == '__main__':
@@ -100,6 +100,6 @@ if __name__ == '__main__':
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    dynamic_pieces, sewing_forces = extract_all_piece_vertices(clothing_data, avatar_mesh)
+    dynamic_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
-    show_each_mesh_different_colors(avatar_mesh, dynamic_pieces, sewing_forces)
+    show_each_mesh_different_colors(avatar_mesh, dynamic_pieces, sewing_constraints)

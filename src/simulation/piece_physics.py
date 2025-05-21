@@ -153,6 +153,7 @@ class DynamicPiece:
         self.apply_friction()
 
     def body_collision_adjustment(self, body_trimesh: Trimesh):
+        """ Push vertices outside the body mesh """
         vertices = self.mesh.vertices_3d
 
         is_inside_mesh = body_trimesh.contains(vertices)

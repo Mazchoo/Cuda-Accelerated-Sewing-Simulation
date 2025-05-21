@@ -9,7 +9,7 @@ from src.utils.read_obj import parse_obj
 from src.utils.file_io import read_json
 from src.simulation.mesh import MeshData, create_mesh_scatter_plot
 from src.simulation.piece_physics import DynamicPiece
-from src.simulation.sewing_forces import SewingForces
+from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
@@ -18,10 +18,10 @@ from src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECTION
 
 class FabricSimulation:
     """ Run a fabric simulation and keep track of piece positions """
-    def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece], sewing_forces: SewingForces):
+    def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece], sewing_constraints: SewingConstraints):
         self.body = body
         self.pieces = pieces
-        self.sewing_forces = sewing_forces
+        self.sewing_constraints = sewing_constraints
 
         self.frames = []
         self.add_vertices_to_frames()
@@ -35,7 +35,7 @@ class FabricSimulation:
         self.frames.append({k: piece.mesh.vertices_3d.copy() for k, piece in self.pieces.items()})
 
     def step(self, nr_steps: int = 1, logging: bool = True):
-        ''' Run simulation for one time step '''
+        ''' Run simulation for a number of steps '''
         for step in range(nr_steps):
             for piece in self.pieces.values():
                 piece.update_internal_forces()
@@ -46,9 +46,9 @@ class FabricSimulation:
                 if RUN_COLLISION_DETECTION:
                     piece.body_collision_adjustment(self.body.trimesh)
 
-            self.sewing_forces.recalculate_adjustment(self.pieces)
+            self.sewing_constraints.recalculate_adjustment(self.pieces)
             for piece_key, piece in self.pieces.items():
-                adjustment = self.sewing_forces.get_adjustment_for_piece(piece_key)
+                adjustment = self.sewing_constraints.get_adjustment_for_piece(piece_key)
                 piece.apply_adjustment(adjustment)
 
             self.add_vertices_to_frames()
@@ -86,10 +86,10 @@ if __name__ == '__main__':
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json('./assets/sewing_shirt.json')
-    all_pieces, sewing_forces = extract_all_piece_vertices(clothing_data)
+    all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
     one_piece_dict = {"L1": all_pieces["L-1"]}
 
-    simulation = FabricSimulation(avatar_mesh, one_piece_dict, sewing_forces)
+    simulation = FabricSimulation(avatar_mesh, one_piece_dict, sewing_constraints)
     start = perf_counter()
     simulation.step(100)
     print(f'Time taken to run 1 piece {NR_STEPS} steps = {perf_counter() - start:.3}')

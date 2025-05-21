@@ -3,12 +3,12 @@ from typing import Dict
 
 import plotly.graph_objects as go
 
-from src.simulation.sewing_forces import SewingForces
+from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.piece_physics import DynamicPiece
 from src.display.common import get_hsv_colors, float_rgb_to_str
 
 
-def add_sewing_points_to_plotly_fig(pieces: Dict[str, DynamicPiece], sewing: SewingForces,
+def add_sewing_points_to_plotly_fig(pieces: Dict[str, DynamicPiece], sewing: SewingConstraints,
                                     fig: go.Figure, **kwargs):
     """ Add annotations as text to figure """
     colors = get_hsv_colors(len(sewing) + 1)
