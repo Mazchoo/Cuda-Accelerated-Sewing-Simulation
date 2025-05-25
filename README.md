@@ -1,10 +1,15 @@
 # Cuda Accelerated Sewing Simulation
 
-## Project Goal
+## Description
 
-Models sewing form a basic pattern using a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints. Use Cuda acceleration to acheive real time simulation. Displays result in OpenGL rendering context. 
+Python simulation of clothing model from a basic 2D pattern using and a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints.
 
-## Demonstration with pictures
+Currently in progress of adding:
+* Use Cuda acceleration to acheive real time simulation.
+* Display result in OpenGL rendering context
+* Load design directly from a .dxf
+
+## Pictures for context
 
 Sewing simulation with full shirt
 
@@ -25,3 +30,6 @@ Project avatar view in plotly (left), OpenGL viewer (right)
 <img src="https://github.com/user-attachments/assets/984ccd6d-aaaa-45c2-958f-76159043bf50" alt="Plotly Avatar" width="400">
 </span>
 
+## Installation
+
+ToDo
