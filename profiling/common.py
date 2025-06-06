@@ -19,18 +19,6 @@ def show_formatted_cpp(kernel_code: str) -> HTML:
     return HTML(highlighted_code)
 
 
-def save_numpy_array(filename: str, arr: np.ndarray):
-    np.save(f'./numpy/{filename}', arr)
-
-
-def load_numpy(filename: str) -> np.ndarray:
-    return np.load(f'./numpy/{filename}')
-
-
-def load_numpy_base_dir(filename: str) -> np.ndarray:
-    return np.load(f'./profiling/numpy/{filename}')
-
-
 def replace_constants_in_kernel(kernel_code: str, variables: dict) -> str:
     for key, value in variables.items():
         kernel_code = kernel_code.replace(key, f"{value}f")
