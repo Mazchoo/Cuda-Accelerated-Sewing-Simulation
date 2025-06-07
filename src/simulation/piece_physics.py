@@ -124,7 +124,7 @@ class DynamicPiece:
         """ Apply friction in the oposite direction of velocity """
         self.acceleration -= FRICTION_CONSTANT * self.velocity
 
-    def apply_bend_forces(self):
+    def apply_bend_force(self):
         """ Apply resistance to straight lines disturbed from rest """
         vertices = self.mesh.vertices_3d
         bend_relations = self.vertex_relations.bend_relations
@@ -149,7 +149,7 @@ class DynamicPiece:
 
         self.apply_stress_force()
         self.apply_shear_force()
-        self.apply_bend_forces()
+        self.apply_bend_force()
         self.apply_friction()
 
     def body_collision_adjustment(self, body_trimesh: Trimesh):
