@@ -8,7 +8,7 @@ from src.simulation.setup.vertex_relationships import VertexRelations
 
 from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
                             CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
-                            SHEAR_WEIGHTING, SHEAR_THRESHOLD, FRICTION_CONSTANT,
+                            SHEAR_WEIGHTING, SHEAR_THRESHOLD,
                             BEND_WEIGHTING, BEND_THRESHOLD,
                             VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS)
 
