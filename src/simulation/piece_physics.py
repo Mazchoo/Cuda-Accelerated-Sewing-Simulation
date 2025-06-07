@@ -120,10 +120,6 @@ class DynamicPiece:
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 1], shear_shear_force_update)
         np.add.at(self.acceleration, shear_relations[has_shear_expand_force, 0], -shear_shear_force_update)
 
-    def apply_friction(self):
-        """ Apply friction in the oposite direction of velocity """
-        self.acceleration -= FRICTION_CONSTANT * self.velocity
-
     def apply_bend_force(self):
         """ Apply resistance to straight lines disturbed from rest """
         vertices = self.mesh.vertices_3d
@@ -150,7 +146,6 @@ class DynamicPiece:
         self.apply_stress_force()
         self.apply_shear_force()
         self.apply_bend_force()
-        self.apply_friction()
 
     def body_collision_adjustment(self, body_trimesh: Trimesh):
         """ Push vertices outside the body mesh """
