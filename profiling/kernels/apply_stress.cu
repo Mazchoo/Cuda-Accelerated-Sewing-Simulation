@@ -36,9 +36,9 @@ __global__ void apply_stress(float *acceleration, float *vertices,
     float distance = normL2(vector);
     float stress_amount = distance / STRESS_RESTING_AMOUNT;
     if (stress_amount > 1 + STRESS_THRESHOLD) {
-        float3 vectorNorm = vector;
-        scaleVector(vectorNorm, 1 / stress_amount);
-        vector = subtract(vector, vectorNorm);
+        float3 vector_norm = vector;
+        scaleVector(vector_norm, 1 / stress_amount);
+        vector = subtract(vector, vector_norm);
         scaleVector(vector, STRESS_WEIGHTING);
 
         acceleration[from_ind * 3] += vector.x;
@@ -49,17 +49,17 @@ __global__ void apply_stress(float *acceleration, float *vertices,
         acceleration[to_ind * 3 + 2] -= vector.z;
     } else if (stress_amount < 1 - STRESS_THRESHOLD) {
         if (stress_amount > EPSILON) {
-            float3 vectorNorm = vector;
-            scaleVector(vectorNorm, 1 / stress_amount);
-            vector = subtract(vector, vectorNorm);
+            float3 vector_norm = vector;
+            scaleVector(vector_norm, 1 / stress_amount);
+            vector = subtract(vector, vector_norm);
         }
         scaleVector(vector, STRESS_WEIGHTING);
 
-        acceleration[from_ind * 3] -= vector.x;
-        acceleration[from_ind * 3 + 1] -= vector.y;
-        acceleration[from_ind * 3 + 2] -= vector.z;
-        acceleration[to_ind * 3] += vector.x;
-        acceleration[to_ind * 3 + 1] += vector.y;
-        acceleration[to_ind * 3 + 2] += vector.z;
+        acceleration[from_ind * 3] += vector.x;
+        acceleration[from_ind * 3 + 1] += vector.y;
+        acceleration[from_ind * 3 + 2] += vector.z;
+        acceleration[to_ind * 3] -= vector.x;
+        acceleration[to_ind * 3 + 1] -= vector.y;
+        acceleration[to_ind * 3 + 2] -= vector.z;
     }
 }
