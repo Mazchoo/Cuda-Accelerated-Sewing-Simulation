@@ -12,8 +12,10 @@ __device__ __inline__ void scaleVector(float3 &v, float s) {
     v.z *= s;
 }
 
-__global__ void apply_stress(float *acceleration, float *vertices,
-                             unsigned int* stress_relations, int nr_stress_relations) {
+__global__ void apply_stress(float *acceleration,
+                             const float* const vertices,
+                             const unsigned int* const stress_relations,
+                             const unsigned int nr_stress_relations) {
     int pair_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pair_idx >= nr_stress_relations) return;
     const float EPSILON = 1e-10f;

@@ -3,8 +3,11 @@ __device__ __inline__ float normL2(float3 v) {
     return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-__global__ void update_position_with_friction(float *accelerations, float* velocities, float *vertices,
-                                              const int nr_vertices, const float dampening) {
+__global__ void update_position_with_friction(const float* const accelerations,
+                                              float* velocities,
+                                              float* vertices,
+                                              const unsigned int nr_vertices,
+                                              const float dampening) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= nr_vertices) return;
 

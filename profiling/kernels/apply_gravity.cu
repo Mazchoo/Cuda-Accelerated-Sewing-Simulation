@@ -1,4 +1,5 @@
-__global__ void apply_gravity(float *acceleration, int num_acceleration) {
+
+__global__ void apply_gravity(float* acceleration, const unsigned int num_acceleration) {
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pt_idx >= num_acceleration) return;
 

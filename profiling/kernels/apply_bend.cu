@@ -25,8 +25,10 @@ __device__ __inline__ float3 crossProduct(float3 v1, float3 v2) {
     return make_float3(v1.y * v2.z - v2.y * v1.z, v1.z * v2.x - v2.z * v1.x, v1.x * v2.y - v2.x * v1.y);
 }
 
-__global__ void apply_bend(float *acceleration, float *vertices,
-                           unsigned int* bend_relations, int nr_bend_relations) {
+__global__ void apply_bend(float* acceleration,
+                           const float* const vertices,
+                           const unsigned int* const bend_relations,
+                           const unsigned int nr_bend_relations) {
     int pair_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pair_idx >= nr_bend_relations) return;
     const float EPSILON = 1e-10f;

@@ -27,7 +27,6 @@ class SewingPairRelations:
             Give vertices of two pieces involved find the adjustment to move vertices closer
             The adjustment amount is capped at SEWING_ADJUSTMENT_STEP in magnitude
         """
-        # ToDo - target for optimising if using references to store relations instead
         self.adjustment *= 0
 
         from_vertices = all_from_vertices[self.indices[:, 0]]

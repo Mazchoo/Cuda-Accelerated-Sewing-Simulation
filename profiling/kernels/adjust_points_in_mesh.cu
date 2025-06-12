@@ -1,3 +1,4 @@
+
 __device__ __inline__ float3 cross_product(float3 a, float3 b) {
     return make_float3(
         a.y * b.z - a.z * b.y,
@@ -31,7 +32,7 @@ __device__ __inline__ float3 scalar_multiply(float3 p, float scalar) {
     return make_float3(p.x * scalar, p.y * scalar, p.z * scalar);
 }
 
-__device__ __inline__ float3 get_v0(float *triangles, int idx) {
+__device__ __inline__ float3 get_v0(const float* const triangles, int idx) {
     return make_float3(
         triangles[idx * 9],
         triangles[idx * 9 + 1],
@@ -39,7 +40,7 @@ __device__ __inline__ float3 get_v0(float *triangles, int idx) {
     );
 }
 
-__device__ __inline__ float3 get_edge1(float *triangles, int idx) {
+__device__ __inline__ float3 get_edge1(const float* const triangles, int idx) {
     return make_float3(
         triangles[idx * 9 + 3],
         triangles[idx * 9 + 4],
@@ -47,7 +48,7 @@ __device__ __inline__ float3 get_edge1(float *triangles, int idx) {
     );
 }
 
-__device__ __inline__ float3 get_edge2(float *triangles, int idx) {
+__device__ __inline__ float3 get_edge2(const float* const triangles, int idx) {
     return make_float3(
         triangles[idx * 9 + 6],
         triangles[idx * 9 + 7],
@@ -120,9 +121,12 @@ __device__ float3 closest_point_on_triangle(float3& query,
     return add(w_vec, add(u_vec, v_vec));
 }
 
-__global__ void adjust_point_in_mesh(float *triangles, int num_triangles,
-                                     float *points, int num_points,
-                                     float *normals, float *centers) {
+__global__ void adjust_point_in_mesh(const float* const triangles,
+                                     const unsigned num_triangles,
+                                     float* points,
+                                     const unsigned int num_points,
+                                     const float* const normals,
+                                     const float* const centers) {
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pt_idx >= num_points) return;
 
