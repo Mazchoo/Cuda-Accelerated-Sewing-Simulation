@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from src.simulation.piece_physics import DynamicPiece
+from simulation.dynamic_piece import DynamicPiece
 from src.simulation.mesh import MeshData
 from src.utils.geometry import get_alignment_matrix, get_closest_normal_on_mesh
 

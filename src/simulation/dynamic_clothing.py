@@ -1,0 +1,1 @@
+""" Class containing information to simulate clothing as one mesh """

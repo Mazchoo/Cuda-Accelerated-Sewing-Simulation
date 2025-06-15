@@ -1,4 +1,4 @@
-""" Class containing information to simulate a dynamic clothing mesh """
+""" Class containing information to place a piece """
 import numpy as np
 from trimesh import Trimesh
 
@@ -14,7 +14,7 @@ from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
 
 
 class DynamicPiece:
-    """ Simulated with physics helpers """
+    """ Piece placement helpers """
     def __init__(self, mesh: MeshData, vertex_relations: VertexRelations,
                  snap_point_name: str, alignment_point_name: str):
         self.mesh = mesh

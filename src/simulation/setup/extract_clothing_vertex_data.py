@@ -12,7 +12,7 @@ from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data
 from src.simulation.setup.alignment import snap_and_align_piece_to_body
 from src.simulation.setup.vertex_relationships import VertexRelations
 from src.simulation.setup.bend_piece_over_body import bend_piece_over_body
-from src.simulation.piece_physics import DynamicPiece
+from simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingPairRelations, SewingConstraints
 
 from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING, AVATAR_SCALING

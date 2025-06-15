@@ -4,7 +4,7 @@ from typing import Dict
 import plotly.graph_objects as go
 
 from src.simulation.sewing_constraints import SewingConstraints
-from src.simulation.piece_physics import DynamicPiece
+from simulation.dynamic_piece import DynamicPiece
 from src.display.common import get_hsv_colors, float_rgb_to_str
 
 
