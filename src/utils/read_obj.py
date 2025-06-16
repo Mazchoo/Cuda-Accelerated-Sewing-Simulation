@@ -43,17 +43,17 @@ def parse_face(line):
 
 def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
     ''' Create an array of all vertices to draw in triplets for every face. '''
-    texture_data = {
-        path: {'count': 0, 'offset': 0} for path in faces.keys()
-    }
+    texture_data = [
+        {'path': path, 'count': 0, 'offset': 0} for path in faces.keys()
+    ]
 
     vertex_data = []
     index_data = []
 
     ind = 0
     seen_faces = []
-    for path, face_list in faces.items():
-        texture_data[path]['offset'] = len(index_data)
+    for texture, face_list in zip(texture_data, faces.values()):
+        texture['offset'] = len(index_data)
 
         for face in face_list:
             face_inds = []
@@ -70,7 +70,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
 
             index_data.append(face_inds)
 
-        texture_data[path]['count'] = len(index_data) - texture_data[path]['offset']
+        texture['count'] = len(index_data) - texture['offset']
 
     return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.int32), texture_data
 
@@ -111,17 +111,18 @@ def parse_obj(file_path: str, annotation_path: str):
 
     mesh = MeshData(vertex_data, index_data, texture_data,
                     annotations=get_annotated_locations_from_dict(annotations))
+    mesh.place_at_origin()
 
     return mesh
 
 
 if __name__ == '__main__':
     mesh = parse_obj('./assets/BodyMesh.obj', './assets/BodyAnnotations.json')
-    print(len(mesh._vertex_data), "vertice parsed")
-    x_min = mesh._vertex_data[:, 0].min()
-    x_max = mesh._vertex_data[:, 0].max()
-    y_min = mesh._vertex_data[:, 1].min()
-    y_max = mesh._vertex_data[:, 1].max()
-    z_min = mesh._vertex_data[:, 2].min()
-    z_max = mesh._vertex_data[:, 2].max()
+    print(len(mesh.vertex_data), "vertice parsed")
+    x_min = mesh.vertex_data[:, 0].min()
+    x_max = mesh.vertex_data[:, 0].max()
+    y_min = mesh.vertex_data[:, 1].min()
+    y_max = mesh.vertex_data[:, 1].max()
+    z_min = mesh.vertex_data[:, 2].min()
+    z_max = mesh.vertex_data[:, 2].max()
     print(f"Vertex range x {x_max-x_min:.3f}, y: {y_max-y_min:.3f}, z: {z_max-z_min:.3f}")

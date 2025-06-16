@@ -4,7 +4,7 @@ from typing import List, Iterator, Dict
 import numpy as np
 
 from src.simulation.common import DistanceAdjustment
-from simulation.dynamic_piece import DynamicPiece
+from src.simulation.dynamic_piece import DynamicPiece
 
 from src.parameters import SEWING_ADJUSTMENT_STEP, TIME_DELTA
 

@@ -8,7 +8,7 @@ from src.display.common import get_hsv_colors, float_rgb_to_str
 from src.utils.read_obj import parse_obj
 from src.utils.file_io import read_json
 from src.simulation.mesh import MeshData, create_mesh_scatter_plot
-from simulation.dynamic_piece import DynamicPiece
+from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 

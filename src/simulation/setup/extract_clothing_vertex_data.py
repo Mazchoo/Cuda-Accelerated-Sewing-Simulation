@@ -12,7 +12,7 @@ from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data
 from src.simulation.setup.alignment import snap_and_align_piece_to_body
 from src.simulation.setup.vertex_relationships import VertexRelations
 from src.simulation.setup.bend_piece_over_body import bend_piece_over_body
-from simulation.dynamic_piece import DynamicPiece
+from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingPairRelations, SewingConstraints
 
 from src.parameters import VERTEX_RESOLUTION, CM_PER_M, SEWING_SPACING, AVATAR_SCALING
@@ -95,6 +95,8 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
         annotations=get_annotation_dict_from_piece_data(piece_data),
         turn_points=turn_points / CM_PER_M
     )
+
+    mesh.place_at_origin()
     if piece_data["body_points"]["alignment"]["flip"]:
         mesh.flip_x()
 
@@ -157,7 +159,7 @@ def get_sewing_range(piece_mesh: MeshData, sewing_entry: dict) -> \
 def get_offset_contour_3d(piece_mesh: MeshData, piece_data: dict) -> np.ndarray:
     """ Get contour from clothing data in 3d coordinates """
     contour = np.array([[x, y, 0] for x, y in piece_data["contour"]], dtype=np.float64) / CM_PER_M
-    contour -= piece_mesh.origin_array
+    contour -= piece_mesh._origin_array
     return Polygon(contour).exterior
 
 

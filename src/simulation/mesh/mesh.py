@@ -21,8 +21,6 @@ class MeshData:
         self._annotations = annotations if annotations is not None else {}
         self._turn_points = turn_points
 
-        self.origin_array = self.place_at_origin()
-
     @property
     def nr_vertices(self) -> int:
         """ Get number of vertices """
@@ -57,6 +55,21 @@ class MeshData:
         """ Get dictionary of named point to location """
         return self._annotations
 
+    @property
+    def vertex_data(self) -> np.ndarray:
+        """ Return all vertex drawing information """
+        return self._vertex_data
+
+    @property
+    def index_data(self) -> np.ndarray:
+        """ Return all triangle index information """
+        return self._index_data
+
+    @property
+    def texture_data(self) -> dict:
+        """ Return information that links textures to consecutive vertex indices """
+        return self._texture_data
+
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         x_mean = self._vertex_data[:, 0].mean()
@@ -72,7 +85,7 @@ class MeshData:
         if self._turn_points is not None:
             self._turn_points -= origin_array
 
-        return origin_array
+        self._origin_array = origin_array
 
     def scale_vertices(self, scalar: float):
         """ Scale vertices by a constant """

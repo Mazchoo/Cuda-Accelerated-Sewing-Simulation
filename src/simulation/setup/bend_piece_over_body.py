@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from simulation.dynamic_piece import DynamicPiece
+from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.mesh import MeshData
 from src.utils.geometry import (get_closest_normal_on_mesh, get_each_point_distance_to_3d_line,
                                 get_closest_line_origin_for_each_point, get_projections_onto_line_origins,
