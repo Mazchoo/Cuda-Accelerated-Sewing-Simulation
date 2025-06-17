@@ -9,6 +9,7 @@ from src.utils.read_obj import parse_obj
 from src.utils.file_io import read_json
 from src.simulation.mesh import MeshData, create_mesh_scatter_plot
 from src.simulation.dynamic_piece import DynamicPiece
+from src.simulation.dynamic_clothing import DynamicClothing
 from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
@@ -20,36 +21,32 @@ class FabricSimulation:
     """ Run a fabric simulation and keep track of piece positions """
     def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece], sewing_constraints: SewingConstraints):
         self.body = body
-        self.pieces = pieces
-        self.sewing_constraints = sewing_constraints
+        self.clothing = DynamicClothing(pieces, sewing_constraints)
 
         self.frames = []
         self.add_vertices_to_frames()
 
         self.body_scatter_plot = create_mesh_scatter_plot(self.body, marker=dict(color='grey', size=6),
                                                           name='Body')
-        self.colors = [float_rgb_to_str(c) for c in get_hsv_colors(len(self.pieces))]
+        self.color = float_rgb_to_str(get_hsv_colors(1)[0])
 
     def add_vertices_to_frames(self):
         """ Update stored positions in animation buffer """
-        self.frames.append({k: piece.mesh.vertices_3d.copy() for k, piece in self.pieces.items()})
+        self.frames.append({'all': self.clothing.mesh.vertices_3d.copy()})
 
     def step(self, nr_steps: int = 1, logging: bool = True):
         ''' Run simulation for a number of steps '''
         for step in range(nr_steps):
-            for piece in self.pieces.values():
-                piece.update_internal_forces()
+            self.clothing.update_internal_forces()
+            self.clothing.update_velocities(step)
+            self.clothing.update_positions()
 
-            for piece in self.pieces.values():
-                piece.update_velocities(step)
-                piece.update_positions()
-                if RUN_COLLISION_DETECTION:
-                    piece.body_collision_adjustment(self.body.trimesh)
+            if RUN_COLLISION_DETECTION:
+                self.clothing.body_collision_adjustment(self.body.trimesh)
 
-            self.sewing_constraints.recalculate_adjustment(self.pieces)
-            for piece_key, piece in self.pieces.items():
-                adjustment = self.sewing_constraints.get_adjustment_for_piece(piece_key)
-                piece.apply_adjustment(adjustment)
+            self.clothing.sewing_constraints.recalculate_adjustment({'all': self.clothing})
+            adjustment = self.clothing.sewing_constraints.get_adjustment_for_piece('all')
+            self.clothing.apply_adjustment(adjustment)
 
             self.add_vertices_to_frames()
             if logging:
@@ -62,16 +59,17 @@ class FabricSimulation:
 
     def get_scatter_at_frame(self, i: int) -> go.Frame:
         """ Return snapshot of simulation as series of scatter plots """
+        # ToDo - display for each color based on offset
         data = [self.body_scatter_plot]
         frame_positions = self.frames[i]
 
-        for j, (piece_name, vertices_3d) in enumerate(frame_positions.items()):
+        for piece_name, vertices_3d in frame_positions.items():
             data.append(go.Scatter3d(
                 x=vertices_3d[:, 0],
                 y=vertices_3d[:, 2],
                 z=vertices_3d[:, 1],
                 mode='markers',
-                marker=dict(color=self.colors[j], size=6),
+                marker=dict(color=self.color, size=6),
                 name=piece_name
             ))
 

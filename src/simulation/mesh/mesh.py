@@ -158,3 +158,7 @@ class MeshData:
         if ind not in range(self.nr_turn_points):
             return None
         return self._turn_points[ind]
+
+    def __len__(self) -> int:
+        ''' Return number of vertices '''
+        return len(self._vertex_data)
