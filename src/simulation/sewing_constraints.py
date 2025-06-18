@@ -13,7 +13,6 @@ class SewingConstraints:
 
     def recalculate_adjustment(self, dynamic_pieces: Dict[str, DynamicPiece]):
         """ Calculate in place to position adjustments for each sewing pair """
-        # Todo - refactor to use dynamic clothing
         for sewing_pair in self:
             from_vertices = dynamic_pieces[sewing_pair.from_piece].mesh.vertices_3d
             to_vertices = dynamic_pieces[sewing_pair.to_piece].mesh.vertices_3d

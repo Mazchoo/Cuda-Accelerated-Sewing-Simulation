@@ -1,5 +1,4 @@
 ''' Calculate sewing relationship adjustment and store its state '''
-# ToDo - Consider removing state from class
 import numpy as np
 
 from src.parameters import SEWING_ADJUSTMENT_STEP, TIME_DELTA

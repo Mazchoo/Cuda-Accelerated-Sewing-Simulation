@@ -45,8 +45,6 @@ class DynamicClothing:
         all_bend_relations = []
 
         for piece_name, piece in pieces.items():
-            self.piece_to_array_offset[piece_name] = current_offset
-
             all_vertices.append(piece.mesh.vertex_data.copy())
             all_indices.append(get_offset_copy(piece.mesh.index_data, current_offset))
             all_stress_relations.append(get_offset_copy(piece.vertex_relations.stress_relations, current_offset))
@@ -58,6 +56,7 @@ class DynamicClothing:
                 texture['offset'] += current_offset
             all_textures.extend(texture_data)
 
+            self.piece_to_array_offset[piece_name] = (current_offset, current_offset + len(piece.mesh))
             current_offset += len(piece.mesh)
 
         self.mesh = MeshData(
@@ -76,15 +75,15 @@ class DynamicClothing:
         all_to_indices = []
 
         for sewing_pair in sewing_constraints:
-            from_index_offset = self.piece_to_array_offset.get(sewing_pair.from_piece)
-            if from_index_offset is not None:
-                all_from_indices.append(get_offset_copy(sewing_pair.indices[:, 0], from_index_offset))
+            from_index_range = self.piece_to_array_offset.get(sewing_pair.from_piece)
+            if from_index_range is not None:
+                all_from_indices.append(get_offset_copy(sewing_pair.indices[:, 0], from_index_range[0]))
             else:
                 print('Warning!: Sewing offset references unknown piece')
 
-            to_index_offset = self.piece_to_array_offset.get(sewing_pair.to_piece)
-            if to_index_offset is not None:
-                all_to_indices.append(get_offset_copy(sewing_pair.indices[:, 1], to_index_offset))
+            to_index_range = self.piece_to_array_offset.get(sewing_pair.to_piece)
+            if to_index_range is not None:
+                all_to_indices.append(get_offset_copy(sewing_pair.indices[:, 1], to_index_range[0]))
             else:
                 print('Warning!: Sewing offset references unknown piece')
 

@@ -42,21 +42,17 @@ def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
     return all_rows
 
 
-def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional[np.ndarray]]],
-                                            piece_data: dict) -> Tuple[MeshData, np.ndarray]:
+def extract_vertex_data_and_faces(vertices_by_line: List[List[Optional[np.ndarray]]],
+                                  width: float, height: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-        Get 3d drawing information from a grid of points inside the contour\
-        Return a mesh and the index relationship between a piece and its
+        Get vertex data in the form x, y, z, tx, ty, nx, ny, nz
+        3d Vertex position, texture position and normal vector
     """
     vertex_data = []
     faces = []
-    # ToDo - Extract getting vertex indices into its own method
-    next_vertex_data_ind = np.int32(0)
-    vertex_indices = np.zeros((len(vertices_by_line), len(vertices_by_line[0])), dtype=np.int32)
 
-    (min_x, min_y), (max_x, max_y) = piece_data["bounding_box"]
-    width = max_x - min_x
-    height = max_y - min_y
+    next_vertex_data_ind = np.uint32(0)
+    vertex_indices = np.zeros((len(vertices_by_line), len(vertices_by_line[0])), dtype=np.uint32)
 
     for i, row in enumerate(vertices_by_line):
         for j, vertex in enumerate(row):
@@ -79,6 +75,25 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
                 if lower_left and lower_right:
                     faces.append([lower_right - 1, next_vertex_data_ind - 1, lower_left - 1])
 
+    return (np.array(vertex_data, dtype=np.float32),
+            np.array(faces, dtype=np.uint32),
+            vertex_indices)
+
+
+def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional[np.ndarray]]],
+                                            piece_data: dict) -> Tuple[MeshData, np.ndarray]:
+    """
+        Get 3d drawing information from a grid of points inside the contour\
+        Return a mesh and the index relationship between a piece and its
+    """
+    (min_x, min_y), (max_x, max_y) = piece_data["bounding_box"]
+    width = max_x - min_x
+    height = max_y - min_y
+
+    vertex_data, faces, vertex_indices = extract_vertex_data_and_faces(
+        vertices_by_line, width, height
+    )
+
     # Material data is just a single color for now
     texture_data = {
         (0.5, 0.5, 0.5): {'count': len(faces), 'offset': 0}
@@ -89,9 +104,7 @@ def convert_rows_of_vertices_into_triangles(vertices_by_line: List[List[Optional
     )
 
     mesh = MeshData(
-        np.array(vertex_data, dtype=np.float32) / CM_PER_M,
-        np.array(faces, dtype=np.uint32),
-        texture_data,
+        vertex_data / CM_PER_M, faces, texture_data,
         annotations=get_annotation_dict_from_piece_data(piece_data),
         turn_points=turn_points / CM_PER_M
     )
@@ -165,7 +178,7 @@ def get_offset_contour_3d(piece_mesh: MeshData, piece_data: dict) -> np.ndarray:
 
 def get_indices_of_closest_points_in_mesh(piece_mesh: MeshData, sewing_points: np.ndarray) -> np.ndarray:
     """ Given 2d sewing points find the indices in the mesh of the closest vertices (assumes mesh has z=0) """
-    # ToDo - when optimising figure out contour indices at the beginning will make this O(n) search in terms of resolution
+    # ToDo - Faster if this operation is done on contour
     vertices = piece_mesh.vertices_2d
     output = []
     for pt in sewing_points:
@@ -228,8 +241,6 @@ def extract_all_piece_vertices(clothing_data: dict,
 
             if clothing_data["pieces"][key].get("wraps_around_body"):
                 bend_piece_over_body(new_piece, body_mesh, VERTEX_RESOLUTION / CM_PER_M)
-
-            new_piece.body_collision_adjustment(body_mesh.trimesh)
 
     return output, sewing_constraints
 

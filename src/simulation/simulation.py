@@ -14,7 +14,7 @@ from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
-from src.parameters import AVATAR_SCALING, NR_STEPS, RUN_COLLISION_DETECTION
+from src.parameters import AVATAR_SCALING, RUN_COLLISION_DETECTION
 
 
 class FabricSimulation:
@@ -26,13 +26,14 @@ class FabricSimulation:
         self.frames = []
         self.add_vertices_to_frames()
 
-        self.body_scatter_plot = create_mesh_scatter_plot(self.body, marker=dict(color='grey', size=6),
+        self.body_scatter_plot = create_mesh_scatter_plot(self.body,
+                                                          marker=dict(color='grey', size=6),
                                                           name='Body')
-        self.color = float_rgb_to_str(get_hsv_colors(1)[0])
+        self.colors = [float_rgb_to_str(c) for c in get_hsv_colors(len(pieces))]
 
     def add_vertices_to_frames(self):
         """ Update stored positions in animation buffer """
-        self.frames.append({'all': self.clothing.mesh.vertices_3d.copy()})
+        self.frames.append(self.clothing.mesh.vertices_3d.copy())
 
     def step(self, nr_steps: int = 1, logging: bool = True):
         ''' Run simulation for a number of steps '''
@@ -59,17 +60,16 @@ class FabricSimulation:
 
     def get_scatter_at_frame(self, i: int) -> go.Frame:
         """ Return snapshot of simulation as series of scatter plots """
-        # ToDo - display for each color based on offset
         data = [self.body_scatter_plot]
-        frame_positions = self.frames[i]
+        vertices = self.frames[i]
 
-        for piece_name, vertices_3d in frame_positions.items():
+        for j, (piece_name, (start_ind, end_ind)) in enumerate(self.clothing.piece_to_array_offset.items()):
             data.append(go.Scatter3d(
-                x=vertices_3d[:, 0],
-                y=vertices_3d[:, 2],
-                z=vertices_3d[:, 1],
+                x=vertices[start_ind:end_ind, 0],
+                y=vertices[start_ind:end_ind, 2],
+                z=vertices[start_ind:end_ind, 1],
                 mode='markers',
-                marker=dict(color=self.color, size=6),
+                marker=dict(color=self.colors[j], size=6),
                 name=piece_name
             ))
 
@@ -85,9 +85,8 @@ if __name__ == '__main__':
 
     clothing_data = read_json('./assets/sewing_shirt.json')
     all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
-    one_piece_dict = {"L1": all_pieces["L-1"]}
 
-    simulation = FabricSimulation(avatar_mesh, one_piece_dict, sewing_constraints)
+    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing_constraints)
     start = perf_counter()
-    simulation.step(100)
-    print(f'Time taken to run 1 piece {NR_STEPS} steps = {perf_counter() - start:.3}')
+    simulation.step(1)
+    print(f'Time taken to run 1 piece {1} steps = {perf_counter() - start:.3}')
