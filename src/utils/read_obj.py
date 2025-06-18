@@ -72,7 +72,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
 
         texture['count'] = len(index_data) - texture['offset']
 
-    return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.int32), texture_data
+    return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.uint32), texture_data
 
 
 def parse_obj(file_path: str, annotation_path: str):

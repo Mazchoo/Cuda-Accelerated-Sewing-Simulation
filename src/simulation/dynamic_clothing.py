@@ -1,6 +1,5 @@
 """ Class containing information to simulate clothing as one mesh """
 from typing import Dict
-from copy import deepcopy
 
 import numpy as np
 from trimesh import Trimesh
@@ -11,6 +10,8 @@ from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.sewing_pair import SewingPairRelations
 from src.simulation.setup.vertex_relationships import VertexRelations
+from src.simulation.setup.fuse_piece_relations import (get_piece_to_index_range_mapping, get_combined_vertex_data,
+                                                       get_combined_particle_relations, get_combined_sewing_relations)
 
 
 from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
@@ -20,79 +21,28 @@ from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
                             VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS)
 
 
-def get_offset_copy(arr: np.ndarray, offset: int) -> np.ndarray:
-    """ Return an offset copy of a numpy integer array """
-    arr_copy = arr.copy()
-    arr_copy += offset
-    return arr_copy
-
-
 class DynamicClothing:
     """
         Manages physics of simulation
         Puts all pieces into a single array of positions
     """
-    def __init__(self, pieces: Dict[str, DynamicPiece],
-                 sewing_constraints: SewingConstraints):
-        current_offset = 0
-        self.piece_to_array_offset = {}
+    def __init__(self, pieces: Dict[str, DynamicPiece], sewing_constraints: SewingConstraints):
 
-        all_vertices = []
-        all_indices = []
-        all_textures = []
-        all_stress_relations = []
-        all_shear_relations = []
-        all_bend_relations = []
+        self.piece_to_index_range = get_piece_to_index_range_mapping(pieces)
 
-        for piece_name, piece in pieces.items():
-            all_vertices.append(piece.mesh.vertex_data.copy())
-            all_indices.append(get_offset_copy(piece.mesh.index_data, current_offset))
-            all_stress_relations.append(get_offset_copy(piece.vertex_relations.stress_relations, current_offset))
-            all_shear_relations.append(get_offset_copy(piece.vertex_relations.shear_relations, current_offset))
-            all_bend_relations.append(get_offset_copy(piece.vertex_relations.bend_relations, current_offset))
+        vertices, indices, textures = get_combined_vertex_data(pieces, self.piece_to_index_range)
+        self.mesh = MeshData(vertices, indices, textures)
 
-            texture_data = deepcopy(piece.mesh.texture_data)
-            for texture in [t for t in texture_data if isinstance(t, dict)]:
-                texture['offset'] += current_offset
-            all_textures.extend(texture_data)
+        stress, shear, bend = get_combined_particle_relations(pieces, self.piece_to_index_range)
+        self.vertex_relations = VertexRelations(stress, shear, bend)
 
-            self.piece_to_array_offset[piece_name] = (current_offset, current_offset + len(piece.mesh))
-            current_offset += len(piece.mesh)
+        sew_from_indices, sew_to_indices = get_combined_sewing_relations(sewing_constraints, self.piece_to_index_range)
 
-        self.mesh = MeshData(
-            np.concat(all_vertices, dtype=np.float32),
-            np.concat(all_indices, dtype=np.int32),
-            all_textures
-        )
-
-        self.vertex_relations = VertexRelations(
-            np.concat(all_stress_relations),
-            np.concat(all_shear_relations),
-            np.concat(all_bend_relations)
-        )
-
-        all_from_indices = []
-        all_to_indices = []
-
-        for sewing_pair in sewing_constraints:
-            from_index_range = self.piece_to_array_offset.get(sewing_pair.from_piece)
-            if from_index_range is not None:
-                all_from_indices.append(get_offset_copy(sewing_pair.indices[:, 0], from_index_range[0]))
-            else:
-                print('Warning!: Sewing offset references unknown piece')
-
-            to_index_range = self.piece_to_array_offset.get(sewing_pair.to_piece)
-            if to_index_range is not None:
-                all_to_indices.append(get_offset_copy(sewing_pair.indices[:, 1], to_index_range[0]))
-            else:
-                print('Warning!: Sewing offset references unknown piece')
-
-        sewing_pair = SewingPairRelations('all', np.concat(all_from_indices),
-                                          'all', np.concat(all_to_indices))
+        sewing_pair = SewingPairRelations('all', sew_from_indices, 'all', sew_to_indices)
         self.sewing_constraints = SewingConstraints([sewing_pair])
 
-        self.velocity = np.zeros((current_offset, 3), dtype=np.float32)
-        self.acceleration = np.zeros((current_offset, 3), dtype=np.float32)
+        self.velocity = np.zeros((len(self.mesh), 3), dtype=np.float32)
+        self.acceleration = np.zeros((len(self.mesh), 3), dtype=np.float32)
 
         self.resting_straight_length = VERTEX_RESOLUTION / CM_PER_M
         self.resting_diagonal_length = np.sqrt(2) * VERTEX_RESOLUTION / CM_PER_M
@@ -105,9 +55,10 @@ class DynamicClothing:
 
     def apply_dampening_to_velocity(self, step: int):
         """ Apply energy reductiont to the system depending on the step """
-        norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
         dampening_cosine = 0.5 - 0.5 * np.cos(self.dampening_constant * step)  # Value between 0 and 1
         dampening = VELOCITY_DAMPING_START + (VELOCITY_DAMPING_END - VELOCITY_DAMPING_START) * dampening_cosine
+
+        norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
 
         scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * dampening
         self.velocity *= scales

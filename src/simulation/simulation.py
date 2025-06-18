@@ -63,7 +63,7 @@ class FabricSimulation:
         data = [self.body_scatter_plot]
         vertices = self.frames[i]
 
-        for j, (piece_name, (start_ind, end_ind)) in enumerate(self.clothing.piece_to_array_offset.items()):
+        for j, (piece_name, (start_ind, end_ind)) in enumerate(self.clothing.piece_to_index_range.items()):
             data.append(go.Scatter3d(
                 x=vertices[start_ind:end_ind, 0],
                 y=vertices[start_ind:end_ind, 2],
