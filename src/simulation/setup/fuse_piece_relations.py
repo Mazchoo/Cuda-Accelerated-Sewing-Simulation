@@ -49,8 +49,8 @@ def get_combined_vertex_data(pieces: Dict[str, DynamicPiece],
             texture['offset'] += start_ind
         all_textures.extend(texture_data)
 
-    return (np.concat(all_vertices, dtype=np.float32),
-            np.concat(all_indices, dtype=np.uint32),
+    return (np.concatenate(all_vertices, dtype=np.float32),
+            np.concatenate(all_indices, dtype=np.uint32),
             all_textures)
 
 
@@ -71,9 +71,9 @@ def get_combined_particle_relations(pieces: Dict[str, DynamicPiece],
         all_shear_relations.append(get_offset_copy(piece.vertex_relations.shear_relations, start_ind))
         all_bend_relations.append(get_offset_copy(piece.vertex_relations.bend_relations, start_ind))
 
-    return (np.concat(all_stress_relations),
-            np.concat(all_shear_relations),
-            np.concat(all_bend_relations))
+    return (np.concatenate(all_stress_relations),
+            np.concatenate(all_shear_relations),
+            np.concatenate(all_bend_relations))
 
 
 def get_combined_sewing_relations(sewing_constraints: SewingConstraints,
@@ -91,4 +91,4 @@ def get_combined_sewing_relations(sewing_constraints: SewingConstraints,
         to_start_ind, _ = index_ranges.get(sewing_pair.to_piece)
         all_to_indices.append(get_offset_copy(sewing_pair.indices[:, 1], to_start_ind))
 
-    return np.concat(all_from_indices), np.concat(all_to_indices)
+    return np.concatenate(all_from_indices), np.concatenate(all_to_indices)
