@@ -2,12 +2,13 @@
 import numpy.typing as npt
 
 from src.parameters import DEFAULT_BLOCK_SIZE, RAY_TRACING_BLOCK_SIZE
+from src.simulation.setup.cuda_variables import CudaVariables
 from src.simulation.setup.cuda_kernels import (GRAVITY_MODULE,
                                                STRESS_MODULE,
                                                SHEAR_MODULE,
                                                BEND_MODULE,
-                                               UPDATE_POSITION_MODULE)
-from src.simulation.setup.cuda_variables import CudaVariables
+                                               UPDATE_POSITION_MODULE,
+                                               SEWING_MODULE)
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
 RAY_TRACE_BLOCK_SHAPE = (RAY_TRACING_BLOCK_SIZE, 1, 1)
@@ -67,5 +68,15 @@ def apply_friction(variables: CudaVariables, dampening: npt.float32):
                            variables.vertices.gpu,
                            len(variables.vertices),
                            dampening,
-                           block=(DEFAULT_BLOCK_SHAPE, 1, 1),
+                           block=DEFAULT_BLOCK_SHAPE,
                            grid=(nr_blocks, 1, 1))
+
+
+def apply_sewing(variables: CudaVariables):
+    ''' Update positions for sewing constraints '''
+    nr_blocks = calculate_nr_blocks(len(variables.sewing_indices))
+    SEWING_MODULE(variables.vertices.gpu,
+                  variables.sewing_indices.gpu,
+                  len(variables.sewing_indices),
+                  block=DEFAULT_BLOCK_SHAPE,
+                  grid=(nr_blocks, 1, 1))
