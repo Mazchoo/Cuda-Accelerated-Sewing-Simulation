@@ -14,7 +14,7 @@ from src.simulation.setup.fuse_piece_relations import (get_piece_to_index_range_
                                                        get_combined_particle_relations, get_combined_sewing_relations)
 
 
-from src.parameters import (GRAVITY, VERTEX_RESOLUTION, MAX_TENSILE_VELOCITY,
+from src.parameters import (GRAVITY, VERTEX_RESOLUTION, TERMINAL_VELOCITY,
                             CM_PER_M, TIME_DELTA, STRESS_WEIGHTING, STRESS_THRESHOLD,
                             SHEAR_WEIGHTING, SHEAR_THRESHOLD,
                             BEND_WEIGHTING, BEND_THRESHOLD,
@@ -60,7 +60,7 @@ class DynamicClothing:
 
         norms = np.linalg.norm(self.velocity, axis=1, keepdims=True)
 
-        scales = np.minimum(1.0, MAX_TENSILE_VELOCITY / norms) * dampening
+        scales = np.minimum(1.0, TERMINAL_VELOCITY / norms) * dampening
         self.velocity *= scales
 
     def update_velocities(self, step: int):

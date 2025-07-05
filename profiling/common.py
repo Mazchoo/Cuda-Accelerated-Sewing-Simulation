@@ -10,6 +10,7 @@ FORMATTER = HtmlFormatter(style="colorful", full=True, noclasses=True)
 
 
 def read_file_str(path: str) -> str:
+    ''' Return file contents as string '''
     return Path(path).open().read()
 
 
