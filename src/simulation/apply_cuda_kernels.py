@@ -2,7 +2,8 @@
 from src.parameters import DEFAULT_BLOCK_SIZE, RAY_TRACING_BLOCK_SIZE
 from src.simulation.setup.cuda_kernels import (GRAVITY_MODULE,
                                                STRESS_MODULE,
-                                               SHEAR_MODULE)
+                                               SHEAR_MODULE,
+                                               BEND_MODULE)
 from src.simulation.setup.cuda_variables import CudaVariables
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
@@ -34,7 +35,7 @@ def apply_stress(variables: CudaVariables):
 
 
 def apply_shear(variables: CudaVariables):
-    ''' Update acceleration in place for stress '''
+    ''' Update acceleration in place for shear '''
     nr_blocks = calculate_nr_blocks(len(variables.shear_indices))
     SHEAR_MODULE(variables.accelerations.gpu,
                  variables.vertices.gpu,
@@ -42,3 +43,14 @@ def apply_shear(variables: CudaVariables):
                  len(variables.shear_indices),
                  block=DEFAULT_BLOCK_SHAPE,
                  grid=(nr_blocks, 1, 1))
+
+
+def apply_bend(variables: CudaVariables):
+    ''' Update acceleration in place for bend '''
+    nr_blocks = calculate_nr_blocks(len(variables.bend_indices))
+    BEND_MODULE(variables.accelerations.gpu,
+                variables.vertices.gpu,
+                variables.bend_indices.gpu,
+                len(variables.bend_indices),
+                block=DEFAULT_BLOCK_SHAPE,
+                grid=(nr_blocks, 1, 1))
