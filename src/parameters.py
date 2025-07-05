@@ -20,3 +20,6 @@ DISTANCE_FROM_BODY = 0.025  # Default distance along normal of alignment point o
 SEWING_SPACING = 0.01  # Spacing between two points while doing sewing
 SEWING_ADJUSTMENT_STEP = 0.5  # Maximum distance per second to get closer to sewing adjustment
 WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
+
+DEFAULT_BLOCK_SIZE = 1024  # Default cuda block size
+RAY_TRACING_BLOCK_SIZE = 64  # Block size for ray tracing algorithm
