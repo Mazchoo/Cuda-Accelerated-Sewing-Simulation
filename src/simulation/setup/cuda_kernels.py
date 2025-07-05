@@ -69,7 +69,7 @@ SEWING_MODULE = SourceModule(
 ).get_function("apply_sewing_constraints")
 
 # Move points to go outside the body
-RAY_TRACING_MODULE = SourceModule(
+COLLISION_MODULE = SourceModule(
     read_file_str('./profiling/kernels/adjust_points_in_mesh.cu')
 ).get_function("adjust_point_in_mesh")
 

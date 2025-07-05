@@ -22,4 +22,4 @@ SEWING_ADJUSTMENT_STEP = 0.5  # Maximum distance per second to get closer to sew
 WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
 
 DEFAULT_BLOCK_SIZE = 1024  # Default cuda block size
-RAY_TRACING_BLOCK_SIZE = 64  # Block size for ray tracing algorithm
+COLLISION_BLOCK_SIZE = 64  # Block size for ray tracing algorithm

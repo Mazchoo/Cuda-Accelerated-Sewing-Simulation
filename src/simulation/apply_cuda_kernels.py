@@ -1,17 +1,18 @@
 ''' Run cuda operations on cuda variables '''
 import numpy.typing as npt
 
-from src.parameters import DEFAULT_BLOCK_SIZE, RAY_TRACING_BLOCK_SIZE
+from src.parameters import DEFAULT_BLOCK_SIZE, COLLISION_BLOCK_SIZE
 from src.simulation.setup.cuda_variables import CudaVariables
 from src.simulation.setup.cuda_kernels import (GRAVITY_MODULE,
                                                STRESS_MODULE,
                                                SHEAR_MODULE,
                                                BEND_MODULE,
                                                UPDATE_POSITION_MODULE,
-                                               SEWING_MODULE)
+                                               SEWING_MODULE,
+                                               COLLISION_MODULE)
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
-RAY_TRACE_BLOCK_SHAPE = (RAY_TRACING_BLOCK_SIZE, 1, 1)
+COLLISION_BLOCK_SHAPE = (COLLISION_BLOCK_SIZE, 1, 1)
 
 
 def calculate_nr_blocks(num_ops: int, block_size: int) -> int:
@@ -80,3 +81,16 @@ def apply_sewing(variables: CudaVariables):
                   len(variables.sewing_indices),
                   block=DEFAULT_BLOCK_SHAPE,
                   grid=(nr_blocks, 1, 1))
+
+
+def apply_collisions(variables: CudaVariables):
+    ''' Update positions to stop collision with body '''
+    nr_blocks = calculate_nr_blocks(len(variables.vertices))
+    COLLISION_MODULE(variables.triangles.gpu,
+                     len(variables.triangles),
+                     variables.vertices.gpu,
+                     len(variables.vertices),
+                     variables.traingle_normals.gpu,
+                     variables.triangle_centers.gpu,
+                     block=COLLISION_BLOCK_SHAPE,
+                     grid=(nr_blocks, 1, 1))
