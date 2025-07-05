@@ -6,12 +6,12 @@ import numpy as np
 
 from profiling.common import read_file_str, replace_constants_in_kernel
 
-from parameters import (GRAVITY, VERTEX_RESOLUTION, CM_PER_M,
-                        STRESS_THRESHOLD, STRESS_WEIGHTING,
-                        SHEAR_THRESHOLD, SHEAR_WEIGHTING,
-                        BEND_THRESHOLD, BEND_WEIGHTING,
-                        TIME_DELTA, TERMINAL_VELOCITY,
-                        SEWING_ADJUSTMENT_STEP)
+from src.parameters import (GRAVITY, VERTEX_RESOLUTION, CM_PER_M,
+                            STRESS_THRESHOLD, STRESS_WEIGHTING,
+                            SHEAR_THRESHOLD, SHEAR_WEIGHTING,
+                            BEND_THRESHOLD, BEND_WEIGHTING,
+                            TIME_DELTA, TERMINAL_VELOCITY,
+                            SEWING_ADJUSTMENT_STEP)
 
 # Update acceleration with gravity
 GRAVITY_MODULE = SourceModule(
@@ -72,3 +72,7 @@ SEWING_MODULE = SourceModule(
 RAY_TRACING_MODULE = SourceModule(
     read_file_str('./profiling/kernels/adjust_points_in_mesh.cu')
 ).get_function("adjust_point_in_mesh")
+
+
+if __name__ == '__main__':
+    print("Kernels compiled")
