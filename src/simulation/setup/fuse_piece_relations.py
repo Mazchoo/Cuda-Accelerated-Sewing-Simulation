@@ -3,6 +3,7 @@ from typing import Dict, Tuple, List
 from copy import deepcopy
 
 import numpy as np
+from trimesh import Trimesh
 
 from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingConstraints
@@ -92,3 +93,18 @@ def get_combined_sewing_relations(sewing_constraints: SewingConstraints,
         all_to_indices.append(get_offset_copy(sewing_pair.indices[:, 1], to_start_ind))
 
     return np.concatenate(all_from_indices), np.concatenate(all_to_indices)
+
+
+def get_body_mesh_arrays(trimesh: Trimesh) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+        Extract array information from trimesh into numpy arrays
+        (n, 3, 3) float arrays of triangle 3d vertex triplets
+        (n, 3) centers of each triangle
+        (n, 3) normals of each triangle
+    """
+    triangles = np.array([
+        [trimesh.vertices[i], trimesh.vertices[j], trimesh.vertices[k]] for i, j, k in trimesh.faces
+    ], dtype=np.float32)
+    centers = (triangles[:, 0] + triangles[:, 1] + triangles[:, 2]) / 3
+
+    return triangles, centers, trimesh.face_normals
