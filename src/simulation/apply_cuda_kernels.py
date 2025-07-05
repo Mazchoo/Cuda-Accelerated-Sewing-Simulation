@@ -1,9 +1,12 @@
 ''' Run cuda operations on cuda variables '''
+import numpy.typing as npt
+
 from src.parameters import DEFAULT_BLOCK_SIZE, RAY_TRACING_BLOCK_SIZE
 from src.simulation.setup.cuda_kernels import (GRAVITY_MODULE,
                                                STRESS_MODULE,
                                                SHEAR_MODULE,
-                                               BEND_MODULE)
+                                               BEND_MODULE,
+                                               UPDATE_POSITION_MODULE)
 from src.simulation.setup.cuda_variables import CudaVariables
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
@@ -54,3 +57,15 @@ def apply_bend(variables: CudaVariables):
                 len(variables.bend_indices),
                 block=DEFAULT_BLOCK_SHAPE,
                 grid=(nr_blocks, 1, 1))
+
+
+def apply_friction(variables: CudaVariables, dampening: npt.float32):
+    ''' Update position and velocity, taking friction into account '''
+    nr_blocks = calculate_nr_blocks(len(variables.vertices))
+    UPDATE_POSITION_MODULE(variables.accelerations.gp,
+                           variables.velocities.gp,
+                           variables.vertices.gpu,
+                           len(variables.vertices),
+                           dampening,
+                           block=(DEFAULT_BLOCK_SHAPE, 1, 1),
+                           grid=(nr_blocks, 1, 1))
