@@ -3,7 +3,6 @@ from typing import NamedTuple
 
 import pycuda.driver as cuda
 import numpy as np
-import numpy.typing as npt
 
 
 class CudaVariable:
@@ -19,8 +18,8 @@ class CudaVariable:
         cuda.memcpy_dtoh(self.cpu, self.gpu)
         return self.cpu
 
-    def __len__(self) -> npt.uint32:
-        return self.length
+    def __len__(self) -> int:
+        return int(self.length)
 
 
 class CudaVariables(NamedTuple):

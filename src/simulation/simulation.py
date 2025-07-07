@@ -20,20 +20,19 @@ from src.parameters import AVATAR_SCALING, RUN_COLLISION_DETECTION
 class FabricSimulation:
     """ Run a fabric simulation and keep track of piece positions """
     def __init__(self, body: MeshData, pieces: Dict[str, DynamicPiece], sewing_constraints: SewingConstraints):
-        self.body = body
-        self.clothing = DynamicClothing(pieces, sewing_constraints)
+        self.clothing = DynamicClothing(pieces, sewing_constraints, body)
 
         self.frames = []
         self.add_vertices_to_frames()
 
-        self.body_scatter_plot = create_mesh_scatter_plot(self.body,
+        self.body_scatter_plot = create_mesh_scatter_plot(body,
                                                           marker=dict(color='grey', size=6),
                                                           name='Body')
         self.colors = [float_rgb_to_str(c) for c in get_hsv_colors(len(pieces))]
 
     def add_vertices_to_frames(self):
         """ Update stored positions in animation buffer """
-        self.frames.append(self.clothing.mesh.vertices_3d.copy())
+        self.frames.append(self.clothing.vertices_3d.copy())
 
     def step(self, nr_steps: int = 1, logging: bool = True):
         ''' Run simulation for a number of steps '''
@@ -43,7 +42,7 @@ class FabricSimulation:
             self.clothing.update_positions()
 
             if RUN_COLLISION_DETECTION:
-                self.clothing.body_collision_adjustment(self.body.trimesh)
+                self.clothing.body_collision_adjustment()
 
             self.clothing.sewing_constraints.recalculate_adjustment({'all': self.clothing})
             adjustment = self.clothing.sewing_constraints.get_adjustment_for_piece('all')
