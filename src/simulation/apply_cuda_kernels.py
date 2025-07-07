@@ -64,8 +64,8 @@ def apply_bend(variables: CudaVariables):
 def apply_friction(variables: CudaVariables, dampening: np.float32):
     ''' Update position and velocity, taking friction into account '''
     nr_blocks = calculate_nr_blocks(len(variables.vertices), DEFAULT_BLOCK_SIZE)
-    UPDATE_POSITION_MODULE(variables.accelerations.gp,
-                           variables.velocities.gp,
+    UPDATE_POSITION_MODULE(variables.accelerations.gpu,
+                           variables.velocities.gpu,
                            variables.vertices.gpu,
                            variables.vertices.length,
                            dampening,

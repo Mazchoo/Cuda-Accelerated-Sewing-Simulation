@@ -14,7 +14,7 @@ from src.simulation.sewing_constraints import SewingConstraints
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
 
-from src.parameters import AVATAR_SCALING, RUN_COLLISION_DETECTION
+from src.parameters import AVATAR_SCALING
 
 
 class FabricSimulation:
@@ -37,16 +37,7 @@ class FabricSimulation:
     def step(self, nr_steps: int = 1, logging: bool = True):
         ''' Run simulation for a number of steps '''
         for step in range(nr_steps):
-            self.clothing.update_internal_forces()
-            self.clothing.update_velocities(step)
-            self.clothing.update_positions()
-
-            if RUN_COLLISION_DETECTION:
-                self.clothing.body_collision_adjustment()
-
-            self.clothing.sewing_constraints.recalculate_adjustment({'all': self.clothing})
-            adjustment = self.clothing.sewing_constraints.get_adjustment_for_piece('all')
-            self.clothing.apply_adjustment(adjustment)
+            self.clothing.update_forces(step)
 
             self.add_vertices_to_frames()
             if logging:

@@ -55,7 +55,7 @@ UPDATE_POSITION_MODULE = SourceModule(
     replace_constants_in_kernel(
         read_file_str('./profiling/kernels/update_position.cu'), {
             "TIME_DELTA": TIME_DELTA,
-            "TERMINAL_VELOCITY": TERMINAL_VELOCITY
+            "TERMINAL_VELOCITY": TERMINAL_VELOCITY * TIME_DELTA
         })
 ).get_function("update_position_with_friction")
 
