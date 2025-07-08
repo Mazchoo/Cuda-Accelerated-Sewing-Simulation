@@ -98,13 +98,20 @@ def get_combined_sewing_relations(sewing_constraints: SewingConstraints,
 def get_body_mesh_arrays(trimesh: Trimesh) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
         Extract array information from trimesh into numpy arrays
-        (n, 3, 3) float arrays of triangle 3d vertex triplets
-        (n, 3) centers of each triangle
+        (n, 3, 3) float arrays of triangle 3d vertex triplets, in p0, p0 -> p1, p0 -> p2 format
+        (n, 4) centers of each triangle + distance to center
         (n, 3) normals of each triangle
     """
     triangles = np.array([
         [trimesh.vertices[i], trimesh.vertices[j], trimesh.vertices[k]] for i, j, k in trimesh.faces
     ], dtype=np.float32)
-    centers = (triangles[:, 0] + triangles[:, 1] + triangles[:, 2]) / 3
+    triangles[:, 1] -= triangles[:, 0]
+    triangles[:, 2] -= triangles[:, 0]
 
-    return triangles, centers, trimesh.face_normals
+    centers = (triangles[:, 0] + triangles[:, 1] + triangles[:, 2]) / 3
+    distances_to_center = np.expand_dims(np.max(
+        np.linalg.norm(triangles - np.expand_dims(centers, 1), axis=2), axis=1
+    ), axis=-1)
+    centers = np.hstack([centers, distances_to_center])
+
+    return triangles, centers, trimesh.face_normals.astype(np.float32)

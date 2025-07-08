@@ -41,7 +41,7 @@ class DynamicClothing:
         accelerations = np.zeros((len(self.mesh), 3), dtype=np.float32)
 
         self.cuda_varibales = CudaVariables(
-            vertices=CudaVariable(vertices),
+            vertices=CudaVariable(self.mesh.vertices_3d.copy()),
             velocities=CudaVariable(velocities),
             accelerations=CudaVariable(accelerations),
             stress_indices=CudaVariable(stress),
@@ -73,5 +73,5 @@ class DynamicClothing:
         apply_shear(self.cuda_varibales)
         apply_bend(self.cuda_varibales)
         apply_friction(self.cuda_varibales, dampening)
-        # apply_sewing(self.cuda_varibales)
-        # apply_collisions(self.cuda_varibales)
+        apply_sewing(self.cuda_varibales)
+        apply_collisions(self.cuda_varibales)

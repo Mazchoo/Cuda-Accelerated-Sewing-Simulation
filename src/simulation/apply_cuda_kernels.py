@@ -17,7 +17,7 @@ COLLISION_BLOCK_SHAPE = (COLLISION_BLOCK_SIZE, 1, 1)
 
 def calculate_nr_blocks(num_ops: int, block_size: int) -> int:
     ''' Given number of operations and block size, find number of blocks needed '''
-    return (num_ops + block_size - 1) // int(block_size)
+    return (num_ops + block_size - 1) // block_size
 
 
 def apply_gravity(variables: CudaVariables):

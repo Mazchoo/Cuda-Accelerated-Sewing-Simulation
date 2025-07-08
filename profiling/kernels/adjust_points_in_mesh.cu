@@ -122,7 +122,7 @@ __device__ float3 closest_point_on_triangle(float3& query,
 }
 
 __global__ void adjust_point_in_mesh(const float* const triangles,
-                                     const unsigned num_triangles,
+                                     const unsigned int num_triangles,
                                      float* points,
                                      const unsigned int num_points,
                                      const float* const normals,
@@ -182,8 +182,8 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
         );
         float3 adjustment = scalar_multiply(normal, sqrtf(closest_distance_sq));
 
-        points[pt_idx * 3] += adjustment.x;
-        points[pt_idx * 3 + 1] += adjustment.y;
-        points[pt_idx * 3 + 2] += adjustment.z;
+        points[pt_idx * 3] = query.x + adjustment.x;
+        points[pt_idx * 3 + 1] = max(query.y + adjustment.y, 0.0f);
+        points[pt_idx * 3 + 2] = query.z + adjustment.z;
     }
 }
