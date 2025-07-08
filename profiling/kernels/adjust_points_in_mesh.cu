@@ -129,6 +129,7 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
                                      const float* const centers) {
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pt_idx >= num_points) return;
+    const float EPSILON = 1e-7f;
 
     float3 query = make_float3(
         points[pt_idx * 3],
@@ -147,6 +148,7 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
 
     if (hit_count % 2 == 1) {
         float closest_distance_sq = 1e20;
+        float closest_distance = 1e20;
         int closest_index = 0;
 
         for (int tri_idx = 0; tri_idx < num_triangles; ++tri_idx) {
@@ -158,7 +160,7 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
                     centers[tri_idx * 4 + 2]
                 ), query));
             float radius = centers[tri_idx * 4 + 3];
-            if (closest_distance_sq < dist_to_center - radius) {
+            if (closest_distance < dist_to_center - radius) {
                 continue;
             }
 
@@ -169,9 +171,13 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
             );
             float distance = square_dist(closest_point, query);
 
+            if (distance < EPSILON) {
+                return;
+            }
             if (distance < closest_distance_sq) {
                 closest_index = tri_idx;
                 closest_distance_sq = distance;
+                closest_distance = sqrtf(closest_distance_sq);
             }
         }
 
@@ -180,10 +186,10 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
             normals[closest_index * 3 + 1],
             normals[closest_index * 3 + 2]
         );
-        float3 adjustment = scalar_multiply(normal, sqrtf(closest_distance_sq));
+        float3 adjustment = scalar_multiply(normal, closest_distance);
 
-        points[pt_idx * 3] = query.x + adjustment.x;
+        points[pt_idx * 3] += adjustment.x;
         points[pt_idx * 3 + 1] = max(query.y + adjustment.y, 0.0f);
-        points[pt_idx * 3 + 2] = query.z + adjustment.z;
+        points[pt_idx * 3 + 2] += adjustment.z;
     }
 }

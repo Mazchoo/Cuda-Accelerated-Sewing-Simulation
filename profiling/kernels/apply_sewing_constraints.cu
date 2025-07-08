@@ -18,7 +18,7 @@ __global__ void apply_sewing_constraints(float* vertices,
                                          const unsigned int nr_sewing) {
     int pair_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pair_idx >= nr_sewing) return;
-    const float EPSILON = 1e-10f;
+    const float EPSILON = 1e-2f;
 
     unsigned int from_ind = sewing_indices[pair_idx * 2];
     unsigned int to_ind = sewing_indices[pair_idx * 2 + 1];
@@ -40,12 +40,9 @@ __global__ void apply_sewing_constraints(float* vertices,
         return;
     }
     
-    float adjustment = vectorNorm / 2;
-    if (adjustment > SEWING_MAX_ADJUSTMENT) {
-        adjustment = SEWING_MAX_ADJUSTMENT;
-    }
+    float adjustment = min(vectorNorm / 2, SEWING_MAX_ADJUSTMENT);
 
-    scaleVector(vector, (adjustment / vectorNorm) * TIME_DELTA);
+    scaleVector(vector, (adjustment / vectorNorm));
     vertices[from_ind * 3] += vector.x;
     vertices[from_ind * 3 + 1] += vector.y;
     vertices[from_ind * 3 + 2] += vector.z;

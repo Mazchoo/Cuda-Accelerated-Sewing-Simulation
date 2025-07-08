@@ -41,7 +41,7 @@ __global__ void apply_stress(float *acceleration,
         float3 vector_norm = vector;
         scaleVector(vector_norm, 1 / stress_amount);
         vector = subtract(vector, vector_norm);
-        scaleVector(vector, STRESS_WEIGHTING);
+        scaleVector(vector, STRESS_WEIGHTING / STRESS_RESTING_AMOUNT);
 
         acceleration[from_ind * 3] += vector.x;
         acceleration[from_ind * 3 + 1] += vector.y;
@@ -55,7 +55,7 @@ __global__ void apply_stress(float *acceleration,
             scaleVector(vector_norm, 1 / stress_amount);
             vector = subtract(vector, vector_norm);
         }
-        scaleVector(vector, STRESS_WEIGHTING);
+        scaleVector(vector, STRESS_WEIGHTING / STRESS_RESTING_AMOUNT);
 
         acceleration[from_ind * 3] += vector.x;
         acceleration[from_ind * 3 + 1] += vector.y;
