@@ -97,28 +97,60 @@ __device__ int ray_intersects_triangle(float3& query, const float3& dir,
     return 1;
 }
 
-__device__ float3 closest_point_on_triangle(float3& query,
-                                            float3 v0, float3 edge1, float3 edge2) {
-    const float EPSILON = 1e-10f;
-    float3 q_to_v0 = subtract(query, v0);
 
-    float d1 = dot_product(edge1, q_to_v0);
-    float d2 = dot_product(edge2, q_to_v0);
-    float d3 = dot_product(edge1, edge1);
-    float d4 = dot_product(edge1, edge2);
-    float d5 = dot_product(edge2, edge2);
+__device__ float3 closest_point_on_triangle(const float3 p,
+                                            const float3 a,
+                                            const float3 ab,
+                                            const float3 ac) {
+    float3 ap = subtract(p, a);
+    float d1 = dot_product(ab, ap);
+    float d2 = dot_product(ac, ap);
 
-    float denom = d3 * d5 - d4 * d4 + EPSILON;
-    float v_clamped = clamp((d5 * d1 - d4 * d2) / denom);
-    float w_clamped = clamp((d3 * d2 - d4 * d1) / denom);
-    float u_clamped = clamp(1 - v_clamped - w_clamped);
+    // Check if P in vertex region outside A
+    if (d1 <= 0.0f && d2 <= 0.0f)
+        return a;
 
-    float sum_clamped = u_clamped + v_clamped + w_clamped;
-    float3 u_vec = scalar_multiply(v0, u_clamped / sum_clamped);
-    float3 v_vec = scalar_multiply(add(v0, edge1), v_clamped / sum_clamped);
-    float3 w_vec = scalar_multiply(add(v0, edge2), w_clamped / sum_clamped);
+    float3 b = add(a, ab);
+    float3 bp = subtract(p, b);
+    float d3 = dot_product(ab, bp);
+    float d4 = dot_product(ac, bp);
 
-    return add(w_vec, add(u_vec, v_vec));
+    // Check if P in vertex region outside B
+    if (d3 >= 0.0f && d4 <= d3)
+        return b;
+
+    float vc = d1 * d4 - d3 * d2;
+    if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
+        float v = d1 / (d1 - d3);
+        return add(a, scalar_multiply(ab, v));  // Edge AB
+    }
+
+    float3 c = add(a, ac);
+    float3 cp = subtract(p, c);
+    float d5 = dot_product(ab, cp);
+    float d6 = dot_product(ac, cp);
+
+    // Check if P in vertex region outside C
+    if (d6 >= 0.0f && d5 <= d6)
+        return c;
+
+    float vb = d5 * d2 - d1 * d6;
+    if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
+        float w = d2 / (d2 - d6);
+        return add(a, scalar_multiply(ac, w));  // Edge AC
+    }
+
+    float va = d3 * d6 - d5 * d4;
+    if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
+        float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+        return add(b, scalar_multiply(subtract(c, b), w));  // Edge BC
+    }
+
+    // Inside face region. Compute barycentric coordinates (u,v,w)
+    float denom = 1.0f / (va + vb + vc);
+    float v = vb * denom;
+    float w = vc * denom;
+    return add(a, add(scalar_multiply(ab, v), scalar_multiply(ac, w)));
 }
 
 __global__ void adjust_point_in_mesh(const float* const triangles,
