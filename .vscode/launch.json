@@ -15,6 +15,19 @@
             "env": {
                 "PYTHONPATH": "${workspaceRoot}"
             }
+        },
+        {
+            "name": "Run QSS Editor",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "args": ["RUN_QSS_EDITOR"],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "PYTHONPATH": "${workspaceRoot}"
+            }
         }
     ]
 }
