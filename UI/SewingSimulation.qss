@@ -29,6 +29,59 @@ QWidget
 
 }
 
+/*----------*/
+QSlider::groove:vertical {
+    background: #c;
+    width: 8px;
+    border-radius: 4px;
+}
+
+QSlider::handle:vertical {
+    background: #007acc;
+    height: 20px;
+    margin: 0 -4px; /* Center the handle */
+    border-radius: 6px;
+}
+
+QSlider::sub-page:vertical {
+    background: #569fd9;
+    border-radius: 4px;
+}
+
+QSlider::add-page:vertical {
+    background: #e0e0e0;
+    border-radius: 4px;
+}
+
+/*----------*/
+QLCDNumber {
+    background-color: grey;
+    color: white; /* Segment color */
+    border: 2px solid black;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+/*----------*/
+QDial {
+    background-color: white;
+    border: 2px solid #007acc;
+    border-radius: 50%;
+}
+
+QDial::groove {
+    background: #444;
+    border: 1px solid #666;
+    border-radius: 50%;
+}
+
+QDial::handle {
+    background: #00c8ff;
+    border: 2px solid #007acc;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+}
 
 /*----------*/
 QLabel
