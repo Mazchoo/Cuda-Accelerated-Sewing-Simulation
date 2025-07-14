@@ -18,15 +18,14 @@ def CreateQtController(cls):
     class QtController(cls):
         ''' Inner class for controller '''
 
-        def __init__(self, parent_window, Model, Layout, *args, **kwargs):
+        def __init__(self, parent_window, Model, layout, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
             parent_class = self.getControllerParentClass()
             if not issubclass(parent_class, ControllerABC):
                 raise NotImplementedError(f"Class {parent_class.__name__} does not implement ControllerABC.")
 
-            self.layout = Layout()
-            self.layout.setupUi(parent_window)
+            self.layout = layout
             self.model = Model()
             self.parent = parent_window
 

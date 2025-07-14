@@ -1,7 +1,7 @@
 ''' Main controller module to create to do controller '''
 from PyQt5.QtWidgets import QWidget
 
-from src.qt.common.window_helpers import setWindowIcon
+from src.qt.common.window_helpers import set_window_icon
 from src.qt.common.controller_factory import CreateQtController
 
 
@@ -26,4 +26,4 @@ class SewingSimulationController(QWidget):
     def initializeUi(controller):
         ''' Override to set properties of ui components '''
         controller.parent.setWindowTitle(" Clothing Simulation")
-        setWindowIcon(controller.parent, './assets/sewing_icon.png')
+        set_window_icon(controller.parent, './assets/sewing_icon.png')
