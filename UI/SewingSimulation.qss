@@ -31,7 +31,7 @@ QWidget
 
 /*----------*/
 QSlider::groove:vertical {
-    background: #c;
+    background: #ccc;
     width: 8px;
     border-radius: 4px;
 }
