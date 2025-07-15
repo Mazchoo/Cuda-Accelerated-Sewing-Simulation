@@ -7,7 +7,6 @@ Python simulation of clothing model from a basic 2D pattern using and a dynamic 
 Currently in progress of adding:
 * Use Cuda acceleration to acheive real time simulation.
 * Display result in OpenGL rendering context
-* Load design directly from a .dxf
 
 ## Pictures for context
 
