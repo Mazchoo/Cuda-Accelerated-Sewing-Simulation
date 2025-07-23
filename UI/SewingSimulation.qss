@@ -1,4 +1,5 @@
 /*Copyright (c) DevSec Studio. All rights reserved.
+/*Copyright (c) DevSec Studio. All rights reserved.
 
 MIT License
 
@@ -133,8 +134,8 @@ QPushButton::pressed
 QCheckBox
 {
 	background-color: transparent;
-	color: #5c55e9;
-	font-size: 10px;
+	color: black;
+	font-size: 14px;
 	border: none;
 	border-radius: 5px;
 
@@ -144,7 +145,7 @@ QCheckBox
 /*-----QCheckBox-----*/
 QCheckBox::indicator
 {
-    background-color: #323232;
+    background-color: gray;
     border: 1px solid darkgray;
     width: 12px;
     height: 12px;
@@ -154,7 +155,6 @@ QCheckBox::indicator
 
 QCheckBox::indicator:checked
 {
-    image:url("./ressources/check.png");
 	background-color: #5c55e9;
     border: 1px solid #5c55e9;
 

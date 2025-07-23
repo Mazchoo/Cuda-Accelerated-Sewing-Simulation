@@ -90,8 +90,8 @@
             <widget class="QDial" name="leftRightDial">
              <property name="geometry">
               <rect>
-               <x>30</x>
-               <y>50</y>
+               <x>20</x>
+               <y>30</y>
                <width>50</width>
                <height>64</height>
               </rect>
@@ -100,8 +100,8 @@
             <widget class="QDial" name="upDownDial">
              <property name="geometry">
               <rect>
-               <x>30</x>
-               <y>120</y>
+               <x>20</x>
+               <y>100</y>
                <width>50</width>
                <height>64</height>
               </rect>
@@ -123,8 +123,8 @@
             <widget class="QLCDNumber" name="yawLcdNumber">
              <property name="geometry">
               <rect>
-               <x>110</x>
-               <y>70</y>
+               <x>80</x>
+               <y>50</y>
                <width>64</width>
                <height>23</height>
               </rect>
@@ -133,8 +133,8 @@
             <widget class="QLCDNumber" name="pitchLcdNumber">
              <property name="geometry">
               <rect>
-               <x>110</x>
-               <y>140</y>
+               <x>80</x>
+               <y>120</y>
                <width>64</width>
                <height>23</height>
               </rect>
@@ -156,8 +156,8 @@
             <widget class="QLabel" name="pitchLabel">
              <property name="geometry">
               <rect>
-               <x>100</x>
-               <y>120</y>
+               <x>70</x>
+               <y>100</y>
                <width>71</width>
                <height>16</height>
               </rect>
@@ -169,8 +169,8 @@
             <widget class="QLabel" name="yawLabel">
              <property name="geometry">
               <rect>
-               <x>100</x>
-               <y>50</y>
+               <x>70</x>
+               <y>30</y>
                <width>71</width>
                <height>16</height>
               </rect>
@@ -229,6 +229,19 @@
              </property>
              <property name="orientation">
               <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBox">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>170</y>
+               <width>161</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Toggle Free Flying</string>
              </property>
             </widget>
            </widget>
@@ -290,6 +303,9 @@
    </property>
   </action>
   <action name="actionOpen_Clothing">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Open Clothing</string>
    </property>
