@@ -3,6 +3,7 @@ from typing import NamedTuple
 
 from src.qt.player import Player
 from src.qt.camera import Camera
+from src.qt.motion import Motion
 from src.qt.light import Light
 from src.qt.shader_program import ShaderProgram
 
@@ -13,6 +14,7 @@ from src.parameters import (MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_R
 class DrawingPass(NamedTuple):
     ''' Drawing pass data '''
     player: Player
+    object_motion: Motion
     light: Light
     shader: ShaderProgram
 
