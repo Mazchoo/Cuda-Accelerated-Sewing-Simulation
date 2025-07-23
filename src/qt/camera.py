@@ -1,4 +1,6 @@
 
+from typing import Dict
+
 import pyrr
 import numpy as np
 
@@ -11,13 +13,13 @@ from src.qt.uniforms import bind_globals_to_object, get_global_object_id
 class Camera:
     __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', 'projection_matrix', 'globals'
 
-    def __init__(self, fovy, aspect, near, far, **kwargs):
+    def __init__(self, fovy, aspect, near, far, **globals: Dict[str, str]):
         self.fovy = fovy
         self.aspect = aspect
         self.near = near
         self.far = far
 
-        self.globals = kwargs
+        self.globals = globals  # maps slots to gpu variables
         self.object_id = None
 
         self.recalculate_projection(fovy, aspect, near, far)
