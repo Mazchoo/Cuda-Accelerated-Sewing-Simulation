@@ -5,7 +5,6 @@
 Python simulation of clothing model from a basic 2D pattern using and a dynamic avatar from an .obj file. Models tensile forces, gravity, collisions and sewing constraints.
 
 Currently in progress of adding:
-* Use Cuda acceleration to acheive real time simulation.
 * Display result in OpenGL rendering context
 
 ## Pictures for context
