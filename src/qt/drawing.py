@@ -8,7 +8,7 @@ from src.qt.light import Light
 from src.qt.shader_program import ShaderProgram
 
 from src.parameters import (MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_RATIO,
-                            MAX_CAMERA_DISTANCE_RATIO, FIELD_OF_VIEW, LIGHT_POSITION_RATIO)
+                            MAX_CAMERA_DISTANCE_RATIO, FIELD_OF_VIEW)
 
 
 class DrawingPass(NamedTuple):

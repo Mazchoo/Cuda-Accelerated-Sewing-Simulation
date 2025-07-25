@@ -1,5 +1,5 @@
-
-from typing import Dict
+''' Container for 4by4 matrix representing camera projection '''
+from typing import Dict, Optional
 
 import pyrr
 import numpy as np
@@ -13,18 +13,20 @@ from src.qt.uniforms import bind_globals_to_object, get_global_object_id
 class Camera:
     __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', 'projection_matrix', 'globals'
 
-    def __init__(self, fovy, aspect, near, far, **globals: Dict[str, str]):
+    def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals: Dict[str, str]):
         self.fovy = fovy
         self.aspect = aspect
         self.near = near
         self.far = far
 
-        self.globals = globals  # maps slots to gpu variables
+        self.globals = globals  # maps slots to gpu variables if defined
         self.object_id = None
 
         self.recalculate_projection(fovy, aspect, near, far)
 
-    def recalculate_projection(self, fovy=None, aspect=None, near=None, far=None):
+    def recalculate_projection(self, fovy: Optional[float] = None, aspect: Optional[float] = None,
+                               near: Optional[float] = None, far: Optional[float] = None):
+        ''' Recalcuate projection matrix, incorporating any changes '''
         fovy = fovy or self.fovy
         aspect = aspect or self.aspect
         near = near or self.near
