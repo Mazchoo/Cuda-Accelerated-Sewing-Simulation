@@ -5,6 +5,7 @@ layout (location=1) in vec2 vertexTexCoord;
 layout (location=2) in vec3 vertexNormal;
 
 uniform mat4 camera;
+uniform mat4 motion;
 
 out vec2 fragmentTexCoord;
 out vec3 fragmentPosition;
@@ -12,7 +13,7 @@ out vec3 fragmentNormal;
 
 void main()
 {
-    gl_Position = camera * vec4(vertexPos, 1.0);
+    gl_Position = camera * motion * vec4(vertexPos, 1.0);
 
     fragmentTexCoord = vertexTexCoord;
     fragmentPosition = gl_Position.xyz;
