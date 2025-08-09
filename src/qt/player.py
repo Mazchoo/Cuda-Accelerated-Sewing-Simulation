@@ -74,7 +74,7 @@ class Player:
 
         self._view_matrix = self._position_matrix @ self._angle_matrix
 
-    def set_view_to_global(self, shader: int = None, var_name: str = None):
+    def set_all_globals(self, shader: int = None, var_name: str = None):
         glob_id = get_global_object_id(self, "object_id", shader, var_name)
         glUniformMatrix4fv(glob_id, 1, GL_FALSE, self._view_matrix)
 

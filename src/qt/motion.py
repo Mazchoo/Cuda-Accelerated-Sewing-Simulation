@@ -1,20 +1,20 @@
-
+''' Class to store the motion matrix '''
 import pyrr
 import numpy as np
-from OpenGL.GL import glUniformMatrix4fv
-from OpenGL.GL import GL_FALSE
+from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
 from src.qt.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Motion:
+    ''' Stores the position and orientation of a single object '''
     __slots__ = 'angles', 'position', '_angle_matrix', '_position_matrix', \
                 'object_id', 'motion_matrix', "globals"
 
-    def __init__(self, position: list, angles: list, **kwargs):
+    def __init__(self, position: list, angles: list, **globals):
 
         self.object_id = None
-        self.globals = kwargs
+        self.globals = globals
 
         if len(angles) != 3:
             raise ValueError(f"Expecting three angles, found {len(angles)}")
@@ -30,6 +30,10 @@ class Motion:
         self.recalculate_motion_matrix(self.position, self.angles)
 
     def increment_angles(self, xy=None, yz=None, xz=None):
+        '''
+            Make an adjustment to the euler angles of the object
+            Call recalculate_motion_matrix (angles=True) afterwards to push change
+        '''
         if yz:
             self.angles[0] += yz
             if self.angles[0] > 2 * np.pi or self.angles[0] < -2 * np.pi:
@@ -44,6 +48,10 @@ class Motion:
                 self.angles[2] = 0
 
     def increment_position(self, x=None, y=None, z=None):
+        '''
+            Make an adjustment to the 3D position of the object
+            Call recalculate_motion_matrix (position=True) afterwards to push change
+        '''
         if x:
             self.position[0] += x
         if y:
@@ -52,6 +60,10 @@ class Motion:
             self.position[2] += z
 
     def recalculate_motion_matrix(self, position=False, angles=False):
+        ''' Recalculate the motion matrix, position and/or angles should be set to true '''
+        if not position and not angles:
+            return
+
         if position:
             self._position_matrix[3, :3] = self.position
 
@@ -64,9 +76,11 @@ class Motion:
         self.motion_matrix = self._angle_matrix @ self._position_matrix
         return self.motion_matrix
 
-    def set_motion_to_global(self, shader: int = None, var_name: str = None):
+    def set_all_globals(self, shader: int = None, var_name: str = None):
+        ''' Copy object motion matrix to the GPU '''
         glob_id = get_global_object_id(self, "object_id", shader, var_name)
         glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.motion_matrix)
 
     def bind_global_variable_names(self, shader: int):
+        ''' Bind motion matrix to id on the GPU '''
         bind_globals_to_object(self, shader)
