@@ -6,6 +6,7 @@ import numpy as np
 from pyrr import matrix44
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
+from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 from src.qt.gl_helpers.typing import Matrix4x4, Position3D
@@ -15,18 +16,18 @@ class Player:
     ''' Stores and recalculates a 4x4 view matrix for player perspective and can store it on GPU '''
 
     __slots__ = '_position', '_theta', '_phi', '_position_matrix', \
-        '_angle_matrix', '_view_matrix', 'camera', 'object_id', 'globals'
+        '_angle_matrix', 'view_matrix', 'camera', 'object_id', 'globals'
 
     camera: Camera
     object_id: Optional[int]
     globals: Dict[str, str]
+    view_matrix: Matrix4x4
 
     _position: np.ndarray
     _theta: float
     _phi: float
     _position_matrix: Matrix4x4
     _angle_matrix: Matrix4x4
-    _view_matrix: Matrix4x4
 
     def __init__(self, camera: Camera, theta: float = 0., phi: float = 0.,
                  position: Position3D = (0., 0., 0.), **globals):
@@ -97,14 +98,15 @@ class Player:
                 dtype=np.float32
             )
 
-        self._view_matrix = self.camera.projection_matrix @ self._position_matrix @ self._angle_matrix
+        self.view_matrix = self.camera.projection_matrix @ self._position_matrix @ self._angle_matrix
 
-    def set_all_globals(self, shader: Optional[int] = None, var_name: Optional[str] = None):
+    def set_all_globals(self):
         ''' Update all player properties on the GPU '''
-        glob_id = get_global_object_id(self, "object_id", shader, var_name)
-        glUniformMatrix4fv(glob_id, 1, GL_FALSE, self._view_matrix)
+        glob_id = get_global_object_id(self, "object_id")
+        glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.view_matrix)
 
-    def bind_global_variable_names(self, shader: int):
-        ''' Bind player properties to uniform variable names in the shader '''
-        bind_globals_to_object(self, shader)
-        self.camera.bind_global_variable_names(shader)
+    def bind_global_variable_names(self, shader: ShaderProgram):
+        ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
+        shader.use()
+        bind_globals_to_object(self, shader.gl_id)
+        self.set_all_globals()

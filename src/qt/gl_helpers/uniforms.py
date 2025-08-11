@@ -5,14 +5,11 @@ from OpenGL.GL import glGetUniformLocation
 # ToDo - Turn this into an abstract base class
 
 
-def get_global_object_id(obj: Self, attr_name: str, shader: int = None, var_name: str = None):
-    ''' Get shorthand integer variable to refer to uniform on GPU '''
-    if shader and var_name:
-        global_object_id = glGetUniformLocation(shader, var_name)
-    else:
-        global_object_id = getattr(obj, attr_name)
-        if global_object_id is None:
-            raise AttributeError(f"Global variable {attr_name} has not been set in container {obj}")
+def get_global_object_id(obj: Self, attr_name: str) -> int:
+    ''' Get shorthand integer variable to refer to uniform on GPU, raises error if not found '''
+    global_object_id = getattr(obj, attr_name)
+    if global_object_id is None:
+        raise AttributeError(f"Global variable {attr_name} has not been set in container {obj}")
 
     return global_object_id
 

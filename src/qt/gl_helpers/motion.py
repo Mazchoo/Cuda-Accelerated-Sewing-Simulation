@@ -5,6 +5,7 @@ from pyrr import matrix44
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
+from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 from src.qt.gl_helpers.typing import Matrix4x4, Angles3D, Position3D
 
@@ -119,11 +120,13 @@ class Motion:
         self.motion_matrix = self._angle_matrix @ self._position_matrix
         return self.motion_matrix
 
-    def set_all_globals(self, shader: Optional[int] = None, var_name: Optional[str] = None):
+    def set_all_globals(self):
         """ Copy object motion matrix to the GPU. """
-        glob_id = get_global_object_id(self, "object_id", shader, var_name)
+        glob_id = get_global_object_id(self, "object_id")
         glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.motion_matrix)
 
-    def bind_global_variable_names(self, shader: int):
+    def bind_global_variable_names(self, shader: ShaderProgram):
         """ Bind motion matrix to id on the GPU. """
-        bind_globals_to_object(self, shader)
+        shader.use()
+        bind_globals_to_object(self, shader.gl_id)
+        self.set_all_globals()

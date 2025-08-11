@@ -1,12 +1,8 @@
 ''' Container for 4by4 matrix representing camera projection '''
-from typing import Dict, Optional
+from typing import Optional
 
 from pyrr import matrix44
 import numpy as np
-
-from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
-
-from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Camera:
@@ -14,7 +10,7 @@ class Camera:
 
     __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', 'projection_matrix', 'globals'
 
-    def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals: Dict[str, str]):
+    def __init__(self, fovy: float, aspect: float, near: float, far: float):
         '''
             fovy: The vertical field of view angle in degrees
             aspect: The aspect ratio (width/height) of the viewport
@@ -25,9 +21,6 @@ class Camera:
         self.aspect = aspect
         self.near = near
         self.far = far
-
-        self.globals = globals  # maps slots to gpu variables if defined
-        self.object_id = None
 
         self.recalculate_projection(fovy, aspect, near, far)
 
@@ -42,12 +35,3 @@ class Camera:
         self.projection_matrix = matrix44.create_perspective_projection(
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
         )
-
-    def set_all_globals(self, shader: int = None, var_name: str = None):
-        ''' Update all camera properties on the GPU '''
-        glob_id = get_global_object_id(self, "object_id", shader, var_name)
-        glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.projection_matrix)
-
-    def bind_global_variable_names(self, shader: int):
-        ''' Bind camera properties to uniform variable names in the shader '''
-        bind_globals_to_object(self, shader)

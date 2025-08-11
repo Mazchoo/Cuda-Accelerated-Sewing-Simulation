@@ -15,10 +15,10 @@ from src.parameters import (VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
 
 class DrawingPass:
     ''' Drawing pass data '''
+    shader: ShaderProgram
     player: Player
     object_motion: Motion
     light: Light
-    shader: ShaderProgram
 
     def __init__(self, height: float, aspect_ratio: float):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
@@ -28,15 +28,19 @@ class DrawingPass:
         min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
         max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
 
-        camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance,
-                        object_id="projection", position_glob_id="cameraPosition")
+        camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance)
+
         # Viewing position is middle of body at default distance
         view_position = [0, height/2, -default_distance]
-        self.player = Player(camera, position=view_position)
+        self.player = Player(camera, position=view_position,
+                             object_id="camera")
+        self.player.bind_global_variable_names(self.shader)
 
         light_position = [0, LIGHT_POSITION_RATIO * height, 0]
         self.light = Light(light_position, LIGHT_COLOR,
                            LIGHT_REFLECTIVE_STRENGTH, LIGHT_AMBIENT_STRENGTH,
                            **LIGHT_PROPERTIES)
+        self.light.bind_global_variable_names(self.shader)
 
-        self.object_motion = Motion()
+        self.object_motion = Motion(object_id="motion")
+        self.object_motion.bind_global_variable_names(self.shader)
