@@ -56,7 +56,7 @@ class Motion:
         if z:
             self.position[2] += z
 
-    def recalculate_motion_matrix(self, position: bool = False, angles: bool = False):
+    def recalculate_motion_matrix(self, position: bool = True, angles: bool = True):
         ''' Recalculate the motion matrix, position and/or angles should be set to true '''
         if not position and not angles:
             return
