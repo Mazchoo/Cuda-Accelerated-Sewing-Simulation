@@ -4,8 +4,7 @@ from typing import Dict, Optional
 from pyrr import matrix44
 import numpy as np
 
-from OpenGL.GL import glUniformMatrix4fv
-from OpenGL.GL import GL_FALSE
+from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
 from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
