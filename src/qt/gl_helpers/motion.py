@@ -23,8 +23,8 @@ class Motion:
     _angle_matrix: Matrix4x4
     _position_matrix: Matrix4x4
 
-    def __init__(self, position: Position3D,
-                 angles: Angles3D, **globals):
+    def __init__(self, position: Position3D = (0., 0., 0.),
+                 angles: Angles3D = (0., 0., 0.), **globals):
         """
         Initialize a Motion object with position and orientation.
 

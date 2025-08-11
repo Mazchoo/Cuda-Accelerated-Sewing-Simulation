@@ -97,7 +97,7 @@ class Player:
                 dtype=np.float32
             )
 
-        self._view_matrix = self._position_matrix @ self._angle_matrix
+        self._view_matrix = self.camera.projection_matrix @ self._position_matrix @ self._angle_matrix
 
     def set_all_globals(self, shader: Optional[int] = None, var_name: Optional[str] = None):
         ''' Update all player properties on the GPU '''

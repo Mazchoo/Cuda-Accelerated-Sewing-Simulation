@@ -12,8 +12,6 @@ MATERIAL_PROPERTIES = {
 LIGHT_PROPERTIES = {
     "position_glob_id": "lightSource.position",
     "color_glob_id": "lightSource.color",
-    "strength_glob_id": "lightSource.strength",
-    "ambient_strength_glob_id": "lightSource.ambientStrength",
-    "min_dist_glob_id": "lightSource.minDistance",
-    "max_dist_glob_id": "lightSource.maxDistance"
+    "reflective_strength_glob_id": "lightSource.reflectiveStrength",
+    "ambient_strength_glob_id": "lightSource.ambientStrength"
 }

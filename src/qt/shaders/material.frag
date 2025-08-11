@@ -7,10 +7,8 @@ in vec3 fragmentNormal;
 struct LightSource {
     vec3 position;
     vec3 color;
-    float strength;
+    float reflectiveStrength;
     float ambientStrength;
-    float minDistance;
-    float maxDistance;
 };
 
 struct Material {
@@ -43,11 +41,7 @@ vec4 calculatePointLight(vec3 fragmentPosition, vec3 fragmentNormal) {
 
     // Geometry Data
     vec3 fragLight = lightSource.position - fragmentPosition;
-    float dist2inv = length(fragLight);
-    // Get a distance modifier from the light source (using player distance from light)
-    float distModifier = 1 - min(max(dist2inv - lightSource.minDistance, 0.0) / lightSource.maxDistance, 1.0);
-
-    dist2inv = 1 / pow(dist2inv, 2);
+    float dist2inv = 1 / dot(fragLight, fragLight);
     fragLight = normalize(fragLight);
 
     vec3 fragCamera = normalize(cameraPosition - fragmentPosition);
@@ -57,12 +51,12 @@ vec4 calculatePointLight(vec3 fragmentPosition, vec3 fragmentNormal) {
     result += textureColor * currentMaterial.ambientWeighting * lightSource.ambientStrength;
 
     // Diffuse lighting
-    result += lightSource.color * currentMaterial.diffuseWeighting * lightSource.strength * distModifier * max(0.0, dot(fragmentNormal, fragLight)) * dist2inv;
+    result += lightSource.color * currentMaterial.diffuseWeighting * lightSource.reflectiveStrength * distModifier * max(0.0, dot(fragmentNormal, fragLight)) * dist2inv;
 
     // Specular lighting
     float specularModifier = pow(max(0.0, dot(fragmentNormal, halfVector)), currentMaterial.specularExponent) * dist2inv;
     vec3 specularColor = mix(lightSource.color, textureColor, currentMaterial.specularTint);
-    result += specularColor * currentMaterial.specularWeighting * lightSource.strength * specularModifier * distModifier;
+    result += specularColor * currentMaterial.specularWeighting * lightSource.reflectiveStrength * specularModifier * distModifier;
     result = clamp(result, 0.0, 1.0);
     result = pow(result, vec3(1.0/2.2)); // Gamma adjustment
 

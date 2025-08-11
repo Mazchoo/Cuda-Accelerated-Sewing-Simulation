@@ -13,22 +13,27 @@ class Light:
 
     position: np.ndarray
     color: np.ndarray
-    strength: float
+    reflective_strength: float
+    ambient_strength: float
+
     globals: Dict[str, str]
     position_glob_id: Optional[int]
     color_glob_id: Optional[int]
-    strength_glob_id: Optional[int]
+    reflective_strength_glob_id: Optional[int]
+    ambient_strength_glob_id: Optional[int]
 
-    def __init__(self, position: Position3D,
-                 color: ColorRGB, strength: float, **globals):
+    def __init__(self, position: Position3D, color: ColorRGB,
+                 reflective_strength: float, ambient_strength: float, **globals):
         self.position = np.array(position, dtype=np.float32)
         self.color = np.array(color, dtype=np.float32)
-        self.strength = float(strength)
+        self.reflective_strength = reflective_strength
+        self.ambient_strength = ambient_strength
 
         self.globals = globals
         self.position_glob_id = None
         self.color_glob_id = None
-        self.strength_glob_id = None
+        self.reflective_strength_glob_id = None
+        self.ambient_strength_glob_id = None
 
     def set_position_to_global(self, shader: int = None, var_name: str = None):
         ''' Copy light position to GPU uniform variable '''
@@ -43,7 +48,7 @@ class Light:
     def set_strength_to_global(self, shader: int = None, var_name: str = None):
         ''' Copy light strength to GPU uniform variable '''
         glob_id = get_global_object_id(self, "strength_glob_id", shader, var_name)
-        glUniform1f(glob_id, self.strength)
+        glUniform1f(glob_id, self.reflective_strength)
 
     def set_all_globals(self):
         ''' Update all light properties on the GPU '''
