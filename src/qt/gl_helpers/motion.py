@@ -1,5 +1,7 @@
 ''' Class to store the motion matrix '''
-import pyrr
+from typing import Tuple
+
+from pyrr import matrix44
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
@@ -11,23 +13,18 @@ class Motion:
     __slots__ = 'angles', 'position', '_angle_matrix', '_position_matrix', \
                 'object_id', 'motion_matrix', "globals"
 
-    def __init__(self, position: list, angles: list, **globals):
+    def __init__(self, position: Tuple[float, float, float],
+                 angles: Tuple[float, float, float], **globals):
 
         self.object_id = None
         self.globals = globals
-
-        if len(angles) != 3:
-            raise ValueError(f"Expecting three angles, found {len(angles)}")
         self.angles = angles
-
-        if len(position) != 3:
-            raise ValueError(f"Expecting thee cordinates for position, found {len(position)}")
         self.position = position
 
         self._angle_matrix = np.identity(4, dtype=np.float32)
         self._position_matrix = np.identity(4, dtype=np.float32)
 
-        self.recalculate_motion_matrix(self.position, self.angles)
+        self.recalculate_motion_matrix(True, True)
 
     def increment_angles(self, xy=None, yz=None, xz=None):
         '''
@@ -59,7 +56,7 @@ class Motion:
         if z:
             self.position[2] += z
 
-    def recalculate_motion_matrix(self, position=False, angles=False):
+    def recalculate_motion_matrix(self, position: bool = False, angles: bool = False):
         ''' Recalculate the motion matrix, position and/or angles should be set to true '''
         if not position and not angles:
             return
@@ -68,7 +65,7 @@ class Motion:
             self._position_matrix[3, :3] = self.position
 
         if angles:
-            self._angle_matrix = pyrr.matrix44.create_from_eulers(
+            self._angle_matrix = matrix44.create_from_eulers(
                 eulers=self.angles,
                 dtype=np.float32
             )
