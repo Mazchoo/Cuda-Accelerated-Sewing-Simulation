@@ -2,6 +2,7 @@
 from typing import Self
 
 from OpenGL.GL import glGetUniformLocation
+# ToDo - Turn this into an abstract base class
 
 
 def get_global_object_id(obj: Self, attr_name: str, shader: int = None, var_name: str = None):
