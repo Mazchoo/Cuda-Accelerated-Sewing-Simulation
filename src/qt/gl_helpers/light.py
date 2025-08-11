@@ -2,7 +2,7 @@
 import numpy as np
 from OpenGL.GL import glUniform3fv, glUniform1f
 
-from src.qt.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Light:

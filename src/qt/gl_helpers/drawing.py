@@ -1,11 +1,11 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
 from typing import NamedTuple
 
-from src.qt.player import Player
-from src.qt.camera import Camera
-from src.qt.motion import Motion
-from src.qt.light import Light
-from src.qt.shader_program import ShaderProgram
+from src.qt.gl_helpers.player import Player
+from src.qt.gl_helpers.camera import Camera
+from src.qt.gl_helpers.motion import Motion
+from src.qt.gl_helpers.light import Light
+from src.qt.gl_helpers.shader_program import ShaderProgram
 
 from src.parameters import (MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_RATIO,
                             MAX_CAMERA_DISTANCE_RATIO, FIELD_OF_VIEW)

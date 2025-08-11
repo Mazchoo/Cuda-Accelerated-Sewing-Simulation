@@ -7,7 +7,7 @@ import numpy as np
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.GL import GL_FALSE
 
-from src.qt.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Camera:
@@ -36,7 +36,7 @@ class Camera:
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
         )
 
-    def set_projection_to_global(self, shader: int = None, var_name: str = None):
+    def set_all_globals(self, shader: int = None, var_name: str = None):
         glob_id = get_global_object_id(self, "object_id", shader, var_name)
         glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.projection_matrix)
 

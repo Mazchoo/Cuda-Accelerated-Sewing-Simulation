@@ -3,7 +3,7 @@ import pyrr
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
-from src.qt.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Motion:
