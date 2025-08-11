@@ -1,10 +1,11 @@
 ''' Class to store and manage lighting properties for OpenGL rendering '''
-from typing import Tuple, Dict, Optional
+from typing import Dict, Optional
 
 import numpy as np
 from OpenGL.GL import glUniform3fv, glUniform1f
 
 from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.typing import ColorRGB, Position3D
 
 
 class Light:
@@ -18,8 +19,8 @@ class Light:
     color_glob_id: Optional[int]
     strength_glob_id: Optional[int]
 
-    def __init__(self, position: Tuple[float, float, float],
-                 color: Tuple[float, float, float], strength: float, **globals):
+    def __init__(self, position: Position3D,
+                 color: ColorRGB, strength: float, **globals):
         self.position = np.array(position, dtype=np.float32)
         self.color = np.array(color, dtype=np.float32)
         self.strength = float(strength)

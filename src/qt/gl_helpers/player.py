@@ -1,6 +1,6 @@
 ''' Container for 4x4 matrix representing player view transformation '''
 
-from typing import Optional, Tuple, Dict
+from typing import Optional, Dict
 
 import numpy as np
 from pyrr import matrix44
@@ -8,6 +8,7 @@ from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.typing import Matrix4x4, Position3D
 
 
 class Player:
@@ -23,12 +24,12 @@ class Player:
     _position: np.ndarray
     _theta: float
     _phi: float
-    _position_matrix: np.ndarray
-    _angle_matrix: np.ndarray
-    _view_matrix: np.ndarray
+    _position_matrix: Matrix4x4
+    _angle_matrix: Matrix4x4
+    _view_matrix: Matrix4x4
 
     def __init__(self, camera: Camera, theta: float = 0., phi: float = 0.,
-                 position: Tuple[float, float, float] = (0., 0., 0.), **globals):
+                 position: Position3D = (0., 0., 0.), **globals):
         ''' Initialize player view transformation '''
         self.camera = camera
         self._position = position
