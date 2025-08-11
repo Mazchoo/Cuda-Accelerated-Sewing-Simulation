@@ -1,17 +1,17 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
-from typing import NamedTuple
-
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
 from src.qt.gl_helpers.light import Light
 from src.qt.gl_helpers.shader_program import ShaderProgram
 
-from src.parameters import (MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_RATIO,
+from src.parameters import (VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
+                            MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_RATIO,
                             MAX_CAMERA_DISTANCE_RATIO, FIELD_OF_VIEW)
 
 
-class DrawingPass(NamedTuple):
+
+class DrawingPass:
     ''' Drawing pass data '''
     player: Player
     object_motion: Motion
@@ -19,6 +19,8 @@ class DrawingPass(NamedTuple):
     shader: ShaderProgram
 
     def __init__(self, height: float, aspect_ratio: float):
+        self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
+
         default_distance = DEFAULT_CAMERA_DISTANCE_RATIO * height
         min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
         max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)

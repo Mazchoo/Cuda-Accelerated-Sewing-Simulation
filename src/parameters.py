@@ -31,3 +31,5 @@ DEFAULT_CAMERA_DISTANCE_RATIO = 1.0  # Initial camera distance as ratio of avata
 MAX_CAMERA_DISTANCE_RATIO = 3.0  # Far camera distance as ratio of avatar height
 LIGHT_POSITION_RATIO = 1.2  # Default light position above avatar
 FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
+VERTEX_SHADER_PATH = "./src/qt/shaders/camera.vert"  # Determines vertex transform shader
+FRAGMENT_SHADER_PATH = "./src/qt/shaders/material.frag"  # Determines color transform shader

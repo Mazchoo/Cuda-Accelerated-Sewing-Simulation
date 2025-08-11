@@ -6,27 +6,28 @@ from OpenGL.GL import glUseProgram, glDeleteProgram, GL_VERTEX_SHADER, GL_FRAGME
 
 class ShaderProgram:
     """ Manages OpenGL shader program lifecycle including compilation, usage, and cleanup """
+    _id: int
 
     def __init__(self, vertex_file_path: str, fragment_file_path: str):
         """
             Load and compile vertex/fragment shaders from file paths.
             The compiled program is immediately activated
         """
-        self.id = ShaderProgram._create_shader(vertex_file_path, fragment_file_path)
-        glUseProgram(self.id)
+        self._id = ShaderProgram._create_shader(vertex_file_path, fragment_file_path)
+        glUseProgram(self._id)
 
     @property
     def gl_id(self) -> int:
         """ Returns the OpenGL program ID for direct access """
-        return self.id
+        return self._id
 
     def use(self):
         """ Activate this shader program for subsequent rendering operations """
-        glUseProgram(self.id)
+        glUseProgram(self._id)
 
     def destroy(self):
         """ Clean up GPU resources by deleting the shader program """
-        glDeleteProgram(self.id)
+        glDeleteProgram(self._id)
 
     @staticmethod
     def read_shader_file(path: str):

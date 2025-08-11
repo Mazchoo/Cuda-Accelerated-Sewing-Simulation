@@ -32,13 +32,11 @@ class Player:
                  position: Position3D = (0., 0., 0.), **globals):
         ''' Initialize player view transformation '''
         self.camera = camera
-        self._position = position
-        self._theta = theta
-        self._phi = phi
-
         self.object_id = None
         self.globals = globals
 
+        self._theta = theta
+        self._phi = phi
         self._position = np.array(position, dtype=np.float32)
 
         self._position_matrix = np.identity(4, dtype=np.float32)

@@ -48,6 +48,6 @@ class Camera:
         glob_id = get_global_object_id(self, "object_id", shader, var_name)
         glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.projection_matrix)
 
-    def bind_global_variable_names(self, shader):
+    def bind_global_variable_names(self, shader: int):
         ''' Bind camera properties to uniform variable names in the shader '''
         bind_globals_to_object(self, shader)
