@@ -6,13 +6,12 @@ import numpy as np
 from pyrr import matrix44
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
-from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.camera import Camera
-from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 from src.qt.gl_helpers.typing import Matrix4x4, Position3D
 
 
-class Player:
+class Player(OpenGLUploadable):
     ''' Stores and recalculates a 4x4 view matrix for player perspective and can store it on GPU '''
 
     __slots__ = '_position', '_theta', '_phi', '_position_matrix', \
@@ -102,11 +101,4 @@ class Player:
 
     def set_all_globals(self):
         ''' Update all player properties on the GPU '''
-        glob_id = get_global_object_id(self, "object_id")
-        glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.view_matrix)
-
-    def bind_global_variable_names(self, shader: ShaderProgram):
-        ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
-        shader.use()
-        bind_globals_to_object(self, shader.gl_id)
-        self.set_all_globals()
+        glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.view_matrix)

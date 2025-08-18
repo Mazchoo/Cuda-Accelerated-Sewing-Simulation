@@ -10,13 +10,12 @@ from OpenGL.GL import (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
 from PIL import Image
 import numpy as np
 
-from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.typing import ColorRGB
 from src.qt.gl_helpers.material_parameters import MaterialParameters
-from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 
 
-class Material:
+class Material(OpenGLUploadable):
     ''' Represent a material to switch to it when necessary '''
 
     texture: int
@@ -63,21 +62,15 @@ class Material:
     def set_all_globals(self):
         ''' Update all player properties on the GPU '''
         props = self.material_properties
-        glUniform3fv(get_global_object_id(self, 'ambient_weighting_glob_id'), 1, props.ambient_weighting)
-        glUniform3fv(get_global_object_id(self, 'diffuse_weighting_glob_id'), 1, props.diffuse_weighting)
-        glUniform3fv(get_global_object_id(self, 'specular_weighting_glob_id'), 1, props.specular_weighting)
-        glUniform1f(get_global_object_id(self, 'specular_exponent_glob_id'), props.specular_exponent)
-        glUniform1f(get_global_object_id(self, 'opacicty_glob_id'), props.opacicty)
-        glUniform1f(get_global_object_id(self, 'specular_tint_glob_id'), props.specular_tint)
+        glUniform3fv(self.ambient_weighting_glob_id, 1, props.ambient_weighting)
+        glUniform3fv(self.diffuse_weighting_glob_id, 1, props.diffuse_weighting)
+        glUniform3fv(self.specular_weighting_glob_id, 1, props.specular_weighting)
+        glUniform1f(self.specular_exponent_glob_id, props.specular_exponent)
+        glUniform1f(self.opacicty_glob_id, props.opacity)
+        glUniform1f(self.specular_tint_glob_id, props.specular_tint)
 
         glActiveTexture(self.slot)
         glBindTexture(GL_TEXTURE_2D, self.texture)
-
-    def bind_global_variable_names(self, shader: ShaderProgram):
-        ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
-        shader.use()
-        bind_globals_to_object(self, shader.gl_id)
-        self.set_all_globals()
 
     def destroy(self):
         ''' Clean up memory when finished '''

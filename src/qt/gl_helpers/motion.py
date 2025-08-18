@@ -5,12 +5,11 @@ from pyrr import matrix44
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
 
-from src.qt.gl_helpers.shader_program import ShaderProgram
-from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
+from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 from src.qt.gl_helpers.typing import Matrix4x4, Angles3D, Position3D
 
 
-class Motion:
+class Motion(OpenGLUploadable):
     ''' Stores the position and orientation of a single object '''
     __slots__ = '_angles', '_position', '_angle_matrix', '_position_matrix', \
                 'object_id', 'motion_matrix', "globals"
@@ -122,11 +121,4 @@ class Motion:
 
     def set_all_globals(self):
         """ Copy object motion matrix to the GPU. """
-        glob_id = get_global_object_id(self, "object_id")
-        glUniformMatrix4fv(glob_id, 1, GL_FALSE, self.motion_matrix)
-
-    def bind_global_variable_names(self, shader: ShaderProgram):
-        """ Bind motion matrix to id on the GPU. """
-        shader.use()
-        bind_globals_to_object(self, shader.gl_id)
-        self.set_all_globals()
+        glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.motion_matrix)
