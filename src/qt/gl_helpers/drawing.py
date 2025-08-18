@@ -1,4 +1,6 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
+from typing import List
+
 from OpenGL.GL import glEnable, glBlendFunc
 from OpenGL.GL import GL_DEPTH_TEST, GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 
@@ -7,6 +9,7 @@ from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
 from src.qt.gl_helpers.light import Light
 from src.qt.gl_helpers.shader_program import ShaderProgram
+from src.qt.gl_helpers.mesh_obj import ObjMesh
 
 from src.qt.shaders.shader_parameters import LIGHT_PROPERTIES
 from src.parameters import (VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
@@ -22,6 +25,7 @@ class DrawingPass:
     player: Player
     object_motion: Motion
     light: Light
+    meshes: List[ObjMesh]
 
     def __init__(self, height: float, aspect_ratio: float):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)

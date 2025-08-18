@@ -1,25 +1,43 @@
 ''' Represents data for current material '''
-from typing import Union
+from typing import Union, Dict, Optional
 
 from OpenGL.GL import (glBindTexture, glGenTextures, glGenerateMipmap, glActiveTexture,
-                       glTexParameter, glTexImage2D, glDeleteTextures)
+                       glTexParameter, glTexImage2D, glDeleteTextures,
+                       glUniform3fv, glUniform1f)
 from OpenGL.GL import (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
                        GL_REPEAT, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_MAG_FILTER,
                        GL_NEAREST, GL_LINEAR, GL_RGBA, GL_UNSIGNED_BYTE, GL_TEXTURE0)
 from PIL import Image
 import numpy as np
 
+from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.typing import ColorRGB
+from src.qt.gl_helpers.material_parameters import MaterialParameters
+from src.qt.gl_helpers.uniforms import bind_globals_to_object, get_global_object_id
 
 
 class Material:
     ''' Represent a material to switch to it when necessary '''
-    __slots__ = 'texture'
 
     texture: int
+    slot: int
+    material_properties: MaterialParameters
 
-    def __init__(self, texture_source: Union[str, ColorRGB]):
+    globals: Dict[str, str]
+    ambient_weighting_glob_id: Optional[int]
+    diffuse_weighting_glob_id: Optional[int]
+    specular_weighting_glob_id: Optional[int]
+    specular_exponent_glob_id: Optional[int]
+    opacicty_glob_id: Optional[int]
+    specular_tint_glob_id: Optional[int]
+
+    def __init__(self, texture_source: Union[str, ColorRGB],
+                 params: MaterialParameters, slot: int = GL_TEXTURE0, **globals):
         ''' Source can a file name or a single color '''
+        self.material_properties = params
+        self.globals = globals
+
+        self.slot = slot
         self.texture = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, self.texture)
 
@@ -42,10 +60,24 @@ class Material:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
         glGenerateMipmap(GL_TEXTURE_2D)
 
-    def use(self, slot=GL_TEXTURE0):
-        ''' Switch to using this texture '''
-        glActiveTexture(slot)
+    def set_all_globals(self):
+        ''' Update all player properties on the GPU '''
+        props = self.material_properties
+        glUniform3fv(get_global_object_id(self, 'ambient_weighting_glob_id'), 1, props.ambient_weighting)
+        glUniform3fv(get_global_object_id(self, 'diffuse_weighting_glob_id'), 1, props.diffuse_weighting)
+        glUniform3fv(get_global_object_id(self, 'specular_weighting_glob_id'), 1, props.specular_weighting)
+        glUniform1f(get_global_object_id(self, 'specular_exponent_glob_id'), props.specular_exponent)
+        glUniform1f(get_global_object_id(self, 'opacicty_glob_id'), props.opacicty)
+        glUniform1f(get_global_object_id(self, 'specular_tint_glob_id'), props.specular_tint)
+
+        glActiveTexture(self.slot)
         glBindTexture(GL_TEXTURE_2D, self.texture)
+
+    def bind_global_variable_names(self, shader: ShaderProgram):
+        ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
+        shader.use()
+        bind_globals_to_object(self, shader.gl_id)
+        self.set_all_globals()
 
     def destroy(self):
         ''' Clean up memory when finished '''
