@@ -3,13 +3,14 @@ from types import Iterable, Tuple
 import ctypes
 
 import numpy as np
-from OpenGL.GL import (glBindVertexArray, glDrawArrays,
+from OpenGL.GL import (glBindVertexArray, glDrawElements,
                        glDeleteVertexArrays, glDeleteBuffers,
                        glGenVertexArrays, glGenBuffers,
                        glBindBuffer, glBufferData,
                        glEnableVertexAttribArray, glVertexAttribPointer)
 from OpenGL.GL import (GL_TRIANGLES, GL_FLOAT, GL_ARRAY_BUFFER,
-                       GL_STATIC_DRAW, GL_FALSE)
+                       GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, GL_FALSE,
+                       GL_UNSIGNED_INT)
 
 from src.simulation.mesh import MeshData
 from src.qt.gl_helpers.material import Material
@@ -20,10 +21,11 @@ from src.qt.gl_helpers.uniforms import bind_globals_to_object
 
 class ObjMesh:
 
-    __slots__ = 'vao', 'vbo', 'material_iterator', 'mesh_data'
+    __slots__ = 'vao', 'vbo', 'ebo', 'material_iterator', 'mesh_data'
 
     vao: int
     vbo: int
+    ebo: int
     material_iterator: Iterable[Tuple[Material, int, int]]
     mesh_data: MeshData
 
@@ -31,7 +33,10 @@ class ObjMesh:
 
         self.mesh_data = mesh_data
 
-        self.vao, self.vbo = self.generate_vertex_buffers(self.mesh_data.vertex_data)
+        self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
+            self.mesh_data.vertex_data,
+            self.mesh_data.index_data
+        )
 
         draw_iterator = []
         for key, texture in self.mesh_data.texture_data.items():
@@ -41,15 +46,21 @@ class ObjMesh:
 
         self.draw_iterator = tuple(self.draw_iterator)
 
-    def generate_vertex_buffers(self, vertices: np.ndarray):
+    def generate_vertex_buffers(self, vertices: np.ndarray, indices: np.ndarray):
         ''' Generate memory handles for vertex buffer '''
-        self.vao = glGenVertexArrays(1)
-        glBindVertexArray(self.vao)
+        vao = glGenVertexArrays(1)
+        glBindVertexArray(vao)
 
-        self.vbo = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
+        vbo = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, vbo)
         glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
+
+        ebo = glGenBuffers(1)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.nbytes, indices, GL_STATIC_DRAW)
+
         self.layout_position_texture_normal()
+        return vao, vbo, ebo
 
     def layout_position_texture_normal(self):
         '''
@@ -74,7 +85,7 @@ class ObjMesh:
 
         for material, count, offset in self.draw_iterator:
             material.set_all_globals()
-            glDrawArrays(GL_TRIANGLES, offset, count)
+            glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, ctypes.c_void_p(offset * 4))  # 4 bytes per uint32
 
     def bind_global_variable_names(self, shader: ShaderProgram):
         ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
@@ -88,4 +99,4 @@ class ObjMesh:
             material.destroy()
 
         glDeleteVertexArrays(1, (self.vao, ))
-        glDeleteBuffers(1, (self.vbo, ))
+        glDeleteBuffers(1, (self.vbo, self.ebo))
