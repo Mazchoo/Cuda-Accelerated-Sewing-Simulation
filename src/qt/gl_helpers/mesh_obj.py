@@ -6,10 +6,10 @@ import numpy as np
 from OpenGL.GL import (glBindVertexArray, glDrawElements,
                        glDeleteVertexArrays, glDeleteBuffers,
                        glGenVertexArrays, glGenBuffers,
-                       glBindBuffer, glBufferData,
+                       glBindBuffer, glBufferData, glBufferSubData,
                        glEnableVertexAttribArray, glVertexAttribPointer)
 from OpenGL.GL import (GL_TRIANGLES, GL_FLOAT, GL_ARRAY_BUFFER,
-                       GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, GL_FALSE,
+                       GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, GL_DYNAMIC_DRAW, GL_FALSE,
                        GL_UNSIGNED_INT)
 
 from src.simulation.mesh import MeshData
@@ -53,7 +53,7 @@ class ObjMesh:
 
         vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_DYNAMIC_DRAW)
 
         ebo = glGenBuffers(1)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
@@ -92,6 +92,12 @@ class ObjMesh:
         shader.use()
         bind_globals_to_object(self, shader.gl_id)
         self.set_all_globals()
+
+    def reupload_vertices(self):
+        ''' Reupload vertex data to the GPU '''
+        vertices = self.mesh_data.vertex_data
+        glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.nbytes, vertices)
 
     def destroy(self):
         """ Remove buffers after app is finished """
