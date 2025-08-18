@@ -1,4 +1,4 @@
-'''  '''
+''' Drawable OpenGL mesh '''
 from types import Iterable, Tuple
 import ctypes
 
@@ -79,7 +79,7 @@ class ObjMesh:
         glEnableVertexAttribArray(2)
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
 
-    def draw(self):
+    def set_all_globals(self):
         """ Perform a drawing pass with all materials """
         glBindVertexArray(self.vao)
 
