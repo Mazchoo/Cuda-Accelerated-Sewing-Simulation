@@ -20,7 +20,7 @@ from src.qt.gl_helpers.uniforms import bind_globals_to_object
 
 
 class ObjMesh:
-
+    ''' Store vertex, indices and textures of an object and perform draw (set_all_globals) '''
     __slots__ = 'vao', 'vbo', 'ebo', 'material_iterator', 'mesh_data'
 
     vao: int
