@@ -13,10 +13,6 @@ def parse_texture_coord(line):
     if len(vertex) != 2:
         raise ValueError(f'Texture Coord {line} is wrong length.')
 
-    v_original = vertex[0]
-    vertex[0] = -vertex[1]
-    vertex[1] = v_original
-
     return vertex
 
 
