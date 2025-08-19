@@ -1,9 +1,6 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
 from typing import List
 
-from OpenGL.GL import glEnable, glBlendFunc
-from OpenGL.GL import GL_DEPTH_TEST, GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
-
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
@@ -32,10 +29,6 @@ class DrawingPass:
         height = body_mesh.height
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
 
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
         default_distance = DEFAULT_CAMERA_DISTANCE_RATIO * height
         min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
         max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
@@ -62,5 +55,6 @@ class DrawingPass:
 
     def draw(self):
         """ Perform a drawing pass """
+        self.shader.use()
         for mesh in self.meshes:
             mesh.set_all_globals()

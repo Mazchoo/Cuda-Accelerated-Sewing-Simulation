@@ -37,32 +37,35 @@ class ObjMesh(OpenGLUploadable):
         self.mesh_data = mesh_data
 
         self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
-            self.mesh_data.vertex_data,
-            self.mesh_data.index_data
+            np.array([[0, 0.5, 0, 0, 0, 0, 0, 1], [0.2, 0, 0, 0, 0, 0, 0, 1], [-0.2, 0, 0, 0, 0, 0, 0, 1]], dtype=np.float32),
+            np.array([0, 1, 2], dtype=np.uint32),
         )
 
-        draw_iterator = []
+        material_iterator = []
         for texture in self.mesh_data.texture_data:
             material_properties = MaterialParameters()
             material = Material(texture['path'], material_properties, **MATERIAL_PROPERTIES)
-            draw_iterator.append((material, texture['count'], texture['offset']))
+            material_iterator.append((material, 3, 0))
 
-        self.draw_iterator = tuple(draw_iterator)
+        self.material_iterator = tuple(material_iterator)
 
     def generate_vertex_buffers(self, vertices: np.ndarray, indices: np.ndarray):
         ''' Generate memory handles for vertex buffer '''
         vao = glGenVertexArrays(1)
         glBindVertexArray(vao)
 
+        vertices = np.asarray(vertices, dtype=np.float32, order='C')
         vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_DYNAMIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
 
+        indices = np.asarray(indices, dtype=np.uint32, order='C')
         ebo = glGenBuffers(1)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.nbytes, indices, GL_STATIC_DRAW)
 
         self.layout_position_texture_normal()
+
         return vao, vbo, ebo
 
     def layout_position_texture_normal(self):
@@ -73,26 +76,38 @@ class ObjMesh(OpenGLUploadable):
             (s, t) texture
             (nx, ny, nz) normal
         '''
+        comps_per_vertex = 8  # 3 pos + 2 uv + 3 norm
+        stride = comps_per_vertex * ctypes.sizeof(ctypes.c_float)  # or vertices.itemsize * 8
+
+        # positions: first 3 floats
         glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, ctypes.c_void_p(0))
 
+        # uvs: next 2 floats -> offset = 3 * sizeof(float)
         glEnableVertexAttribArray(1)
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(12))
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, ctypes.c_void_p(3 * ctypes.sizeof(ctypes.c_float)))
 
+        # normals: next 3 floats -> offset = 5 * sizeof(float)
         glEnableVertexAttribArray(2)
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)))
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glBindVertexArray(0)
 
     def set_all_globals(self):
         """ Perform a drawing pass with all materials """
         glBindVertexArray(self.vao)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo)
 
-        for material, count, offset in self.draw_iterator:
+        index_bytes = self.mesh_data.index_data.itemsize
+        for material, count, offset in self.material_iterator:
             material.set_all_globals()
-            glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, ctypes.c_void_p(offset * 4))  # 4 bytes per uint32
+            glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, ctypes.c_void_p(offset * index_bytes))
+        glBindVertexArray(0)
 
     def bind_global_variable_names(self, shader: ShaderProgram):
         ''' (Override) Bind all the materials to a shader, this object has special handling for re-uploading vertices '''
-        for material, _, _ in self.draw_iterator:
+        for material, _, _ in self.material_iterator:
             material.bind_global_variable_names(shader)
 
     def reupload_vertices(self):
@@ -103,7 +118,7 @@ class ObjMesh(OpenGLUploadable):
 
     def destroy(self):
         """ Remove buffers after app is finished """
-        for material, _, _ in self.draw_iterator:
+        for material, _, _ in self.material_iterator:
             material.destroy()
 
         glDeleteVertexArrays(1, (self.vao, ))
