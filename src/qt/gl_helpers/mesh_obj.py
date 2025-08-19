@@ -28,7 +28,7 @@ class ObjMesh(OpenGLUploadable):
     ebo: int
     material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData
-    globals: Dict[str, str]
+    globals: Dict[str, str] = {}  # Empty
 
     def __init__(self, mesh_data: MeshData):
 
@@ -40,13 +40,12 @@ class ObjMesh(OpenGLUploadable):
         )
 
         draw_iterator = []
-        for key, texture in self.mesh_data.texture_data.items():
+        for texture in self.mesh_data.texture_data:
             material_properties = MaterialParameters()
-            material = Material(key, material_properties)
+            material = Material(texture['path'], material_properties)
             draw_iterator.append((material, texture['count'], texture['offset']))
 
-        self.draw_iterator = tuple(self.draw_iterator)
-        self.globals = {}
+        self.draw_iterator = tuple(draw_iterator)
 
     def generate_vertex_buffers(self, vertices: np.ndarray, indices: np.ndarray):
         ''' Generate memory handles for vertex buffer '''

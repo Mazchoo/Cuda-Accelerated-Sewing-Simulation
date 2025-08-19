@@ -35,20 +35,9 @@ class Light(OpenGLUploadable):
         self.reflective_strength_glob_id = None
         self.ambient_strength_glob_id = None
 
-    def set_position_to_global(self):
-        ''' Copy light position to GPU uniform variable '''
-        glUniform3fv(self.position_glob_id, 1, self.position)
-
-    def set_color_to_global(self):
-        ''' Copy light color to GPU uniform variable '''
-        glUniform3fv(self.color_glob_id, 1, self.color)
-
-    def set_strength_to_global(self):
-        ''' Copy light strength to GPU uniform variable '''
-        glUniform1f(self.strength_glob_id, self.reflective_strength)
-
     def set_all_globals(self):
         ''' Update all light properties on the GPU '''
-        self.set_position_to_global()
-        self.set_color_to_global()
-        self.set_strength_to_global()
+        glUniform3fv(self.position_glob_id, 1, self.position)
+        glUniform3fv(self.color_glob_id, 1, self.color)
+        glUniform1f(self.reflective_strength_glob_id, self.reflective_strength)
+        glUniform1f(self.ambient_strength_glob_id, self.ambient_strength)

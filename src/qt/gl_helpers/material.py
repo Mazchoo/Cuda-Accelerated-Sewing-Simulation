@@ -51,12 +51,11 @@ class Material(OpenGLUploadable):
             texture_array = np.array([[texture_source]], dtype=np.float32)
             image = Image.fromarray(texture_array, mode="RGBA")
 
-        image_width, image_height, _ = image.shape
         image.transpose(Image.Transpose.ROTATE_90)
         image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
         image_data = image.tobytes("raw", "RGBA")
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
         glGenerateMipmap(GL_TEXTURE_2D)
 
     def set_all_globals(self):
