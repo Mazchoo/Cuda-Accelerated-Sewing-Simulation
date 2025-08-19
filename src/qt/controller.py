@@ -1,8 +1,8 @@
 ''' Main controller module to create to do controller '''
 from PyQt5.QtWidgets import QWidget
 
-from src.qt.common.window_helpers import set_window_icon
-from src.qt.common.controller_factory import CreateQtController
+from src.qt.gl_helpers.common.window_helpers import set_window_icon
+from src.qt.gl_helpers.common.controller_factory import CreateQtController
 
 
 @CreateQtController  # initialise with window, model, layout

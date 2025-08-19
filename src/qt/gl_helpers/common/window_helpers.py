@@ -9,7 +9,7 @@ except ImportError:
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QMainWindow
 
-from UI.SewingSimulationUI import Ui_MainWindow
+from src.qt.ui.SewingSimulationUI import Ui_MainWindow
 from src.qt.open_gl_handle import SewingGLWidget
 
 

@@ -11,6 +11,7 @@ from src.qt.gl_helpers.light import Light
 from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.mesh_obj import ObjMesh
 
+from src.simulation.mesh import MeshData
 from src.qt.shaders.shader_parameters import LIGHT_PROPERTIES
 from src.parameters import (VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
                             MIN_CAMERA_DISTANCE_RATIO, DEFAULT_CAMERA_DISTANCE_RATIO,
@@ -27,7 +28,7 @@ class DrawingPass:
     light: Light
     meshes: List[ObjMesh]
 
-    def __init__(self, height: float, aspect_ratio: float):
+    def __init__(self, height: float, aspect_ratio: float, body_mesh: MeshData):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
 
         glEnable(GL_DEPTH_TEST)
@@ -54,3 +55,6 @@ class DrawingPass:
 
         self.object_motion = Motion(object_id="motion")
         self.object_motion.bind_global_variable_names(self.shader)
+
+        self.meshes = [ObjMesh(body_mesh)]
+        self.meshes[0].bind_global_variable_names(self.shader)

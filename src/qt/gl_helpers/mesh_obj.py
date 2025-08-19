@@ -1,5 +1,5 @@
 ''' Drawable OpenGL mesh '''
-from types import Iterable, Tuple
+from typing import Tuple, Dict
 import ctypes
 
 import numpy as np
@@ -16,18 +16,19 @@ from src.simulation.mesh import MeshData
 from src.qt.gl_helpers.material import Material
 from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.material_parameters import MaterialParameters
-from src.qt.gl_helpers.uploadable_abc import bind_globals_to_object
+from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 
 
-class ObjMesh:
+class ObjMesh(OpenGLUploadable):
     ''' Store vertex, indices and textures of an object and perform draw (set_all_globals) '''
     __slots__ = 'vao', 'vbo', 'ebo', 'material_iterator', 'mesh_data'
 
     vao: int
     vbo: int
     ebo: int
-    material_iterator: Iterable[Tuple[Material, int, int]]
+    material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData
+    globals: Dict[str, str]
 
     def __init__(self, mesh_data: MeshData):
 
@@ -45,6 +46,7 @@ class ObjMesh:
             draw_iterator.append((material, texture['count'], texture['offset']))
 
         self.draw_iterator = tuple(self.draw_iterator)
+        self.globals = {}
 
     def generate_vertex_buffers(self, vertices: np.ndarray, indices: np.ndarray):
         ''' Generate memory handles for vertex buffer '''
@@ -87,11 +89,10 @@ class ObjMesh:
             material.set_all_globals()
             glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, ctypes.c_void_p(offset * 4))  # 4 bytes per uint32
 
-    def draw(self, shader: ShaderProgram):
-        ''' Bind player properties to uniform variable names in the shader, sets current state to global '''
-        shader.use()
-        bind_globals_to_object(self, shader.gl_id)
-        self.set_all_globals()
+    def bind_global_variable_names(self, shader: ShaderProgram):
+        ''' (Override) Bind all the materials to a shader, this object has special handling for re-uploading vertices '''
+        for material, _, _ in self.draw_iterator:
+            material.bind_global_variable_names(shader)
 
     def reupload_vertices(self):
         ''' Reupload vertex data to the GPU '''

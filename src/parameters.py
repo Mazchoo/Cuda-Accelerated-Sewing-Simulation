@@ -48,3 +48,7 @@ DEFAULT_SPECULAR_TINT = 0.
 # Shader paths
 VERTEX_SHADER_PATH = "./src/qt/shaders/camera.vert"  # Determines vertex transform shader
 FRAGMENT_SHADER_PATH = "./src/qt/shaders/material.frag"  # Determines color transform shader
+
+# Body Data
+BODY_PATH = "./assets/BodyMesh.obj"
+BODY_ANNOTATIONS_PATH = "./assets/BodyAnnotations.json"

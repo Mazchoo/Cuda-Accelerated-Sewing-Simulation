@@ -51,12 +51,12 @@ vec4 calculatePointLight(vec3 fragmentPosition, vec3 fragmentNormal) {
     result += textureColor * currentMaterial.ambientWeighting * lightSource.ambientStrength;
 
     // Diffuse lighting
-    result += lightSource.color * currentMaterial.diffuseWeighting * lightSource.reflectiveStrength * distModifier * max(0.0, dot(fragmentNormal, fragLight)) * dist2inv;
+    result += lightSource.color * currentMaterial.diffuseWeighting * lightSource.reflectiveStrength * max(0.0, dot(fragmentNormal, fragLight)) * dist2inv;
 
     // Specular lighting
     float specularModifier = pow(max(0.0, dot(fragmentNormal, halfVector)), currentMaterial.specularExponent) * dist2inv;
     vec3 specularColor = mix(lightSource.color, textureColor, currentMaterial.specularTint);
-    result += specularColor * currentMaterial.specularWeighting * lightSource.reflectiveStrength * specularModifier * distModifier;
+    result += specularColor * currentMaterial.specularWeighting * lightSource.reflectiveStrength * specularModifier;
     result = clamp(result, 0.0, 1.0);
     result = pow(result, vec3(1.0/2.2)); // Gamma adjustment
 

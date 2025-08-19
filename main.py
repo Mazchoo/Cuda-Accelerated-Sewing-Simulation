@@ -1,12 +1,19 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
 
-from src.qt.common.window_helpers import load_qss, attach_qss_editor, edit_ui_template
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QSurfaceFormat
+
+from src.qt.gl_helpers.common.window_helpers import load_qss, attach_qss_editor, edit_ui_template
 
 from src.qt.controller import SewingSimulationController
-from UI.SewingSimulationUI import Ui_MainWindow
+from src.qt.ui.SewingSimulationUI import Ui_MainWindow
 
 if __name__ == '__main__':
+    fmt = QSurfaceFormat()
+    fmt.setVersion(3, 3)
+    fmt.setProfile(QSurfaceFormat.CoreProfile)
+    QSurfaceFormat.setDefaultFormat(fmt)
+
     app = QApplication(sys.argv)
 
     parent_window = QMainWindow()
