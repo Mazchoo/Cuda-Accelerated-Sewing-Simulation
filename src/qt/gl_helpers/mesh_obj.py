@@ -37,7 +37,7 @@ class ObjMesh(OpenGLUploadable):
         self.mesh_data = mesh_data
 
         self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
-            np.array([[0, 0.5, 0, 0, 0, 0, 0, 1], [0.2, 0, 0, 0, 0, 0, 0, 1], [-0.2, 0, 0, 0, 0, 0, 0, 1]], dtype=np.float32),
+            np.array([[0.2, 0, 0, 0, 0, 0, 0, 1], [0, 2, 0, 0, 0, 0, 0, 1], [-0.2, 0, 0, 0, 0, 0, 0, 1]], dtype=np.float32),
             np.array([0, 1, 2], dtype=np.uint32),
         )
 

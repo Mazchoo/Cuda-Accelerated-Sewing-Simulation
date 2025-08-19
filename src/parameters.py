@@ -26,9 +26,9 @@ DEFAULT_BLOCK_SIZE = 1024  # Default cuda block size
 COLLISION_BLOCK_SIZE = 64  # Block size for ray tracing algorithm
 
 # Display parameters
-MIN_CAMERA_DISTANCE_RATIO = 0.1  # Near camera distance as ratio of avatar height
+MIN_CAMERA_DISTANCE_RATIO = 0.01  # Near camera distance as ratio of avatar height
 DEFAULT_CAMERA_DISTANCE_RATIO = 1.0  # Initial camera distance as ratio of avatar height
-MAX_CAMERA_DISTANCE_RATIO = 3.0  # Far camera distance as ratio of avatar height
+MAX_CAMERA_DISTANCE_RATIO = 5.0  # Far camera distance as ratio of avatar height
 FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 
 # Default light properties

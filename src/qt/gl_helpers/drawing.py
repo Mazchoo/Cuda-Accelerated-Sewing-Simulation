@@ -1,6 +1,8 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
 from typing import List
 
+import numpy as np
+
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
@@ -36,9 +38,10 @@ class DrawingPass:
         camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance)
 
         # Viewing position is middle of body at default distance
-        view_position = [0, height/2, -default_distance]
+        view_position = [0, 0, -1]
         self.player = Player(camera, position=view_position,
                              object_id="camera")
+        self.player.view_matrix = np.eye(4, dtype=np.float32)
         self.player.bind_global_variable_names(self.shader)
 
         light_position = [0, LIGHT_POSITION_RATIO * height, 0]
