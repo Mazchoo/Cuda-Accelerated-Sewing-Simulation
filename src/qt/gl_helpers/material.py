@@ -48,7 +48,11 @@ class Material(OpenGLUploadable):
         if isinstance(texture_source, str):
             image = Image.open(texture_source).convert("RGBA")
         else:
+            if len(texture_source) == 3:
+                texture_source = list(texture_source) + [1.0]
             texture_array = np.array([[texture_source]], dtype=np.float32)
+            texture_array *= 255
+            texture_array = texture_array.astype(np.uint8)
             image = Image.fromarray(texture_array, mode="RGBA")
 
         image.transpose(Image.Transpose.ROTATE_90)
