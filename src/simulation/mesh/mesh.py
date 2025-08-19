@@ -70,6 +70,11 @@ class MeshData:
         """ Return information that links textures to consecutive vertex indices """
         return self._texture_data
 
+    @property
+    def height(self) -> float:
+        """ Get max difference in y coordinate """
+        return self._vertex_data[:, 1].max() - self._vertex_data[:, 1].min()
+
     def place_at_origin(self):
         """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
         x_mean = self._vertex_data[:, 0].mean()

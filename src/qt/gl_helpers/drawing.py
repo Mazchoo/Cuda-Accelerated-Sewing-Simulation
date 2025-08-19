@@ -28,7 +28,8 @@ class DrawingPass:
     light: Light
     meshes: List[ObjMesh]
 
-    def __init__(self, height: float, aspect_ratio: float, body_mesh: MeshData):
+    def __init__(self, aspect_ratio: float, body_mesh: MeshData):
+        height = body_mesh.height
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
 
         glEnable(GL_DEPTH_TEST)
@@ -58,3 +59,8 @@ class DrawingPass:
 
         self.meshes = [ObjMesh(body_mesh)]
         self.meshes[0].bind_global_variable_names(self.shader)
+
+    def draw(self):
+        """ Perform a drawing pass """
+        for mesh in self.meshes:
+            mesh.set_all_globals()

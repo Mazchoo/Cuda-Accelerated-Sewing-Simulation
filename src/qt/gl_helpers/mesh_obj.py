@@ -18,6 +18,8 @@ from src.qt.gl_helpers.shader_program import ShaderProgram
 from src.qt.gl_helpers.material_parameters import MaterialParameters
 from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 
+from src.qt.shaders.shader_parameters import MATERIAL_PROPERTIES
+
 
 class ObjMesh(OpenGLUploadable):
     ''' Store vertex, indices and textures of an object and perform draw (set_all_globals) '''
@@ -42,7 +44,7 @@ class ObjMesh(OpenGLUploadable):
         draw_iterator = []
         for texture in self.mesh_data.texture_data:
             material_properties = MaterialParameters()
-            material = Material(texture['path'], material_properties)
+            material = Material(texture['path'], material_properties, **MATERIAL_PROPERTIES)
             draw_iterator.append((material, texture['count'], texture['offset']))
 
         self.draw_iterator = tuple(draw_iterator)

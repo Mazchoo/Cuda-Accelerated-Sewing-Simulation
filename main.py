@@ -27,6 +27,6 @@ if __name__ == '__main__':
 
     parent_window.show()
 
-    load_qss(app, "UI/SewingSimulation.qss")
+    load_qss(app, "src/qt/ui/SewingSimulation.qss")
 
     sys.exit(app.exec_())

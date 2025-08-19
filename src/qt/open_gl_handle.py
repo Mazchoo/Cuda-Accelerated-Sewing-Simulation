@@ -33,15 +33,14 @@ class SewingGLWidget(QOpenGLWidget):
         avatar_mesh = parse_obj(BODY_PATH, BODY_ANNOTATIONS_PATH)
         avatar_mesh.scale_vertices(AVATAR_SCALING)
 
-        w, h = self.width(), self.height()
+        w, h = 1346, 907  # ToDo - make this dynamic
 
-        self.drawing_pass = DrawingPass(float(h), w / h, avatar_mesh)
+        self.drawing_pass = DrawingPass(w / h, avatar_mesh)
 
     def paintGL(self):
         ''' Qt Callback for updating on every frame '''
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-        for mesh in self.drawing_pass.meshes:
-            mesh.draw
+        self.drawing_pass.draw()
 
     def resizeGL(self, w, h):
         ''' Qt Callback for updating viewport '''
