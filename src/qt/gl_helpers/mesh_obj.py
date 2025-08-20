@@ -37,15 +37,15 @@ class ObjMesh(OpenGLUploadable):
         self.mesh_data = mesh_data
 
         self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
-            np.array([[0.2, 0, 0, 0, 0, 0, 0, 1], [0, 2, 0, 0, 0, 0, 0, 1], [-0.2, 0, 0, 0, 0, 0, 0, 1]], dtype=np.float32),
-            np.array([0, 1, 2], dtype=np.uint32),
+            self.mesh_data.vertex_data,
+            self.mesh_data.index_data.flatten()
         )
 
         material_iterator = []
         for texture in self.mesh_data.texture_data:
             material_properties = MaterialParameters()
             material = Material(texture['path'], material_properties, **MATERIAL_PROPERTIES)
-            material_iterator.append((material, 3, 0))
+            material_iterator.append((material, texture["count"], texture["offset"]))
 
         self.material_iterator = tuple(material_iterator)
 
@@ -57,7 +57,7 @@ class ObjMesh(OpenGLUploadable):
         vertices = np.asarray(vertices, dtype=np.float32, order='C')
         vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_DYNAMIC_DRAW)
 
         indices = np.asarray(indices, dtype=np.uint32, order='C')
         ebo = glGenBuffers(1)
@@ -91,9 +91,6 @@ class ObjMesh(OpenGLUploadable):
         glEnableVertexAttribArray(2)
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)))
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
-        glBindVertexArray(0)
-
     def set_all_globals(self):
         """ Perform a drawing pass with all materials """
         glBindVertexArray(self.vao)
@@ -103,7 +100,6 @@ class ObjMesh(OpenGLUploadable):
         for material, count, offset in self.material_iterator:
             material.set_all_globals()
             glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, ctypes.c_void_p(offset * index_bytes))
-        glBindVertexArray(0)
 
     def bind_global_variable_names(self, shader: ShaderProgram):
         ''' (Override) Bind all the materials to a shader, this object has special handling for re-uploading vertices '''

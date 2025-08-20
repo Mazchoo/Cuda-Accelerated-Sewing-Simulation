@@ -38,10 +38,9 @@ class DrawingPass:
         camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance)
 
         # Viewing position is middle of body at default distance
-        view_position = [0, 0, -1]
+        view_position = [0, height, default_distance]
         self.player = Player(camera, position=view_position,
                              object_id="camera")
-        self.player.view_matrix = np.eye(4, dtype=np.float32)
         self.player.bind_global_variable_names(self.shader)
 
         light_position = [0, LIGHT_POSITION_RATIO * height, 0]

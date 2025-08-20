@@ -49,7 +49,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
     ind = 0
     seen_faces = []
     for texture, face_list in zip(texture_data, faces.values()):
-        texture['offset'] = len(index_data)
+        texture['offset'] = len(index_data) * 3
 
         for face in face_list:
             face_inds = []
@@ -66,7 +66,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
 
             index_data.append(face_inds)
 
-        texture['count'] = len(index_data) - texture['offset']
+        texture['count'] = len(index_data) * 3 - texture['offset']
 
     return np.array(vertex_data, dtype=np.float32), np.array(index_data, dtype=np.uint32), texture_data
 

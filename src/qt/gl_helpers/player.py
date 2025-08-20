@@ -88,16 +88,13 @@ class Player(OpenGLUploadable):
             Recalculate the player view matrix based on current parameters
             Atleast one of position, theta or phi must be set to True
         '''
-        if position:
-            self._position_matrix[3, :3] = self._position
+        view = np.transpose(matrix44.create_look_at(
+            eye=self._position,
+            target=[0., -self._position[1], 0.],
+            up=[0., 1., 0.]
+        ))
 
-        if theta or phi:
-            self._angle_matrix = matrix44.create_from_eulers(
-                eulers=[self._phi, 0, self._theta],
-                dtype=np.float32
-            )
-
-        self.view_matrix = self.camera.projection_matrix @ self._angle_matrix @ self._position_matrix
+        self.view_matrix = self.camera.projection_matrix @ view
 
     def set_all_globals(self):
         ''' Update all player properties on the GPU '''
