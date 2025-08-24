@@ -13,7 +13,7 @@ out vec3 fragmentNormal;
 
 void main()
 {
-    gl_Position = camera * motion * vec4(vertexPos, 1.0);
+    gl_Position = camera * motion * vec4(vertexPos.x, vertexPos.z, vertexPos.y, 1.0);
 
     fragmentTexCoord = vertexTexCoord;
     fragmentPosition = gl_Position.xyz;
