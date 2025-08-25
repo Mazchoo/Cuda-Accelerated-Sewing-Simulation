@@ -3,20 +3,26 @@ from typing import Optional
 
 from pyrr import matrix44
 import numpy as np
+from OpenGL.GL import glUniformMatrix4fv, GL_FALSE
+
+from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 
 
-class Camera:
+class Camera(OpenGLUploadable):
     ''' Stores and recalculates a 4x4 perspective projection matrix and can store it on GPU '''
 
     __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', 'projection_matrix', 'globals'
 
-    def __init__(self, fovy: float, aspect: float, near: float, far: float):
+    def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals):
         '''
             fovy: The vertical field of view angle in degrees
             aspect: The aspect ratio (width/height) of the viewport
             near: The distance to the near clipping plane (z is mapped to the valid range [-1, 1])
             far: The distance to the far clipping plane (z is mapped to the valid range [-1, 1])
         '''
+        self.object_id = None
+        self.globals = globals
+
         self.fovy = fovy
         self.aspect = aspect
         self.near = near
@@ -32,6 +38,10 @@ class Camera:
         near = near or self.near
         far = far or self.far
 
-        self.projection_matrix = np.transpose(matrix44.create_perspective_projection(
+        self.projection_matrix = matrix44.create_perspective_projection(
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
-        ))
+        )
+
+    def set_all_globals(self):
+        ''' Update all player properties on the GPU '''
+        glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.projection_matrix)

@@ -27,7 +27,7 @@ COLLISION_BLOCK_SIZE = 64  # Block size for ray tracing algorithm
 
 # Display parameters
 MIN_CAMERA_DISTANCE_RATIO = 0.01  # Near camera distance as ratio of avatar height
-DEFAULT_CAMERA_DISTANCE_RATIO = 1.0  # Initial camera distance as ratio of avatar height
+DEFAULT_CAMERA_DISTANCE_RATIO = 1.5  # Initial camera distance as ratio of avatar height
 MAX_CAMERA_DISTANCE_RATIO = 5.0  # Far camera distance as ratio of avatar height
 FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 
@@ -38,7 +38,7 @@ LIGHT_REFLECTIVE_STRENGTH = 2.0  # Default reflective strength
 LIGHT_AMBIENT_STRENGTH = 2.0  # Default ambient strength
 
 # Default material properties
-DEFAULT_AMBIENT_WEIGHTING = (0.2, 0.2, 0.2)
+DEFAULT_AMBIENT_WEIGHTING = (0.4, 0.4, 0.4)
 DEFAULT_DIFFUSE_WEIGHTING = (0.5, 0.5, 0.5)
 DEFAULT_SPECULAR_WEIGHTING = (1, 1, 1)
 DEFAULT_SPECULAR_EXPONENT = 0.75

@@ -1,8 +1,6 @@
 ''' Container of all the information for an open GL draw call (outside the vertex and index data) '''
 from typing import List
 
-import numpy as np
-
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
@@ -22,6 +20,7 @@ from src.parameters import (VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
 class DrawingPass:
     ''' Drawing pass data '''
     shader: ShaderProgram
+    camera: Camera
     player: Player
     object_motion: Motion
     light: Light
@@ -35,12 +34,16 @@ class DrawingPass:
         min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
         max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
 
-        camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance)
+        self.camera = Camera(FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance,
+                             object_id="camera")
+        self.camera.bind_global_variable_names(self.shader)
 
         # Viewing position is middle of body at default distance
         view_position = [0, height/2, default_distance]
-        self.player = Player(camera, position=view_position,
-                             object_id="camera")
+        view_target = [0, height/2, 0]
+        self.player = Player(position=view_position,
+                             target=view_target,
+                             object_id="projection")
         self.player.bind_global_variable_names(self.shader)
 
         light_position = [0, LIGHT_POSITION_RATIO * height, 0]
