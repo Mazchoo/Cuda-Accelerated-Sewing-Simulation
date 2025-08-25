@@ -1,5 +1,6 @@
 ''' Container for 4by4 matrix representing camera projection '''
 from typing import Optional
+from numpy import ndarray
 
 from pyrr import matrix44
 import numpy as np
@@ -11,7 +12,15 @@ from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 class Camera(OpenGLUploadable):
     ''' Stores and recalculates a 4x4 perspective projection matrix and can store it on GPU '''
 
-    __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', 'projection_matrix', 'globals'
+    __slots__ = 'fovy', 'aspect', 'near', 'far', 'object_id', '_projection_matrix', 'globals'
+    fovy: float
+    aspect: float
+    near: float
+    far: float
+
+    object_id: Optional[int]
+    _projection_matrix: ndarray
+    globals: dict
 
     def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals):
         '''
@@ -38,10 +47,10 @@ class Camera(OpenGLUploadable):
         near = near or self.near
         far = far or self.far
 
-        self.projection_matrix = matrix44.create_perspective_projection(
+        self._projection_matrix = matrix44.create_perspective_projection(
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
         )
 
     def set_all_globals(self):
         ''' Update all player properties on the GPU '''
-        glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.projection_matrix)
+        glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self._projection_matrix)
