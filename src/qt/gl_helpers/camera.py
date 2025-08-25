@@ -1,5 +1,5 @@
 ''' Container for 4by4 matrix representing camera projection '''
-from typing import Optional
+from typing import Optional, Dict
 from numpy import ndarray
 
 from pyrr import matrix44
@@ -19,8 +19,9 @@ class Camera(OpenGLUploadable):
     far: float
 
     object_id: Optional[int]
+    globals: Dict[str, str]
+
     _projection_matrix: ndarray
-    globals: dict
 
     def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals):
         '''
