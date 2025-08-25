@@ -32,6 +32,6 @@ class Camera:
         near = near or self.near
         far = far or self.far
 
-        self.projection_matrix = matrix44.create_perspective_projection(
+        self.projection_matrix = np.transpose(matrix44.create_perspective_projection(
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
-        )
+        ))

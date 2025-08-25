@@ -88,11 +88,11 @@ class Player(OpenGLUploadable):
             Recalculate the player view matrix based on current parameters
             Atleast one of position, theta or phi must be set to True
         '''
-        view = matrix44.create_look_at(
+        view = np.transpose(matrix44.create_look_at(
             eye=self._position,
             target=[0., self._position[1], 0.],
             up=[0., 1., 0.]
-        )
+        ))
 
         self.view_matrix = self.camera.projection_matrix @ view
 
