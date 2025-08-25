@@ -1,7 +1,18 @@
 import sys
 import numpy as np
+import ctypes
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
-from OpenGL.GL import *
+from OpenGL.GL import (
+    glCreateProgram, glCreateShader, glShaderSource, glCompileShader,
+    glAttachShader, glLinkProgram, glDeleteShader, glGenVertexArrays,
+    glBindVertexArray, glGenBuffers, glBindBuffer, glBufferData,
+    glVertexAttribPointer, glEnableVertexAttribArray, glEnable,
+    glClearColor, glClear, glUseProgram, glGetUniformLocation,
+    glUniformMatrix4fv, glDrawElements,
+    GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_ARRAY_BUFFER, GL_STATIC_DRAW,
+    GL_ELEMENT_ARRAY_BUFFER, GL_FLOAT, GL_FALSE, GL_DEPTH_TEST,
+    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_TRIANGLES, GL_UNSIGNED_INT
+)
 from pyrr import matrix44, Vector3
 
 VERTEX_SHADER = """
@@ -38,10 +49,10 @@ class GLWidget(QOpenGLWidget):
         # Vertex data: positions and colors
         self.vertices = np.array([
             # positions        # colors
-            -0.5, -0.5, 0.0,   1.0, 0.0, 0.0,
-             0.5, -0.5, 0.0,   0.0, 1.0, 0.0,
-             0.5,  0.5, 0.0,   0.0, 0.0, 1.0,
-            -0.5,  0.5, 0.0,   1.0, 1.0, 0.0
+            -0.5, -0.5, 0.0,   1.0, 0.0, 0.0,  # Red
+            0.5, -0.5, 0.0,   0.0, 1.0, 0.0,  # Green
+            0.5,  0.5, 0.0,   0.0, 0.0, 1.0,  # Blue
+            -0.5,  0.5, 0.0,   1.0, 1.0, 0.0   # Yellow
         ], dtype=np.float32)
 
         # EBO indices
@@ -99,7 +110,7 @@ class GLWidget(QOpenGLWidget):
             dtype=np.float32
         )
         projection = matrix44.create_perspective_projection(
-            fovy=45.0, aspect=self.width()/self.height(), 
+            fovy=45.0, aspect=self.width()/self.height(),
             near=0.1, far=10.0, dtype=np.float32
         )
 
