@@ -5,13 +5,16 @@ import numpy as np
 from src.parameters import DEFAULT_BLOCK_SIZE, COLLISION_BLOCK_SIZE
 from src.simulation.setup.cuda_variables import CudaVariables
 from src.simulation.setup.cuda_kernels import (
-    GRAVITY_MODULE,
-    STRESS_MODULE,
-    SHEAR_MODULE,
-    BEND_MODULE,
-    UPDATE_POSITION_MODULE,
-    SEWING_MODULE,
-    COLLISION_MODULE,
+    GRAVITY_KERNEL,
+    STRESS_KERNEL,
+    SHEAR_KERNEL,
+    BEND_KERNEL,
+    UPDATE_POSITION_KERNEL,
+    SEWING_KERNEL,
+    COLLISION_KERNEL,
+    ZERO_OUT_NORMALS_KERNEL,
+    SUM_TRIANGLE_NORMALS_KERNEL,
+    NORMALIZE_NORMALS_KERNEL,
 )
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
@@ -27,7 +30,7 @@ def apply_gravity(variables: CudaVariables):
     """Update accerlation in place for gravity"""
     accelerations = variables.accelerations
     nr_blocks = calculate_nr_blocks(len(accelerations), DEFAULT_BLOCK_SIZE)
-    GRAVITY_MODULE(
+    GRAVITY_KERNEL(
         accelerations.gpu,
         accelerations.length,
         block=DEFAULT_BLOCK_SHAPE,
@@ -38,7 +41,7 @@ def apply_gravity(variables: CudaVariables):
 def apply_stress(variables: CudaVariables):
     """Update acceleration in place for stress"""
     nr_blocks = calculate_nr_blocks(len(variables.stress_indices), DEFAULT_BLOCK_SIZE)
-    STRESS_MODULE(
+    STRESS_KERNEL(
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.stress_indices.gpu,
@@ -51,7 +54,7 @@ def apply_stress(variables: CudaVariables):
 def apply_shear(variables: CudaVariables):
     """Update acceleration in place for shear"""
     nr_blocks = calculate_nr_blocks(len(variables.shear_indices), DEFAULT_BLOCK_SIZE)
-    SHEAR_MODULE(
+    SHEAR_KERNEL(
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.shear_indices.gpu,
@@ -64,7 +67,7 @@ def apply_shear(variables: CudaVariables):
 def apply_bend(variables: CudaVariables):
     """Update acceleration in place for bend"""
     nr_blocks = calculate_nr_blocks(len(variables.bend_indices), DEFAULT_BLOCK_SIZE)
-    BEND_MODULE(
+    BEND_KERNEL(
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.bend_indices.gpu,
@@ -77,7 +80,7 @@ def apply_bend(variables: CudaVariables):
 def apply_friction(variables: CudaVariables, dampening: np.float32):
     """Update position and velocity, taking friction into account"""
     nr_blocks = calculate_nr_blocks(len(variables.vertices), DEFAULT_BLOCK_SIZE)
-    UPDATE_POSITION_MODULE(
+    UPDATE_POSITION_KERNEL(
         variables.accelerations.gpu,
         variables.velocities.gpu,
         variables.vertices.gpu,
@@ -91,7 +94,7 @@ def apply_friction(variables: CudaVariables, dampening: np.float32):
 def apply_sewing(variables: CudaVariables):
     """Update positions for sewing constraints"""
     nr_blocks = calculate_nr_blocks(len(variables.sewing_indices), DEFAULT_BLOCK_SIZE)
-    SEWING_MODULE(
+    SEWING_KERNEL(
         variables.vertices.gpu,
         variables.sewing_indices.gpu,
         variables.sewing_indices.length,
@@ -103,7 +106,7 @@ def apply_sewing(variables: CudaVariables):
 def apply_collisions(variables: CudaVariables):
     """Update positions to stop collision with body"""
     nr_blocks = calculate_nr_blocks(len(variables.vertices), COLLISION_BLOCK_SIZE)
-    COLLISION_MODULE(
+    COLLISION_KERNEL(
         variables.triangles.gpu,
         variables.triangles.length,
         variables.vertices.gpu,
