@@ -1,10 +1,16 @@
-""" Struct that contains all the lighting parameters for materials """
+"""Struct that contains all the lighting parameters for materials"""
+
 from typing import NamedTuple
 import numpy as np
 
-from src.parameters import (DEFAULT_AMBIENT_WEIGHTING, DEFAULT_DIFFUSE_WEIGHTING,
-                            DEFAULT_SPECULAR_WEIGHTING, DEFAULT_SPECULAR_EXPONENT,
-                            DEFAULT_OPACITY, DEFAULT_SPECULAR_TINT)
+from src.parameters import (
+    DEFAULT_AMBIENT_WEIGHTING,
+    DEFAULT_DIFFUSE_WEIGHTING,
+    DEFAULT_SPECULAR_WEIGHTING,
+    DEFAULT_SPECULAR_EXPONENT,
+    DEFAULT_OPACITY,
+    DEFAULT_SPECULAR_TINT,
+)
 
 
 class MaterialParameters(NamedTuple):
@@ -18,9 +24,16 @@ class MaterialParameters(NamedTuple):
         opacity: Material opacity (0.0 to 1.0)
         specular_tint: Tint factor for specular highlights
     """
-    ambient_weighting: np.ndarray = np.array(DEFAULT_AMBIENT_WEIGHTING, dtype=np.float32)  # RGB for ambient lighting
-    diffuse_weighting: np.ndarray = np.array(DEFAULT_DIFFUSE_WEIGHTING, dtype=np.float32)  # RGB for diffuse lighting
-    specular_weighting: np.ndarray = np.array(DEFAULT_SPECULAR_WEIGHTING, dtype=np.float32)  # RGB for specular lighting
+
+    ambient_weighting: np.ndarray = np.array(
+        DEFAULT_AMBIENT_WEIGHTING, dtype=np.float32
+    )  # RGB for ambient lighting
+    diffuse_weighting: np.ndarray = np.array(
+        DEFAULT_DIFFUSE_WEIGHTING, dtype=np.float32
+    )  # RGB for diffuse lighting
+    specular_weighting: np.ndarray = np.array(
+        DEFAULT_SPECULAR_WEIGHTING, dtype=np.float32
+    )  # RGB for specular lighting
     specular_exponent: float = DEFAULT_SPECULAR_EXPONENT  # Specular exponent/shininess
     opacity: float = DEFAULT_OPACITY  # Material opacity
     specular_tint: float = DEFAULT_SPECULAR_TINT  # Specular tint factor

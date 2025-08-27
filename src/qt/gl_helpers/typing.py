@@ -1,4 +1,5 @@
-''' Custom types for Open GL interaction '''
+"""Custom types for Open GL interaction"""
+
 from typing import Tuple
 
 import numpy as np

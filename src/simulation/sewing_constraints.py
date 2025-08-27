@@ -1,4 +1,5 @@
-''' Handles calculation of sewing forces between pieces '''
+"""Handles calculation of sewing forces between pieces"""
+
 from typing import List, Iterator, Dict
 
 from src.simulation.common import DistanceAdjustment
@@ -7,12 +8,13 @@ from src.simulation.sewing_pair import SewingPairRelations
 
 
 class SewingConstraints:
-    """ Calculates resultant adjustment for a piece resulting from sewing """
+    """Calculates resultant adjustment for a piece resulting from sewing"""
+
     def __init__(self, relations: List[SewingPairRelations]):
         self.relations = relations
 
     def recalculate_adjustment(self, dynamic_pieces: Dict[str, DynamicPiece]):
-        """ Calculate in place to position adjustments for each sewing pair """
+        """Calculate in place to position adjustments for each sewing pair"""
         for sewing_pair in self:
             from_vertices = dynamic_pieces[sewing_pair.from_piece].mesh.vertices_3d
             to_vertices = dynamic_pieces[sewing_pair.to_piece].mesh.vertices_3d
@@ -32,9 +34,9 @@ class SewingConstraints:
         return DistanceAdjustment(indices, amounts)
 
     def __iter__(self) -> Iterator[SewingPairRelations]:
-        """ Iterate through all sewing pairs """
+        """Iterate through all sewing pairs"""
         yield from self.relations
 
     def __len__(self) -> int:
-        """ Get number of sewing pairs """
+        """Get number of sewing pairs"""
         return len(self.relations)

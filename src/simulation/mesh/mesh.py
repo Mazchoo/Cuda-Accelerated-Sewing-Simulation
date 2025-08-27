@@ -1,4 +1,5 @@
-""" Container class of mesh visualisation data """
+"""Container class of mesh visualisation data"""
+
 from typing import Tuple, Union, Optional
 
 import numpy as np
@@ -7,12 +8,19 @@ from trimesh import Trimesh
 
 class MeshData:
     """
-        Drawing data for a mesh with vertex laytout 3f position 2f texture 3f normal
-        Index data list of integer triplets for each triangle
-        Texture data indicates where to use in each material in a render pass
+    Drawing data for a mesh with vertex laytout 3f position 2f texture 3f normal
+    Index data list of integer triplets for each triangle
+    Texture data indicates where to use in each material in a render pass
     """
-    def __init__(self, vertex_data: np.ndarray, index_data: np.ndarray, texture_data: dict,
-                 annotations: Optional[dict] = None, turn_points: Optional[np.ndarray] = None):
+
+    def __init__(
+        self,
+        vertex_data: np.ndarray,
+        index_data: np.ndarray,
+        texture_data: dict,
+        annotations: Optional[dict] = None,
+        turn_points: Optional[np.ndarray] = None,
+    ):
         self._vertex_data = vertex_data
         self._index_data = index_data
         self._texture_data = texture_data
@@ -23,60 +31,63 @@ class MeshData:
 
     @property
     def nr_vertices(self) -> int:
-        """ Get number of vertices """
+        """Get number of vertices"""
         return len(self._vertex_data)
 
     @property
     def nr_turn_points(self) -> int:
-        """ Get number of turn points """
+        """Get number of turn points"""
         return len(self._turn_points)
 
     @property
     def vertices_3d(self) -> np.ndarray:
-        """ Reference to 3d vertices """
+        """Reference to 3d vertices"""
         return self._vertex_data[:, :3]
 
     @property
     def vertices_2d(self) -> np.ndarray:
-        """ Reference to 2d vertices (x, y only) """
+        """Reference to 2d vertices (x, y only)"""
         return self._vertex_data[:, :2]
 
     @property
     def trimesh(self) -> Trimesh:
-        """ Create compute structure for collision detection """
+        """Create compute structure for collision detection"""
         if self._trimesh is None:
-            self._trimesh = Trimesh(vertices=self._vertex_data[:, :3],
-                                    faces=self._index_data,
-                                    process=True, validate=True)
+            self._trimesh = Trimesh(
+                vertices=self._vertex_data[:, :3],
+                faces=self._index_data,
+                process=True,
+                validate=True,
+            )
         return self._trimesh
 
     @property
     def annotations(self) -> dict:
-        """ Get dictionary of named point to location """
+        """Get dictionary of named point to location"""
         return self._annotations
 
     @property
     def vertex_data(self) -> np.ndarray:
-        """ Return all vertex drawing information """
+        """Return all vertex drawing information"""
         return self._vertex_data
 
     @property
     def index_data(self) -> np.ndarray:
-        """ Return all triangle index information """
+        """Return all triangle index information"""
         return self._index_data
 
     @property
     def texture_data(self) -> dict:
-        """ Return information that links textures to consecutive vertex indices """
+        """Return information that links textures to consecutive vertex indices"""
         return self._texture_data
 
     @property
     def height(self) -> float:
-        """ Get max difference in y coordinate """
+        """Get max difference in y coordinate"""
         return self._vertex_data[:, 1].max() - self._vertex_data[:, 1].min()
 
     def place_at_origin(self):
-        """ Ensure object is stood upright (bottom at y=0) center x, z at 0, 0 """
+        """Ensure object is stood upright (bottom at y=0) center x, z at 0, 0"""
         x_mean = self._vertex_data[:, 0].mean()
         y_min = self._vertex_data[:, 1].min()
         z_mean = self._vertex_data[:, 2].mean()
@@ -93,7 +104,7 @@ class MeshData:
         self._origin_array = origin_array
 
     def scale_vertices(self, scalar: float):
-        """ Scale vertices by a constant """
+        """Scale vertices by a constant"""
         self._vertex_data[:, :3] *= scalar
 
         for annotation_point in self._annotations.values():
@@ -102,9 +113,12 @@ class MeshData:
         if self._turn_points is not None:
             self._turn_points *= scalar
 
-    def offset_vertices(self, offset: Union[Tuple[float, float, float], np.ndarray],
-                        mask: Optional[np.ndarray] = None):
-        """ Update vertex locations in place by a fixed offset """
+    def offset_vertices(
+        self,
+        offset: Union[Tuple[float, float, float], np.ndarray],
+        mask: Optional[np.ndarray] = None,
+    ):
+        """Update vertex locations in place by a fixed offset"""
         if mask is None:
             self._vertex_data[:, :3] += offset
         else:
@@ -112,9 +126,11 @@ class MeshData:
 
         # Once we start running the simulation, stop updating turn-points as they are not phsyical points
         # Another way to handle this is for turn-points ect. to index a vertex
-        if (isinstance(offset, np.ndarray) and len(offset.shape) == 1) \
-           or isinstance(offset, tuple) or isinstance(offset, list):
-
+        if (
+            (isinstance(offset, np.ndarray) and len(offset.shape) == 1)
+            or isinstance(offset, tuple)
+            or isinstance(offset, list)
+        ):
             for annotation_point in self._annotations.values():
                 annotation_point += offset
 
@@ -122,11 +138,11 @@ class MeshData:
                 self._turn_points += offset
 
     def clamp_above_zero(self):
-        """ Ensure y vertices are always above 0 """
-        self._vertex_data[:, 1] = np.maximum(self._vertex_data[:, 1], 0.)
+        """Ensure y vertices are always above 0"""
+        self._vertex_data[:, 1] = np.maximum(self._vertex_data[:, 1], 0.0)
 
     def flip_x(self):
-        """ Flip over x coordinates in place over mean x coordinate """
+        """Flip over x coordinates in place over mean x coordinate"""
         mean_x = self._vertex_data[:, 0].mean()
         self._vertex_data[:, 0] *= -1
         self._vertex_data[:, 0] += mean_x * 2
@@ -140,7 +156,7 @@ class MeshData:
             self._turn_points[:, 0] += mean_x * 2
 
     def matrix_multiply(self, matrix: np.ndarray, origin: np.ndarray):
-        """ Apply a matrix to vertices """
+        """Apply a matrix to vertices"""
         offset = origin - origin @ matrix
 
         self._vertex_data[:, :3] @= matrix
@@ -155,15 +171,15 @@ class MeshData:
             self._turn_points += offset
 
     def get_annotation(self, name: str) -> np.ndarray:
-        """ Get 3d location by name or None """
+        """Get 3d location by name or None"""
         return self._annotations.get(name)
 
     def get_turn_point_by_ind(self, ind: int) -> Optional[np.ndarray]:
-        """ Get 3d location of turn-point if in index range else None """
+        """Get 3d location of turn-point if in index range else None"""
         if ind not in range(self.nr_turn_points):
             return None
         return self._turn_points[ind]
 
     def __len__(self) -> int:
-        ''' Return number of vertices '''
+        """Return number of vertices"""
         return len(self._vertex_data)

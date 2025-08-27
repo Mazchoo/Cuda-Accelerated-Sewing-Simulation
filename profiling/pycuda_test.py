@@ -15,8 +15,6 @@ multiply_them = mod.get_function("multiply_them")
 a = np.random.randn(10).astype(np.float32)
 b = np.random.randn(10).astype(np.float32)
 dest = np.zeros_like(a)
-multiply_them(
-    drv.Out(dest), drv.In(a), drv.In(b),
-    block=(10, 1, 1))
+multiply_them(drv.Out(dest), drv.In(a), drv.In(b), block=(10, 1, 1))
 
 print(dest)

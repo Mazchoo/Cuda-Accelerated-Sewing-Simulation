@@ -1,12 +1,31 @@
-''' Represents data for current material '''
+"""Represents data for current material"""
+
 from typing import Union, Dict, Optional
 
-from OpenGL.GL import (glBindTexture, glGenTextures, glGenerateMipmap, glActiveTexture,
-                       glTexParameter, glTexImage2D, glDeleteTextures,
-                       glUniform3fv, glUniform1f)
-from OpenGL.GL import (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
-                       GL_REPEAT, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_MAG_FILTER,
-                       GL_NEAREST, GL_LINEAR, GL_RGBA, GL_UNSIGNED_BYTE, GL_TEXTURE0)
+from OpenGL.GL import (
+    glBindTexture,
+    glGenTextures,
+    glGenerateMipmap,
+    glActiveTexture,
+    glTexParameter,
+    glTexImage2D,
+    glDeleteTextures,
+    glUniform3fv,
+    glUniform1f,
+)
+from OpenGL.GL import (
+    GL_TEXTURE_2D,
+    GL_TEXTURE_WRAP_S,
+    GL_TEXTURE_WRAP_T,
+    GL_REPEAT,
+    GL_TEXTURE_MIN_FILTER,
+    GL_TEXTURE_MAG_FILTER,
+    GL_NEAREST,
+    GL_LINEAR,
+    GL_RGBA,
+    GL_UNSIGNED_BYTE,
+    GL_TEXTURE0,
+)
 from PIL import Image
 import numpy as np
 
@@ -16,7 +35,7 @@ from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 
 
 class Material(OpenGLUploadable):
-    ''' Represent a material to switch to it when necessary '''
+    """Represent a material to switch to it when necessary"""
 
     texture: int
     slot: int
@@ -30,9 +49,14 @@ class Material(OpenGLUploadable):
     opacicty_glob_id: Optional[int]
     specular_tint_glob_id: Optional[int]
 
-    def __init__(self, texture_source: Union[str, ColorRGB],
-                 params: MaterialParameters, slot: int = GL_TEXTURE0, **globals):
-        ''' Source can a file name or a single color '''
+    def __init__(
+        self,
+        texture_source: Union[str, ColorRGB],
+        params: MaterialParameters,
+        slot: int = GL_TEXTURE0,
+        **globals,
+    ):
+        """Source can a file name or a single color"""
         self.material_properties = params
         self.globals = globals
 
@@ -59,11 +83,21 @@ class Material(OpenGLUploadable):
         image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
         image_data = image.tobytes("raw", "RGBA")
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA,
+            image.width,
+            image.height,
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            image_data,
+        )
         glGenerateMipmap(GL_TEXTURE_2D)
 
     def set_all_globals(self):
-        ''' Update all player properties on the GPU '''
+        """Update all player properties on the GPU"""
         props = self.material_properties
         glUniform3fv(self.ambient_weighting_glob_id, 1, props.ambient_weighting)
         glUniform3fv(self.diffuse_weighting_glob_id, 1, props.diffuse_weighting)
@@ -76,5 +110,5 @@ class Material(OpenGLUploadable):
         glBindTexture(GL_TEXTURE_2D, self.texture)
 
     def destroy(self):
-        ''' Clean up memory when finished '''
-        glDeleteTextures(1, (self.texture, ))
+        """Clean up memory when finished"""
+        glDeleteTextures(1, (self.texture,))

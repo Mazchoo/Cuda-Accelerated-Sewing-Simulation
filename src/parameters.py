@@ -1,4 +1,4 @@
-""" Common place to put all parameters of simulation """
+"""Common place to put all parameters of simulation"""
 
 # Simulation parameters
 NR_STEPS = 200  # Number of time steps to simulate for a sample
@@ -14,11 +14,15 @@ SHEAR_THRESHOLD = 0.1  # Percentage of resting distance where shear starts apply
 BEND_WEIGHTING = 600  # Weight to apply to bend force
 BEND_THRESHOLD = 0.1  # Sin of angle where bending is applied
 CM_PER_M = 100  # Scale of coordinates in clothing to world coordinates
-VELOCITY_DAMPING_START = 1.0  # Amount to reduce velocity by in every step at the beginning
+VELOCITY_DAMPING_START = (
+    1.0  # Amount to reduce velocity by in every step at the beginning
+)
 VELOCITY_DAMPING_END = 0.0  # Amount to reduce velocity by in every step at the end
 DISTANCE_FROM_BODY = 0.025  # Default distance along normal of alignment point on avatar
 SEWING_SPACING = 0.01  # Spacing between two points while doing sewing
-SEWING_ADJUSTMENT_STEP = 0.01  # Maximum distance per second to get closer to sewing adjustment
+SEWING_ADJUSTMENT_STEP = (
+    0.01  # Maximum distance per second to get closer to sewing adjustment
+)
 WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
 
 # Cuda parameters
@@ -33,7 +37,7 @@ FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 
 # Default light properties
 LIGHT_POSITION_RATIO = 1.2  # Default light position above avatar
-LIGHT_COLOR = (1., 1., 1.)  # Default light color
+LIGHT_COLOR = (1.0, 1.0, 1.0)  # Default light color
 LIGHT_REFLECTIVE_STRENGTH = 2.0  # Default reflective strength
 LIGHT_AMBIENT_STRENGTH = 2.0  # Default ambient strength
 
@@ -42,12 +46,16 @@ DEFAULT_AMBIENT_WEIGHTING = (0.4, 0.4, 0.4)
 DEFAULT_DIFFUSE_WEIGHTING = (0.5, 0.5, 0.5)
 DEFAULT_SPECULAR_WEIGHTING = (1, 1, 1)
 DEFAULT_SPECULAR_EXPONENT = 0.75
-DEFAULT_OPACITY = 1.
-DEFAULT_SPECULAR_TINT = 0.
+DEFAULT_OPACITY = 1.0
+DEFAULT_SPECULAR_TINT = 0.0
 
 # Shader paths
-VERTEX_SHADER_PATH = "./src/qt/shaders/camera.vert"  # Determines vertex transform shader
-FRAGMENT_SHADER_PATH = "./src/qt/shaders/material.frag"  # Determines color transform shader
+VERTEX_SHADER_PATH = (
+    "./src/qt/shaders/camera.vert"  # Determines vertex transform shader
+)
+FRAGMENT_SHADER_PATH = (
+    "./src/qt/shaders/material.frag"  # Determines color transform shader
+)
 
 # Body Data
 BODY_PATH = "./assets/BodyMesh.obj"

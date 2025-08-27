@@ -1,4 +1,5 @@
-''' Class to store the motion matrix '''
+"""Class to store the motion matrix"""
+
 from typing import Optional, Dict
 
 from pyrr import matrix44
@@ -10,9 +11,17 @@ from src.qt.gl_helpers.typing import Matrix4x4, Angles3D, Position3D
 
 
 class Motion(OpenGLUploadable):
-    ''' Stores the position and orientation of a single object '''
-    __slots__ = '_angles', '_position', '_angle_matrix', '_position_matrix', \
-                'object_id', 'motion_matrix', "globals"
+    """Stores the position and orientation of a single object"""
+
+    __slots__ = (
+        "_angles",
+        "_position",
+        "_angle_matrix",
+        "_position_matrix",
+        "object_id",
+        "motion_matrix",
+        "globals",
+    )
 
     object_id: Optional[int]
     motion_matrix: Matrix4x4
@@ -23,8 +32,12 @@ class Motion(OpenGLUploadable):
     _angle_matrix: Matrix4x4
     _position_matrix: Matrix4x4
 
-    def __init__(self, position: Position3D = (0., 0., 0.),
-                 angles: Angles3D = (0., 0., 0.), **globals):
+    def __init__(
+        self,
+        position: Position3D = (0.0, 0.0, 0.0),
+        angles: Angles3D = (0.0, 0.0, 0.0),
+        **globals,
+    ):
         """
         Initialize a Motion object with position and orientation.
 
@@ -43,8 +56,12 @@ class Motion(OpenGLUploadable):
 
         self.recalculate_motion_matrix()
 
-    def increment_angles(self, xy: Optional[float] = None,
-                         yz: Optional[float] = None, xz: Optional[float] = None):
+    def increment_angles(
+        self,
+        xy: Optional[float] = None,
+        yz: Optional[float] = None,
+        xz: Optional[float] = None,
+    ):
         """
         Make an adjustment to the euler angles of the object.
         Call recalculate_motion_matrix(angles=True) afterwards to push change.
@@ -55,34 +72,26 @@ class Motion(OpenGLUploadable):
             xz: Rotation around X-Z plane (roll) in radians
         """
         if yz is not None:
-            self._angles = (
-                self._angles[0] + yz,
-                self._angles[1],
-                self._angles[2]
-            )
+            self._angles = (self._angles[0] + yz, self._angles[1], self._angles[2])
             if self._angles[0] > 2 * np.pi or self._angles[0] < -2 * np.pi:
                 self._angles = (0.0, self._angles[1], self._angles[2])
 
         if xy is not None:
-            self._angles = (
-                self._angles[0],
-                self._angles[1] + xy,
-                self._angles[2]
-            )
+            self._angles = (self._angles[0], self._angles[1] + xy, self._angles[2])
             if self._angles[1] > 2 * np.pi or self._angles[1] < -2 * np.pi:
                 self._angles = (self._angles[0], 0.0, self._angles[2])
 
         if xz is not None:
-            self._angles = (
-                self._angles[0],
-                self._angles[1],
-                self._angles[2] + xz
-            )
+            self._angles = (self._angles[0], self._angles[1], self._angles[2] + xz)
             if self._angles[2] > 2 * np.pi or self._angles[2] < -2 * np.pi:
                 self._angles = (self._angles[0], self._angles[1], 0.0)
 
-    def increment_position(self, x: Optional[float] = None,
-                           y: Optional[float] = None, z: Optional[float] = None):
+    def increment_position(
+        self,
+        x: Optional[float] = None,
+        y: Optional[float] = None,
+        z: Optional[float] = None,
+    ):
         """
         Make an adjustment to the 3D position of the object.
         Call recalculate_motion_matrix(position=True) afterwards to push change.
@@ -93,16 +102,30 @@ class Motion(OpenGLUploadable):
             z: Translation along Z-axis
         """
         if x is not None:
-            self._position = (self._position[0] + x, self._position[1], self._position[2])
+            self._position = (
+                self._position[0] + x,
+                self._position[1],
+                self._position[2],
+            )
         if y is not None:
-            self._position = (self._position[0], self._position[1] + y, self._position[2])
+            self._position = (
+                self._position[0],
+                self._position[1] + y,
+                self._position[2],
+            )
         if z is not None:
-            self._position = (self._position[0], self._position[1], self._position[2] + z)
+            self._position = (
+                self._position[0],
+                self._position[1],
+                self._position[2] + z,
+            )
 
-    def recalculate_motion_matrix(self, position: bool = True, angles: bool = True) -> Matrix4x4:
+    def recalculate_motion_matrix(
+        self, position: bool = True, angles: bool = True
+    ) -> Matrix4x4:
         """
-            Recalculate the motion matrix, position and/or angles should be set to true.
-            Returns the recalculated 4x4 motion matrix
+        Recalculate the motion matrix, position and/or angles should be set to true.
+        Returns the recalculated 4x4 motion matrix
         """
         if not position and not angles:
             return self.motion_matrix
@@ -112,13 +135,12 @@ class Motion(OpenGLUploadable):
 
         if angles:
             self._angle_matrix = matrix44.create_from_eulers(
-                eulers=self._angles,
-                dtype=np.float32
+                eulers=self._angles, dtype=np.float32
             )
 
         self.motion_matrix = self._angle_matrix @ self._position_matrix
         return self.motion_matrix
 
     def set_all_globals(self):
-        """ Copy object motion matrix to the GPU. """
+        """Copy object motion matrix to the GPU."""
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.motion_matrix)

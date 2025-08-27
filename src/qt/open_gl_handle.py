@@ -1,4 +1,5 @@
-''' Functions to handle open gl operations on canvas '''
+"""Functions to handle open gl operations on canvas"""
+
 from typing import Optional
 
 import OpenGL.GL as gl
@@ -12,7 +13,8 @@ from src.parameters import BODY_PATH, BODY_ANNOTATIONS_PATH, AVATAR_SCALING
 
 
 class SewingGLWidget(QOpenGLWidget):
-    ''' Creates rendering loop for sewing simulation '''
+    """Creates rendering loop for sewing simulation"""
+
     drawing_pass: Optional[DrawingPass]
 
     def __init__(self, parent: QMainWindow):
@@ -20,7 +22,7 @@ class SewingGLWidget(QOpenGLWidget):
         self.drawing_pass = None
 
     def initializeGL(self):
-        ''' Qt Callback for initial setup '''
+        """Qt Callback for initial setup"""
         print("GL version:", gl.glGetString(gl.GL_VERSION).decode())
         print("GLSL version:", gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION).decode())
         print("Vendor:", gl.glGetString(gl.GL_VENDOR).decode())
@@ -38,10 +40,10 @@ class SewingGLWidget(QOpenGLWidget):
         self.drawing_pass = DrawingPass(w / h, avatar_mesh)
 
     def paintGL(self):
-        ''' Qt Callback for updating on every frame '''
+        """Qt Callback for updating on every frame"""
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         self.drawing_pass.draw()
 
     def resizeGL(self, w, h):
-        ''' Qt Callback for updating viewport '''
+        """Qt Callback for updating viewport"""
         gl.glViewport(0, 0, w, h)

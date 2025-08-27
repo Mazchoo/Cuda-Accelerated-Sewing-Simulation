@@ -3,12 +3,16 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QSurfaceFormat
 
-from src.qt.gl_helpers.common.window_helpers import load_qss, attach_qss_editor, edit_ui_template
+from src.qt.gl_helpers.common.window_helpers import (
+    load_qss,
+    attach_qss_editor,
+    edit_ui_template,
+)
 
 from src.qt.controller import SewingSimulationController
 from src.qt.ui.SewingSimulationUI import Ui_MainWindow
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     fmt = QSurfaceFormat()
     fmt.setVersion(3, 3)
     fmt.setProfile(QSurfaceFormat.CoreProfile)
@@ -20,9 +24,11 @@ if __name__ == '__main__':
     ui = Ui_MainWindow()
     ui.setupUi(parent_window)
     layout = edit_ui_template(ui)
-    widget = SewingSimulationController(parent_window, lambda *_args, **_kwargs: None, layout)
+    widget = SewingSimulationController(
+        parent_window, lambda *_args, **_kwargs: None, layout
+    )
 
-    if 'RUN_QSS_EDITOR' in sys.argv:
+    if "RUN_QSS_EDITOR" in sys.argv:
         attach_qss_editor(parent_window)
 
     parent_window.show()

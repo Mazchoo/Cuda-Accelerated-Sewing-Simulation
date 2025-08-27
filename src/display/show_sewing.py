@@ -1,4 +1,5 @@
-""" Display functions for sewing lines on meshes """
+"""Display functions for sewing lines on meshes"""
+
 from typing import Dict
 
 import plotly.graph_objects as go
@@ -8,9 +9,10 @@ from src.simulation.dynamic_piece import DynamicPiece
 from src.display.common import get_hsv_colors, float_rgb_to_str
 
 
-def add_sewing_points_to_plotly_fig(pieces: Dict[str, DynamicPiece], sewing: SewingConstraints,
-                                    fig: go.Figure, **kwargs):
-    """ Add annotations as text to figure """
+def add_sewing_points_to_plotly_fig(
+    pieces: Dict[str, DynamicPiece], sewing: SewingConstraints, fig: go.Figure, **kwargs
+):
+    """Add annotations as text to figure"""
     colors = get_hsv_colors(len(sewing) + 1)
 
     for i, sewing_pair in enumerate(sewing):
@@ -30,12 +32,14 @@ def add_sewing_points_to_plotly_fig(pieces: Dict[str, DynamicPiece], sewing: Sew
             ys.append(y)
             zs.append(z)
 
-        fig.add_trace(go.Scatter3d(
-            x=xs, y=zs, z=ys,
-            mode='markers',
-            name=f"sewing {i}",
-            marker=dict(
-                color=float_rgb_to_str(colors[i])
-            ),
-            **kwargs
-        ))
+        fig.add_trace(
+            go.Scatter3d(
+                x=xs,
+                y=zs,
+                z=ys,
+                mode="markers",
+                name=f"sewing {i}",
+                marker=dict(color=float_rgb_to_str(colors[i])),
+                **kwargs,
+            )
+        )

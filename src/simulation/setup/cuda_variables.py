@@ -1,4 +1,5 @@
-''' Container for all cuda arrays '''
+"""Container for all cuda arrays"""
+
 from typing import NamedTuple
 
 import pycuda.driver as cuda
@@ -6,7 +7,8 @@ import numpy as np
 
 
 class CudaVariable:
-    ''' Correspondence between cpu and gpu variable '''
+    """Correspondence between cpu and gpu variable"""
+
     def __init__(self, array: np.ndarray):
         self.cpu = array
         self.gpu = cuda.mem_alloc(array.nbytes)
@@ -14,7 +16,7 @@ class CudaVariable:
         self.length = np.uint32(len(array))
 
     def copy_from_gpu(self) -> np.ndarray:
-        ''' Get updated variable from GPU '''
+        """Get updated variable from GPU"""
         cuda.memcpy_dtoh(self.cpu, self.gpu)
         return self.cpu
 
@@ -23,7 +25,8 @@ class CudaVariable:
 
 
 class CudaVariables(NamedTuple):
-    ''' Container for cpu and gpu versions of each variable '''
+    """Container for cpu and gpu versions of each variable"""
+
     vertices: CudaVariable
     velocities: CudaVariable
     accelerations: CudaVariable

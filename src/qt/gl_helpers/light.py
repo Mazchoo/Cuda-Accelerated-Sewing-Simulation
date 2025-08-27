@@ -1,4 +1,5 @@
-''' Class to store and manage lighting properties for OpenGL rendering '''
+"""Class to store and manage lighting properties for OpenGL rendering"""
+
 from typing import Dict, Optional
 
 import numpy as np
@@ -9,7 +10,7 @@ from src.qt.gl_helpers.typing import ColorRGB, Position3D
 
 
 class Light(OpenGLUploadable):
-    ''' Stores the position, color, and strength of a light source '''
+    """Stores the position, color, and strength of a light source"""
 
     position: np.ndarray
     color: np.ndarray
@@ -22,8 +23,14 @@ class Light(OpenGLUploadable):
     reflective_strength_glob_id: Optional[int]
     ambient_strength_glob_id: Optional[int]
 
-    def __init__(self, position: Position3D, color: ColorRGB,
-                 reflective_strength: float, ambient_strength: float, **globals):
+    def __init__(
+        self,
+        position: Position3D,
+        color: ColorRGB,
+        reflective_strength: float,
+        ambient_strength: float,
+        **globals,
+    ):
         self.position = np.array(position, dtype=np.float32)
         self.color = np.array(color, dtype=np.float32)
         self.reflective_strength = reflective_strength
@@ -36,7 +43,7 @@ class Light(OpenGLUploadable):
         self.ambient_strength_glob_id = None
 
     def set_all_globals(self):
-        ''' Update all light properties on the GPU '''
+        """Update all light properties on the GPU"""
         glUniform3fv(self.position_glob_id, 1, self.position)
         glUniform3fv(self.color_glob_id, 1, self.color)
         glUniform1f(self.reflective_strength_glob_id, self.reflective_strength)

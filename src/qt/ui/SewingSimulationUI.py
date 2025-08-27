@@ -15,16 +15,22 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1800, 1000)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(100)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         self.clothingSimulation = QtWidgets.QWidget(MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.clothingSimulation.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.clothingSimulation.sizePolicy().hasHeightForWidth()
+        )
         self.clothingSimulation.setSizePolicy(sizePolicy)
         self.clothingSimulation.setObjectName("clothingSimulation")
         self.windowHorizontalLayout = QtWidgets.QHBoxLayout(self.clothingSimulation)
@@ -38,28 +44,40 @@ class Ui_MainWindow(object):
         self.openGLWidget.setObjectName("openGLWidget")
         self.mainHorizontalLayout.addWidget(self.openGLWidget)
         self.propertiesGroupBox = QtWidgets.QGroupBox(self.mainGroupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(100)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.propertiesGroupBox.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.propertiesGroupBox.sizePolicy().hasHeightForWidth()
+        )
         self.propertiesGroupBox.setSizePolicy(sizePolicy)
         self.propertiesGroupBox.setMinimumSize(QtCore.QSize(400, 0))
         self.propertiesGroupBox.setObjectName("propertiesGroupBox")
         self.propertiesVerticalLayout = QtWidgets.QVBoxLayout(self.propertiesGroupBox)
         self.propertiesVerticalLayout.setObjectName("propertiesVerticalLayout")
         self.materialsTreeView = QtWidgets.QTreeView(self.propertiesGroupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding
+        )
         sizePolicy.setHorizontalStretch(100)
         sizePolicy.setVerticalStretch(50)
-        sizePolicy.setHeightForWidth(self.materialsTreeView.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.materialsTreeView.sizePolicy().hasHeightForWidth()
+        )
         self.materialsTreeView.setSizePolicy(sizePolicy)
         self.materialsTreeView.setObjectName("materialsTreeView")
         self.propertiesVerticalLayout.addWidget(self.materialsTreeView)
         self.controlsGroupBox = QtWidgets.QGroupBox(self.propertiesGroupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(100)
         sizePolicy.setVerticalStretch(50)
-        sizePolicy.setHeightForWidth(self.controlsGroupBox.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.controlsGroupBox.sizePolicy().hasHeightForWidth()
+        )
         self.controlsGroupBox.setSizePolicy(sizePolicy)
         self.controlsGroupBox.setMinimumSize(QtCore.QSize(0, 200))
         self.controlsGroupBox.setMaximumSize(QtCore.QSize(16777215, 200))
@@ -180,4 +198,6 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionShow_Material.setText(_translate("MainWindow", "Show Material"))
         self.actionShow_Stress.setText(_translate("MainWindow", "Show Stress"))
-        self.actionDisplay_Properties.setText(_translate("MainWindow", "Display Properties"))
+        self.actionDisplay_Properties.setText(
+            _translate("MainWindow", "Display Properties")
+        )
