@@ -32,7 +32,7 @@ def apply_gravity(variables: CudaVariables):
     nr_blocks = calculate_nr_blocks(len(accelerations), DEFAULT_BLOCK_SIZE)
     GRAVITY_KERNEL(
         accelerations.gpu,
-        accelerations.length,
+        accelerations.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )
@@ -45,7 +45,7 @@ def apply_stress(variables: CudaVariables):
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.stress_indices.gpu,
-        variables.stress_indices.length,
+        variables.stress_indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )
@@ -58,7 +58,7 @@ def apply_shear(variables: CudaVariables):
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.shear_indices.gpu,
-        variables.shear_indices.length,
+        variables.shear_indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )
@@ -71,7 +71,7 @@ def apply_bend(variables: CudaVariables):
         variables.accelerations.gpu,
         variables.vertices.gpu,
         variables.bend_indices.gpu,
-        variables.bend_indices.length,
+        variables.bend_indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )
@@ -84,7 +84,7 @@ def apply_friction(variables: CudaVariables, dampening: np.float32):
         variables.accelerations.gpu,
         variables.velocities.gpu,
         variables.vertices.gpu,
-        variables.vertices.length,
+        variables.vertices.gpu_length,
         dampening,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
@@ -97,7 +97,7 @@ def apply_sewing(variables: CudaVariables):
     SEWING_KERNEL(
         variables.vertices.gpu,
         variables.sewing_indices.gpu,
-        variables.sewing_indices.length,
+        variables.sewing_indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )
@@ -108,9 +108,9 @@ def apply_collisions(variables: CudaVariables):
     nr_blocks = calculate_nr_blocks(len(variables.vertices), COLLISION_BLOCK_SIZE)
     COLLISION_KERNEL(
         variables.body_triangles.gpu,
-        variables.body_triangles.length,
+        variables.body_triangles.gpu_length,
         variables.vertices.gpu,
-        variables.vertices.length,
+        variables.vertices.gpu_length,
         variables.body_triangle_normals.gpu,
         variables.body_triangle_centers.gpu,
         block=COLLISION_BLOCK_SHAPE,
@@ -125,7 +125,7 @@ def recalculate_normals(variables: CudaVariables):
 
     ZERO_OUT_NORMALS_KERNEL(
         variables.normals.gpu,
-        variables.normals.length,
+        variables.normals.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(normals_nr_blocks, 1, 1),
     )
@@ -133,13 +133,13 @@ def recalculate_normals(variables: CudaVariables):
         variables.normals.gpu,
         variables.vertices.gpu,
         variables.indices.gpu,
-        variables.indices.length,
+        variables.indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(indices_nr_blocks, 1, 1),
     )
     NORMALIZE_NORMALS_KERNEL(
         variables.normals.gpu,
-        variables.normals.length,
+        variables.normals.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(normals_nr_blocks, 1, 1),
     )

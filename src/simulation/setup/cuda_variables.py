@@ -13,7 +13,7 @@ class CudaVariable:
         self.cpu = array
         self.gpu = cuda.mem_alloc(array.nbytes)
         cuda.memcpy_htod(self.gpu, array.flatten())
-        self.length = np.uint32(len(array))
+        self.gpu_length = np.uint32(len(array))
 
     def copy_from_gpu(self) -> np.ndarray:
         """Get updated variable from GPU"""
@@ -21,7 +21,7 @@ class CudaVariable:
         return self.cpu
 
     def __len__(self) -> int:
-        return int(self.length)
+        return int(self.gpu_length)
 
 
 class CudaVariables(NamedTuple):
