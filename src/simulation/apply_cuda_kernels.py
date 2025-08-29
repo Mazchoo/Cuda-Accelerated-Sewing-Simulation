@@ -107,12 +107,39 @@ def apply_collisions(variables: CudaVariables):
     """Update positions to stop collision with body"""
     nr_blocks = calculate_nr_blocks(len(variables.vertices), COLLISION_BLOCK_SIZE)
     COLLISION_KERNEL(
-        variables.triangles.gpu,
-        variables.triangles.length,
+        variables.body_triangles.gpu,
+        variables.body_triangles.length,
         variables.vertices.gpu,
         variables.vertices.length,
-        variables.traingle_normals.gpu,
-        variables.triangle_centers.gpu,
+        variables.body_triangle_normals.gpu,
+        variables.body_triangle_centers.gpu,
         block=COLLISION_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
+    )
+
+
+def recalculate_normals(variables: CudaVariables):
+    """Recalculate normals for each vertex"""
+    normals_nr_blocks = calculate_nr_blocks(len(variables.normals), DEFAULT_BLOCK_SIZE)
+    indices_nr_blocks = calculate_nr_blocks(len(variables.indices), DEFAULT_BLOCK_SIZE)
+
+    ZERO_OUT_NORMALS_KERNEL(
+        variables.normals.gpu,
+        variables.normals.length,
+        block=DEFAULT_BLOCK_SHAPE,
+        grid=(normals_nr_blocks, 1, 1),
+    )
+    SUM_TRIANGLE_NORMALS_KERNEL(
+        variables.normals.gpu,
+        variables.vertices.gpu,
+        variables.indices.gpu,
+        variables.indices.length,
+        block=DEFAULT_BLOCK_SHAPE,
+        grid=(indices_nr_blocks, 1, 1),
+    )
+    NORMALIZE_NORMALS_KERNEL(
+        variables.normals.gpu,
+        variables.normals.length,
+        block=DEFAULT_BLOCK_SHAPE,
+        grid=(normals_nr_blocks, 1, 1),
     )

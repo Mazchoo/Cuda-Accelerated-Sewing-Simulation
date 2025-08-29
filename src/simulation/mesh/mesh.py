@@ -50,6 +50,11 @@ class MeshData:
         return self._vertex_data[:, :2]
 
     @property
+    def normals(self) -> np.ndarray:
+        """An n by 3 array of the normal direction at each vertex"""
+        return self._vertex_data[:, 5:]
+
+    @property
     def trimesh(self) -> Trimesh:
         """Create compute structure for collision detection"""
         if self._trimesh is None:

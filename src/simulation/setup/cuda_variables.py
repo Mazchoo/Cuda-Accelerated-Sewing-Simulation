@@ -28,12 +28,14 @@ class CudaVariables(NamedTuple):
     """Container for cpu and gpu versions of each variable"""
 
     vertices: CudaVariable
+    normals: CudaVariable
+    indices: CudaVariable
     velocities: CudaVariable
     accelerations: CudaVariable
     stress_indices: CudaVariable
     shear_indices: CudaVariable
     bend_indices: CudaVariable
     sewing_indices: CudaVariable
-    triangles: CudaVariable
-    triangle_centers: CudaVariable
-    traingle_normals: CudaVariable
+    body_triangles: CudaVariable
+    body_triangle_centers: CudaVariable
+    body_triangle_normals: CudaVariable

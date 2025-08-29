@@ -24,6 +24,7 @@ from src.simulation.apply_cuda_kernels import (
     apply_friction,
     apply_sewing,
     apply_collisions,
+    recalculate_normals,
 )
 
 from src.parameters import VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS
@@ -63,8 +64,10 @@ class DynamicClothing:
         velocities = np.zeros((len(self.mesh), 3), dtype=np.float32)
         accelerations = np.zeros((len(self.mesh), 3), dtype=np.float32)
 
-        self.cuda_varibales = CudaVariables(
+        self.cuda_variables = CudaVariables(
             vertices=CudaVariable(self.mesh.vertices_3d.copy()),
+            normals=CudaVariable(self.mesh.normals.copy()),
+            indices=CudaVariable(indices),
             velocities=CudaVariable(velocities),
             accelerations=CudaVariable(accelerations),
             stress_indices=CudaVariable(stress),
@@ -73,15 +76,15 @@ class DynamicClothing:
             sewing_indices=CudaVariable(
                 np.stack([sew_from_indices, sew_to_indices]).transpose()
             ),
-            triangles=CudaVariable(body_triangles),
-            triangle_centers=CudaVariable(body_centers),
-            traingle_normals=CudaVariable(body_normals),
+            body_triangles=CudaVariable(body_triangles),
+            body_triangle_centers=CudaVariable(body_centers),
+            body_triangle_normals=CudaVariable(body_normals),
         )
 
     @property
     def vertices_3d(self) -> np.ndarray:
         """Get vertices on the gpu"""
-        return self.cuda_varibales.vertices.copy_from_gpu()
+        return self.cuda_variables.vertices.copy_from_gpu()
 
     def recalculate_dampening(self, step: int) -> np.float32:
         """Calculate dampening based on step"""
@@ -98,10 +101,11 @@ class DynamicClothing:
         """Update forces from internal interactions within piece"""
         dampening = self.recalculate_dampening(step)
 
-        apply_gravity(self.cuda_varibales)
-        apply_stress(self.cuda_varibales)
-        apply_shear(self.cuda_varibales)
-        apply_bend(self.cuda_varibales)
-        apply_friction(self.cuda_varibales, dampening)
-        apply_sewing(self.cuda_varibales)
-        apply_collisions(self.cuda_varibales)
+        apply_gravity(self.cuda_variables)
+        apply_stress(self.cuda_variables)
+        apply_shear(self.cuda_variables)
+        apply_bend(self.cuda_variables)
+        apply_friction(self.cuda_variables, dampening)
+        apply_sewing(self.cuda_variables)
+        apply_collisions(self.cuda_variables)
+        recalculate_normals(self.cuda_variables)
