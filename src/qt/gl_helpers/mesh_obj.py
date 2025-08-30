@@ -28,6 +28,9 @@ from OpenGL.GL import (
     GL_UNSIGNED_INT,
 )
 
+import pycuda.gl as cudagl
+
+import src.simulation.apply_cuda_kernels  # noqa: F401
 from src.simulation.mesh import MeshData
 from src.qt.gl_helpers.material import Material
 from src.qt.gl_helpers.shader_program import ShaderProgram
@@ -40,11 +43,19 @@ from src.qt.shaders.shader_parameters import MATERIAL_PROPERTIES
 class ObjMesh(OpenGLUploadable):
     """Store vertex, indices and textures of an object and perform draw (set_all_globals)"""
 
-    __slots__ = "vao", "vbo", "ebo", "material_iterator", "mesh_data"
+    __slots__ = (
+        "vao",
+        "vbo",
+        "ebo",
+        "material_iterator",
+        "mesh_data",
+        "cuda_buffer_handle",
+    )
 
     vao: int
     vbo: int
     ebo: int
+    cuda_buffer_handle: cudagl.RegisteredBuffer
     material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData
     globals: Dict[str, str] = {}  # Empty
@@ -54,6 +65,9 @@ class ObjMesh(OpenGLUploadable):
 
         self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
             self.mesh_data.vertex_data, self.mesh_data.index_data.flatten()
+        )
+        self.cuda_buffer_handle = cudagl.RegisteredBuffer(
+            int(self.vbo), cudagl.graphics_map_flags.WRITE_DISCARD
         )
 
         material_iterator = []
