@@ -25,6 +25,7 @@ class SewingGLWidget(QOpenGLWidget):
         """Qt Callback for initial setup"""
         print("GL version:", gl.glGetString(gl.GL_VERSION).decode())
         print("GLSL version:", gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION).decode())
+        print("Renderer:", gl.glGetString(gl.GL_RENDERER).decode())
         print("Vendor:", gl.glGetString(gl.GL_VENDOR).decode())
 
         gl.glEnable(gl.GL_DEPTH_TEST)
