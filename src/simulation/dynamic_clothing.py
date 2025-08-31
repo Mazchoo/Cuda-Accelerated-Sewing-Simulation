@@ -3,6 +3,7 @@
 from typing import Dict
 
 import numpy as np
+import pycuda.gl as cudagl
 
 from src.simulation.mesh import MeshData
 from src.simulation.dynamic_piece import DynamicPiece
@@ -25,6 +26,7 @@ from src.simulation.apply_cuda_kernels import (
     apply_sewing,
     apply_collisions,
     recalculate_normals,
+    copy_to_opengl_mesh_data,
 )
 
 from src.parameters import VELOCITY_DAMPING_START, VELOCITY_DAMPING_END, NR_STEPS
@@ -109,3 +111,7 @@ class DynamicClothing:
         apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
         recalculate_normals(self.cuda_variables)
+
+    def copy_to_open_gl_data(self, open_gl_buffer: cudagl.RegisteredBuffer):
+        """Copy cuda data on gpu from cuda context to open gl vertex buffer object"""
+        copy_to_opengl_mesh_data(self.cuda_variables, open_gl_buffer)

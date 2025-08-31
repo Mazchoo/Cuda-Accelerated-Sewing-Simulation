@@ -1,4 +1,5 @@
-__global__ void zero_out_normals(float* normals, const int nr_normals) {
+__global__ void zero_out_normals(float* normals,
+                                 const unsigned int nr_normals) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= nr_normals) return;
 
@@ -49,7 +50,8 @@ __global__ void sum_normals_over_triangles(
 }
 
 // Kernel to normalize accumulated normals
-__global__ void normalize_normals(float* normals, const int nr_normals) {
+__global__ void normalize_normals(float* normals,
+                                  const unsigned int nr_normals) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= nr_normals) return;
 

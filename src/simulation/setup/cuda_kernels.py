@@ -88,6 +88,10 @@ ZERO_OUT_NORMALS_KERNEL = NORMAL_MODULE.get_function("zero_out_normals")
 SUM_TRIANGLE_NORMALS_KERNEL = NORMAL_MODULE.get_function("sum_normals_over_triangles")
 NORMALIZE_NORMALS_KERNEL = NORMAL_MODULE.get_function("normalize_normals")
 
+COPY_TO_VERTEX_DATA_KERNEL = SourceModule(
+    read_file_str("./src/cuda_kernels/copy_to_vertex_data.cu")
+).get_function("copy_to_vertex_data")
+
 
 if __name__ == "__main__":
     print("Kernels compiled")

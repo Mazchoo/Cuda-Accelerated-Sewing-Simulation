@@ -1,7 +1,7 @@
 __global__ void copy_to_vertex_data(float *open_gl_data,
                                     const float *vertices,
                                     const float *normals,
-                                    int nr_vertices)
+                                    const unsigned int nr_vertices)
 {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
     if (idx >= nr_vertices) return;
