@@ -9,11 +9,11 @@ import numpy as np
 class CudaVariable:
     """Correspondence between cpu and gpu variable"""
 
-    def __init__(self, array: np.ndarray):
-        self.cpu = array
-        self.gpu = cuda.mem_alloc(array.nbytes)
-        cuda.memcpy_htod(self.gpu, array.flatten())
-        self.gpu_length = np.uint32(len(array))
+    def __init__(self, arr: np.ndarray):
+        self.cpu = arr
+        self.gpu = cuda.mem_alloc(arr.nbytes)
+        cuda.memcpy_htod(self.gpu, arr.flatten())
+        self.gpu_length = np.uint32(len(arr))
 
     def copy_from_gpu(self) -> np.ndarray:
         """Get updated variable from GPU"""

@@ -44,7 +44,7 @@ def parse_mtl(obj_path: str):
         while line := f.readline():
             line = line.strip()
             flag = line[: line.find(" ")]
-            line_content = line[len(flag) + 1 :]
+            line_content = line[len(flag) + 1:]
 
             if flag == "newmtl":
                 parse_material_name(current_material, current_dict, mtl_dict)
