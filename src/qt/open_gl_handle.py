@@ -14,7 +14,11 @@ from src.parameters import AVATAR_SCALING
 
 
 class SewingGLWidget(QOpenGLWidget):
-    """Creates rendering loop for sewing simulation"""
+    """
+        Creates rendering loop for sewing simulation
+        The vertex data of rendered objects can only be used in the GL functions
+        The GL functions run on their own thread
+    """
 
     drawing_pass: Optional[DrawingPass]
 
@@ -54,7 +58,7 @@ class SewingGLWidget(QOpenGLWidget):
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         self.drawing_pass.draw()
 
-    def resizeGL(self, w, h):
+    def resizeGL(self, w: int, h: int):
         """Qt Callback for updating viewport"""
         gl.glViewport(0, 0, w, h)
         self.drawing_pass.update_aspect_ratio(w / h)
