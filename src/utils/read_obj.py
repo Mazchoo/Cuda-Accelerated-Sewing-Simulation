@@ -122,7 +122,7 @@ def parse_obj(file_path: str, annotation_path: str):
 
 
 if __name__ == "__main__":
-    mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyAnnotations.json")
+    mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
     print(len(mesh.vertex_data), "vertice parsed")
     x_min = mesh.vertex_data[:, 0].min()
     x_max = mesh.vertex_data[:, 0].max()

@@ -80,7 +80,7 @@ def show_3d_scatter_simulation(simulation: FabricSimulation):
 
 
 if __name__ == "__main__":
-    avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyAnnotations.json")
+    avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json("./assets/sewing_shirt.json")

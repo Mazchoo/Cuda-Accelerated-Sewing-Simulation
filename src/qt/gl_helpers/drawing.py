@@ -35,13 +35,12 @@ class DrawingPass:
     light: Light
     meshes: List[ObjMesh]
 
-    def __init__(self, aspect_ratio: float, body_mesh: MeshData):
-        height = body_mesh.height
+    def __init__(self, aspect_ratio: float):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
 
-        default_distance = DEFAULT_CAMERA_DISTANCE_RATIO * height
-        min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
-        max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
+        default_distance = DEFAULT_CAMERA_DISTANCE_RATIO
+        min_distance = min(MIN_CAMERA_DISTANCE_RATIO, default_distance)
+        max_distance = max(MAX_CAMERA_DISTANCE_RATIO, default_distance)
 
         self.camera = Camera(
             FIELD_OF_VIEW, aspect_ratio, min_distance, max_distance, object_id="camera"
@@ -49,14 +48,14 @@ class DrawingPass:
         self.camera.bind_global_variable_names(self.shader)
 
         # Viewing position is middle of body at default distance
-        view_position = [0, height / 2, default_distance]
-        view_target = [0, height / 2, 0]
+        view_position = [0, 0.5, default_distance]
+        view_target = [0, 0.5, 0]
         self.player = Player(
             position=view_position, target=view_target, object_id="projection"
         )
         self.player.bind_global_variable_names(self.shader)
 
-        light_position = [0, LIGHT_POSITION_RATIO * height, 0]
+        light_position = [0, LIGHT_POSITION_RATIO, 0]
         self.light = Light(
             light_position,
             LIGHT_COLOR,
@@ -69,8 +68,37 @@ class DrawingPass:
         self.object_motion = Motion(object_id="motion")
         self.object_motion.bind_global_variable_names(self.shader)
 
-        self.meshes = [ObjMesh(body_mesh)]
-        self.meshes[0].bind_global_variable_names(self.shader)
+        self.meshes = []
+
+    def update_body_height(self, height: float):
+        """Set the camera and light to a default position based on body height"""
+        self.shader.use()
+        default_distance = DEFAULT_CAMERA_DISTANCE_RATIO * height
+        min_distance = min(MIN_CAMERA_DISTANCE_RATIO * height, default_distance)
+        max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
+
+        self.camera.recalculate_projection(near=min_distance, far=max_distance)
+        self.camera.set_all_globals()
+
+        self.player.set_position(0.0, height / 2, default_distance)
+        self.player.set_target(0.0, height / 2, 0.0)
+        self.player.recalculate_player_view()
+        self.player.set_all_globals()
+
+        self.light.set_position(0.0, LIGHT_POSITION_RATIO * height, 0)
+        self.light.set_all_globals()
+
+    def add_mesh(self, mesh: MeshData):
+        """Add a mesh to the simulation"""
+        self.shader.use()
+        self.meshes.append(ObjMesh(mesh))
+        self.meshes[-1].bind_global_variable_names(self.shader)
+
+    def update_aspect_ratio(self, aspect_ratio: float):
+        """Update the aspect ratio of the camera"""
+        self.shader.use()
+        self.camera.recalculate_projection(aspect=aspect_ratio)
+        self.camera.set_all_globals()
 
     def draw(self):
         """Perform a drawing pass"""

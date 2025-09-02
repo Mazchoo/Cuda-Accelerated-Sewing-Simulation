@@ -59,4 +59,4 @@ FRAGMENT_SHADER_PATH = (
 
 # Body Data
 BODY_PATH = "./assets/BodyMesh.obj"
-BODY_ANNOTATIONS_PATH = "./assets/BodyAnnotations.json"
+BODY_ANNOTATIONS_PATH = "./assets/BodyMesh.json"

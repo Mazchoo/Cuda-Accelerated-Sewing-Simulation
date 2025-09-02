@@ -1,6 +1,6 @@
 """Drawable OpenGL mesh"""
 
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Optional
 import ctypes
 
 import numpy as np
@@ -13,7 +13,6 @@ from OpenGL.GL import (
     glGenBuffers,
     glBindBuffer,
     glBufferData,
-    glBufferSubData,
     glEnableVertexAttribArray,
     glVertexAttribPointer,
 )
@@ -44,31 +43,29 @@ class ObjMesh(OpenGLUploadable):
     """Store vertex, indices and textures of an object and perform draw (set_all_globals)"""
 
     __slots__ = (
-        "vao",
-        "vbo",
-        "ebo",
+        "_vao",
+        "_vbo",
+        "_ebo",
         "material_iterator",
         "mesh_data",
-        "cuda_buffer_handle",
+        "_cuda_buffer_handle",
     )
 
-    vao: int
-    vbo: int
-    ebo: int
-    cuda_buffer_handle: cudagl.RegisteredBuffer
+    _vao: Optional[int]
+    _vbo: int
+    _ebo: int
+    _cuda_buffer_handle: cudagl.RegisteredBuffer
+
     material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData
     globals: Dict[str, str] = {}  # Empty
 
     def __init__(self, mesh_data: MeshData):
         self.mesh_data = mesh_data
-
-        self.vao, self.vbo, self.ebo = self.generate_vertex_buffers(
-            self.mesh_data.vertex_data, self.mesh_data.index_data.flatten()
-        )
-        self.cuda_buffer_handle = cudagl.RegisteredBuffer(
-            int(self.vbo), cudagl.graphics_map_flags.WRITE_DISCARD
-        )
+        self._vao = None
+        self._vbo = None
+        self._ebo = None
+        self._cuda_buffer_handle = None
 
         material_iterator = []
         for texture in self.mesh_data.texture_data:
@@ -80,7 +77,18 @@ class ObjMesh(OpenGLUploadable):
 
         self.material_iterator = tuple(material_iterator)
 
-    def generate_vertex_buffers(self, vertices: np.ndarray, indices: np.ndarray):
+    def _allocate_memory_buffers(self):
+        """Delay allocation of vertex buffers as this can only be done in openGL context functions"""
+        self._vao, self._vbo, self._ebo = self.generate_vertex_buffers(
+            self.mesh_data.vertex_data, self.mesh_data.index_data.flatten()
+        )
+        self._cuda_buffer_handle = cudagl.RegisteredBuffer(
+            int(self._vbo), cudagl.graphics_map_flags.WRITE_DISCARD
+        )
+
+    def generate_vertex_buffers(
+        self, vertices: np.ndarray, indices: np.ndarray
+    ) -> Tuple[int, int, int]:
         """Generate memory handles for vertex buffer"""
         vao = glGenVertexArrays(1)
         glBindVertexArray(vao)
@@ -140,8 +148,11 @@ class ObjMesh(OpenGLUploadable):
 
     def set_all_globals(self):
         """Perform a drawing pass with all materials"""
-        glBindVertexArray(self.vao)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo)
+        if self._vao is None:
+            self._allocate_memory_buffers()
+
+        glBindVertexArray(self._vao)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self._ebo)
 
         index_bytes = self.mesh_data.index_data.itemsize
         for material, count, offset in self.material_iterator:
@@ -158,16 +169,10 @@ class ObjMesh(OpenGLUploadable):
         for material, _, _ in self.material_iterator:
             material.bind_global_variable_names(shader)
 
-    def reupload_vertices(self):
-        """Reupload vertex data to the GPU"""
-        vertices = self.mesh_data.vertex_data
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.nbytes, vertices)
-
     def destroy(self):
         """Remove buffers after app is finished"""
         for material, _, _ in self.material_iterator:
             material.destroy()
 
-        glDeleteVertexArrays(1, (self.vao,))
-        glDeleteBuffers(1, (self.vbo, self.ebo))
+        glDeleteVertexArrays(1, (self._vao,))
+        glDeleteBuffers(1, (self._vbo, self._ebo))

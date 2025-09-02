@@ -12,10 +12,10 @@ from src.qt.gl_helpers.typing import ColorRGB, Position3D
 class Light(OpenGLUploadable):
     """Stores the position, color, and strength of a light source"""
 
-    position: np.ndarray
-    color: np.ndarray
-    reflective_strength: float
-    ambient_strength: float
+    _position: np.ndarray
+    _color: np.ndarray
+    _reflective_strength: float
+    _ambient_strength: float
 
     globals: Dict[str, str]
     position_glob_id: Optional[int]
@@ -31,10 +31,10 @@ class Light(OpenGLUploadable):
         ambient_strength: float,
         **globals,
     ):
-        self.position = np.array(position, dtype=np.float32)
-        self.color = np.array(color, dtype=np.float32)
-        self.reflective_strength = reflective_strength
-        self.ambient_strength = ambient_strength
+        self._position = np.array(position, dtype=np.float32)
+        self._color = np.array(color, dtype=np.float32)
+        self._reflective_strength = reflective_strength
+        self._ambient_strength = ambient_strength
 
         self.globals = globals
         self.position_glob_id = None
@@ -42,9 +42,23 @@ class Light(OpenGLUploadable):
         self.reflective_strength_glob_id = None
         self.ambient_strength_glob_id = None
 
+    def set_position(
+        self,
+        x: Optional[float] = None,
+        y: Optional[float] = None,
+        z: Optional[float] = None,
+    ):
+        """Set the light's position to specific coordinates. Requires recalculate to a global update."""
+        if x:
+            self._position[0] = x
+        if y:
+            self._position[1] = y
+        if z:
+            self._position[2] = z
+
     def set_all_globals(self):
         """Update all light properties on the GPU"""
-        glUniform3fv(self.position_glob_id, 1, self.position)
-        glUniform3fv(self.color_glob_id, 1, self.color)
-        glUniform1f(self.reflective_strength_glob_id, self.reflective_strength)
-        glUniform1f(self.ambient_strength_glob_id, self.ambient_strength)
+        glUniform3fv(self.position_glob_id, 1, self._position)
+        glUniform3fv(self.color_glob_id, 1, self._color)
+        glUniform1f(self.reflective_strength_glob_id, self._reflective_strength)
+        glUniform1f(self.ambient_strength_glob_id, self._ambient_strength)

@@ -41,7 +41,7 @@ def attach_qss_editor(widget: QWidget):
     qss_editor.show()
 
 
-def edit_ui_template(ui: Ui_MainWindow):
+def edit_ui_template(ui: Ui_MainWindow) -> Ui_MainWindow:
     """Call back to change properties of UI to custom components"""
 
     # Replace the placeholder with your custom OpenGL widget
@@ -55,4 +55,4 @@ def edit_ui_template(ui: Ui_MainWindow):
     # Insert your subclassed widget in the same place
     ui.openGLWidget = SewingGLWidget(ui.mainGroupBox.parent().parent())
     layout.insertWidget(idx, ui.openGLWidget)
-    return layout
+    return ui

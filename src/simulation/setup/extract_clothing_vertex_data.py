@@ -300,6 +300,6 @@ def extract_all_piece_vertices(
 
 if __name__ == "__main__":
     clothing_data = read_json("./assets/sewing_shirt.json")
-    avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyAnnotations.json")
+    avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
     avatar_mesh.scale_vertices(AVATAR_SCALING)
     extract_all_piece_vertices(clothing_data, avatar_mesh)

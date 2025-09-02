@@ -75,6 +75,20 @@ class Player(OpenGLUploadable):
         if z:
             self._position[2] = z
 
+    def set_target(
+        self,
+        x: Optional[float] = None,
+        y: Optional[float] = None,
+        z: Optional[float] = None,
+    ):
+        """Set the player's look target. Requires recalculate to update matrix."""
+        if x:
+            self._target[0] = x
+        if y:
+            self._target[1] = y
+        if z:
+            self._target[2] = z
+
     def recalculate_player_view(self):
         """
         Recalculate the player view matrix based on current parameters

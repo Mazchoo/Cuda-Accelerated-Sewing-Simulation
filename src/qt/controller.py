@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import QWidget
 from src.qt.gl_helpers.common.window_helpers import set_window_icon
 from src.qt.gl_helpers.common.controller_factory import CreateQtController
 
+from src.qt.actions import open_body_mesh
+
 
 @CreateQtController  # initialise with window, model, layout
 class SewingSimulationController(QWidget):
@@ -14,9 +16,9 @@ class SewingSimulationController(QWidget):
         super().__init__()
 
     @staticmethod
-    def setupCallbacks(controller):
+    def setupCallbacks(self):
         """Override add callbacks to layout of controller"""
-        pass
+        self.layout.actionOpen_Body.triggered.connect(lambda _: open_body_mesh(self))
 
     @staticmethod
     def initializeModels(controller):

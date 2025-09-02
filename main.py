@@ -23,9 +23,9 @@ if __name__ == "__main__":
     parent_window = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(parent_window)
-    layout = edit_ui_template(ui)
+    ui = edit_ui_template(ui)
     widget = SewingSimulationController(
-        parent_window, lambda *_args, **_kwargs: None, layout
+        parent_window, lambda *_args, **_kwargs: None, ui
     )
 
     if "RUN_QSS_EDITOR" in sys.argv:
