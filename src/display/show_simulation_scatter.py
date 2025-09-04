@@ -5,12 +5,12 @@ import plotly.graph_objects as go
 from src.utils.read_obj import parse_obj
 from src.utils.file_io import read_json
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
-from src.simulation.simulation import FabricSimulation
+from src.simulation.scatter_simulation import FabricSimulationScatter
 
 from src.parameters import AVATAR_SCALING, NR_STEPS
 
 
-def show_3d_scatter_simulation(simulation: FabricSimulation):
+def show_3d_scatter_simulation(simulation: FabricSimulationScatter):
     """Create scatter plot animation from saved frames of a simulation"""
 
     frames = [simulation.get_scatter_at_frame(i) for i in range(simulation.nr_frames)]
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     clothing_data = read_json("./assets/sewing_shirt.json")
     all_pieces, sewing = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
-    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing)
+    simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing)
     simulation.step(NR_STEPS)
 
     show_3d_scatter_simulation(simulation)

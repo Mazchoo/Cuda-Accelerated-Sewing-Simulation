@@ -18,7 +18,7 @@ from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_
 from src.parameters import AVATAR_SCALING
 
 
-class FabricSimulation:
+class FabricSimulationScatter:
     """Run a fabric simulation and keep track of piece positions"""
 
     def __init__(
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     clothing_data = read_json("./assets/sewing_shirt.json")
     all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
 
-    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing_constraints)
+    simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing_constraints)
     start = perf_counter()
     simulation.step(1)
     print(f"Time taken to run 1 piece {1} steps = {perf_counter() - start:.3}")
