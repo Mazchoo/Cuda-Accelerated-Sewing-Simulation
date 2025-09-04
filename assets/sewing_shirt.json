@@ -477,7 +477,8 @@
                     "marker": 0.5,
                     "flip": true
                 }
-            }
+            },
+            "material": "Denim.mtl"
         },
         "L-2": {
             "contour": [
@@ -908,7 +909,8 @@
                     "marker": 0.5,
                     "flip": false
                 }
-            }
+            },
+            "material": "Denim.mtl"
         },
         "L-3": {
             "contour": [
@@ -1172,7 +1174,8 @@
                     "flip": false
                 }
             },
-            "wraps_around_body": true
+            "wraps_around_body": true,
+            "material": "FauxLeather.mtl"
         },
         "L-3-flip": {
             "contour": [
@@ -1436,7 +1439,8 @@
                     "flip": false
                 }
             },
-            "wraps_around_body": true
+            "wraps_around_body": true,
+            "material": "FauxLeather.mtl"
         }
     },
     "sewing": [
