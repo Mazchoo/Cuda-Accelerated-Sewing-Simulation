@@ -70,6 +70,7 @@ class ObjMesh(OpenGLUploadable):
         material_iterator = []
         for texture in self.mesh_data.texture_data:
             material_properties = MaterialParameters()
+
             material = Material(
                 texture["path"], material_properties, **MATERIAL_PROPERTIES
             )
