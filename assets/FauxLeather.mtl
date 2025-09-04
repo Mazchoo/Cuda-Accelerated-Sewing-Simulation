@@ -1,0 +1,13 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl FauxLeather
+Ns 96.078453
+Ka 0.600000 0.600000 0.600000
+Kd 0.50000 0.50000 0.50000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd FauxLeather.png
