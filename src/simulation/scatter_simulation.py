@@ -1,4 +1,4 @@
-"""Controller of a simulation run"""
+"""Controller of a simulation run that saves frames"""
 
 from typing import Dict
 from time import perf_counter
