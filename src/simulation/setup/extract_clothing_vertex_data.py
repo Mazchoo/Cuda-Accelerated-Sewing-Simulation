@@ -49,7 +49,11 @@ def extract_grid(piece_data: dict) -> List[List[Optional[np.ndarray]]]:
 
 
 def extract_vertex_data_and_faces(
-    vertices_by_line: List[List[Optional[np.ndarray]]], width: float, height: float
+    vertices_by_line: List[List[Optional[np.ndarray]]],
+    width: float,
+    height: float,
+    min_x: float,
+    min_y: float,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Get vertex data in the form x, y, z, tx, ty, nx, ny, nz
@@ -71,8 +75,8 @@ def extract_vertex_data_and_faces(
                 vertex[0],
                 vertex[1],
                 0.0,
-                vertex[0] / width,
-                vertex[1] / height,
+                (vertex[0] - min_x) / width,
+                (vertex[1] - min_y) / height,
                 0.0,
                 0.0,
                 1.0,
@@ -116,7 +120,7 @@ def convert_rows_of_vertices_into_triangles(
     height = max_y - min_y
 
     vertex_data, faces, vertex_indices = extract_vertex_data_and_faces(
-        vertices_by_line, width, height
+        vertices_by_line, width, height, min_x, min_y
     )
 
     # Material data is just a single color for now
