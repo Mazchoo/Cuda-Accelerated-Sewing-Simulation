@@ -64,15 +64,17 @@ def open_clothing_json(controller: Self):
             print("File provided is not a .json file")
             return
 
-        clothing_data = read_json("./assets/sewing_shirt.json")
-        all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
-
         open_gl_handle: SewingGLWidget = controller.layout.openGLWidget
         if not (meshes := open_gl_handle.drawing_pass.meshes):
             print("Avatar is not already present")
             return
 
         avatar_mesh = meshes[0].mesh_data
+        clothing_data = read_json("./assets/sewing_shirt.json")
+        all_pieces, sewing_constraints = extract_all_piece_vertices(
+            clothing_data, avatar_mesh
+        )
+
         open_gl_handle.fabric_simulation = FabricSimulationScatter(
             avatar_mesh, all_pieces, sewing_constraints
         )

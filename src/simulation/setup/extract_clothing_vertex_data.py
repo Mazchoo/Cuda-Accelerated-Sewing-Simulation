@@ -139,12 +139,15 @@ def convert_rows_of_vertices_into_triangles(
         [[x, y, 0] for x, y in piece_data["turn_points"]], dtype=np.float32
     )
 
+    vertex_data[:, :3] /= CM_PER_M
+    turn_points /= CM_PER_M
+
     mesh = MeshData(
-        vertex_data / CM_PER_M,
+        vertex_data,
         faces,
         texture_data,
         annotations=get_annotation_dict_from_piece_data(piece_data),
-        turn_points=turn_points / CM_PER_M,
+        turn_points=turn_points,
     )
 
     mesh.place_at_origin()
