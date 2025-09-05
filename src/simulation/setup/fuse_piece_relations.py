@@ -46,6 +46,7 @@ def get_combined_vertex_data(
     all_vertices = []
     all_indices = []
     all_textures = []
+    total_texture_count = 0
 
     for piece_name, piece in pieces.items():
         start_ind, _ = index_ranges[piece_name]
@@ -53,8 +54,12 @@ def get_combined_vertex_data(
         all_indices.append(get_offset_copy(piece.mesh.index_data, start_ind))
 
         texture_data = deepcopy(piece.mesh.texture_data)
+        piece_texture_count = 0
         for texture in [t for t in texture_data if isinstance(t, dict)]:
-            texture["offset"] += start_ind
+            texture["offset"] += total_texture_count  # Increment offset within piece
+            piece_texture_count += texture["count"]
+
+        total_texture_count += piece_texture_count
         all_textures.extend(texture_data)
 
     return (
