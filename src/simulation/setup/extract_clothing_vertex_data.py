@@ -8,6 +8,7 @@ from shapely.geometry import Polygon, Point
 from src.utils.file_io import read_json
 from src.utils.geometry import length_along_contour, points_along_contour
 from src.utils.read_obj import parse_obj
+from src.utils.read_mtl import parse_mtl
 
 from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data
 from src.simulation.setup.alignment import snap_and_align_piece_to_body
@@ -119,7 +120,16 @@ def convert_rows_of_vertices_into_triangles(
     )
 
     # Material data is just a single color for now
-    texture_data = {(0.5, 0.5, 0.5): {"count": len(faces), "offset": 0}}
+    mtl_dict = parse_mtl(piece_data["material"])
+    if mtl_dict:
+        key = list(mtl_dict.keys())[0]
+    else:
+        mtl_dict["None"] = {}
+        key = "None"
+
+    texture_data = [
+        {"key": key, "count": len(faces.flatten()), "offset": 0, "mtl": mtl_dict[key]}
+    ]
 
     turn_points = np.array(
         [[x, y, 0] for x, y in piece_data["turn_points"]], dtype=np.float32

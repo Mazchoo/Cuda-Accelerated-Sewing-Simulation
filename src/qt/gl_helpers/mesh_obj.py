@@ -69,11 +69,10 @@ class ObjMesh(OpenGLUploadable):
 
         material_iterator = []
         for texture in self.mesh_data.texture_data:
-            material_properties = MaterialParameters()
+            material_properties = MaterialParameters(texture["mtl"])
 
-            material = Material(
-                texture["path"], material_properties, **MATERIAL_PROPERTIES
-            )
+            texture_src = texture["mtl"]["texture"]
+            material = Material(texture_src, material_properties, **MATERIAL_PROPERTIES)
             material_iterator.append((material, texture["count"], texture["offset"]))
 
         self.material_iterator = tuple(material_iterator)

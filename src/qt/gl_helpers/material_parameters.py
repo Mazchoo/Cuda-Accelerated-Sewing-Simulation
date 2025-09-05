@@ -1,6 +1,5 @@
 """Struct that contains all the lighting parameters for materials"""
 
-from typing import NamedTuple
 import numpy as np
 
 from src.parameters import (
@@ -13,7 +12,7 @@ from src.parameters import (
 )
 
 
-class MaterialParameters(NamedTuple):
+class MaterialParameters:
     """Named tuple containing all lighting-related parameters for materials.
 
     Attributes:
@@ -25,15 +24,23 @@ class MaterialParameters(NamedTuple):
         specular_tint: Tint factor for specular highlights
     """
 
-    ambient_weighting: np.ndarray = np.array(
-        DEFAULT_AMBIENT_WEIGHTING, dtype=np.float32
-    )  # RGB for ambient lighting
-    diffuse_weighting: np.ndarray = np.array(
-        DEFAULT_DIFFUSE_WEIGHTING, dtype=np.float32
-    )  # RGB for diffuse lighting
-    specular_weighting: np.ndarray = np.array(
-        DEFAULT_SPECULAR_WEIGHTING, dtype=np.float32
-    )  # RGB for specular lighting
-    specular_exponent: float = DEFAULT_SPECULAR_EXPONENT  # Specular exponent/shininess
-    opacity: float = DEFAULT_OPACITY  # Material opacity
-    specular_tint: float = DEFAULT_SPECULAR_TINT  # Specular tint factor
+    ambient_weighting: np.ndarray  # RGB for ambient lighting
+    diffuse_weighting: np.ndarray  # RGB for diffuse lighting
+    specular_weighting: np.ndarray  # RGB for specular lighting
+    specular_exponent: float  # Specular exponent/shininess
+    opacity: float  # Material opacity
+    specular_tint: float  # Specular tint factor
+
+    def __init__(self, mtl: dict):
+        self.ambient_weighting = mtl.get(
+            "ambient_weighting", np.array(DEFAULT_AMBIENT_WEIGHTING, dtype=np.float32)
+        )
+        self.diffuse_weighting = mtl.get(
+            "diffuse_weighting", np.array(DEFAULT_DIFFUSE_WEIGHTING, dtype=np.float32)
+        )
+        self.specular_weighting = mtl.get(
+            "specular_weighting", np.array(DEFAULT_SPECULAR_WEIGHTING, dtype=np.float32)
+        )
+        self.specular_exponent = mtl.get("specular_exponent", DEFAULT_SPECULAR_EXPONENT)
+        self.opacity = mtl.get("opacity", DEFAULT_OPACITY)
+        self.specular_tint = mtl.get("specular_tint", DEFAULT_SPECULAR_TINT)

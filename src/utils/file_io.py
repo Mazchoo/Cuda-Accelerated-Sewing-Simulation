@@ -22,6 +22,7 @@ def check_mtl_file_exists(obj_path: str) -> str:
     obj_path = Path(obj_path)
     mtl_path = obj_path.parent / (obj_path.stem + ".mtl")
 
+    # ToDo - Stop raising errors and return and handle them instead
     if not mtl_path.exists():
         raise FileNotFoundError(f"Mtl {mtl_path} cannot be found.")
 
@@ -35,7 +36,7 @@ def parse_material(line, file_path):
     if not material_path.exists():
         raise FileNotFoundError(f"Material {line} does not exist")
     if material_path.suffix != ".png":
-        raise AttributeError("Only .png image type supported.")
+        raise ValueError("Only .png image type supported.")
 
     return str(material_path)
 

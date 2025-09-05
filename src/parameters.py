@@ -38,7 +38,7 @@ FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 # Default light properties
 LIGHT_POSITION_RATIO = 1.2  # Default light position above avatar
 LIGHT_COLOR = (1.0, 1.0, 1.0)  # Default light color
-LIGHT_REFLECTIVE_STRENGTH = 2.0  # Default reflective strength
+LIGHT_REFLECTIVE_STRENGTH = 16.0  # Default reflective strength
 LIGHT_AMBIENT_STRENGTH = 2.0  # Default ambient strength
 
 # Default material properties
@@ -47,7 +47,7 @@ DEFAULT_DIFFUSE_WEIGHTING = (0.5, 0.5, 0.5)
 DEFAULT_SPECULAR_WEIGHTING = (1, 1, 1)
 DEFAULT_SPECULAR_EXPONENT = 0.75
 DEFAULT_OPACITY = 1.0
-DEFAULT_SPECULAR_TINT = 0.0
+DEFAULT_SPECULAR_TINT = 0.5
 
 # Shader paths
 VERTEX_SHADER_PATH = (

@@ -1,3 +1,5 @@
+"""File reading utilities to process .obj files"""
+
 import numpy as np
 
 from src.utils.file_io import read_json
@@ -36,9 +38,12 @@ def parse_face(line):
     return output
 
 
-def convert_parsed_data_to_numpy(faces, vertices, textures, normals):
+def convert_parsed_data_to_numpy(faces, vertices, textures, normals, mtl_dict):
     """Create an array of all vertices to draw in triplets for every face."""
-    texture_data = [{"path": path, "count": 0, "offset": 0} for path in faces.keys()]
+    texture_data = [
+        {"key": key, "count": 0, "offset": 0, "mtl": mtl_dict[key]}
+        for key in faces.keys()
+    ]
 
     vertex_data = []
     index_data = []
@@ -94,7 +99,7 @@ def parse_obj(file_path: str, annotation_path: str):
             line_content = line[len(flag) + 1 :]
 
             if flag == "usemtl":
-                current_texture = mtl_dict[line_content]["texture"]
+                current_texture = line_content
                 if current_texture not in faces:
                     faces[current_texture] = []
             elif flag == "v":
@@ -107,7 +112,7 @@ def parse_obj(file_path: str, annotation_path: str):
                 faces[current_texture].extend(parse_face(line_content))
 
     vertex_data, index_data, texture_data = convert_parsed_data_to_numpy(
-        faces, vertices, textures, normals
+        faces, vertices, textures, normals, mtl_dict
     )
 
     mesh = MeshData(

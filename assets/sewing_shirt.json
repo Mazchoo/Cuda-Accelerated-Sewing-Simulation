@@ -478,7 +478,7 @@
                     "flip": true
                 }
             },
-            "material": "Denim.mtl"
+            "material": "./assets/materials/Denim.mtl"
         },
         "L-2": {
             "contour": [
@@ -910,7 +910,7 @@
                     "flip": false
                 }
             },
-            "material": "Denim.mtl"
+            "material": "./assets/materials/Denim.mtl"
         },
         "L-3": {
             "contour": [
@@ -1175,7 +1175,7 @@
                 }
             },
             "wraps_around_body": true,
-            "material": "FauxLeather.mtl"
+            "material": "./assets/materials/FauxLeather.mtl"
         },
         "L-3-flip": {
             "contour": [
@@ -1440,7 +1440,7 @@
                 }
             },
             "wraps_around_body": true,
-            "material": "FauxLeather.mtl"
+            "material": "./assets/materials/FauxLeather.mtl"
         }
     },
     "sewing": [
