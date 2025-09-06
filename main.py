@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QSurfaceFormat
 
-from src.qt.gl_helpers.common.window_helpers import (
+from src.qt.common.window_helpers import (
     load_qss,
     attach_qss_editor,
     edit_ui_template,

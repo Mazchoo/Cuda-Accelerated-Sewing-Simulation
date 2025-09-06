@@ -1,13 +1,16 @@
 """Container of all the information for an open GL draw call (outside the vertex and index data)"""
 
-from typing import List
+from typing import Optional, ContextManager
 
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
 from src.qt.gl_helpers.light import Light
 from src.qt.gl_helpers.shader_program import ShaderProgram
-from src.qt.gl_helpers.mesh_obj import ObjMesh
+from src.qt.gl_helpers.mesh_obj import GLMesh
+
+from src.qt.gl_helpers.device_adapter import DeviceAllocationAdapter
+from src.qt.gl_helpers.copy_to_gl_context import gl_context_vertex_data
 
 from src.simulation.mesh import MeshData
 from src.qt.shaders.shader_parameters import LIGHT_PROPERTIES
@@ -33,7 +36,8 @@ class DrawingPass:
     player: Player
     object_motion: Motion
     light: Light
-    meshes: List[ObjMesh]
+    body_mesh: Optional[GLMesh]
+    clothing_mesh: Optional[GLMesh]
 
     def __init__(self, aspect_ratio: float):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
@@ -68,7 +72,8 @@ class DrawingPass:
         self.object_motion = Motion(object_id="motion")
         self.object_motion.bind_global_variable_names(self.shader)
 
-        self.meshes = []
+        self.body_mesh = None
+        self.clothing_mesh = None
 
     def update_body_height(self, height: float):
         """Set the camera and light to a default position based on body height"""
@@ -88,11 +93,23 @@ class DrawingPass:
         self.light.set_position(0.0, LIGHT_POSITION_RATIO * height, 0)
         self.light.set_all_globals()
 
-    def add_mesh(self, mesh: MeshData):
-        """Add a mesh to the simulation"""
+    def add_body_mesh(self, mesh: MeshData):
+        """Add a body mesh to the simulation"""
         self.shader.use()
-        self.meshes.append(ObjMesh(mesh))
-        self.meshes[-1].bind_global_variable_names(self.shader)
+        self.body_mesh = GLMesh(mesh)
+        self.body_mesh.bind_global_variable_names(self.shader)
+
+    def add_clothing_mesh(self, mesh: MeshData):
+        """Add a clothing mesh to the simulation"""
+        self.shader.use()
+        self.clothing_mesh = GLMesh(mesh)
+        self.clothing_mesh.bind_global_variable_names(self.shader)
+
+    def edit_clothing_vertex_data_context(
+        self,
+    ) -> ContextManager[Optional[DeviceAllocationAdapter]]:
+        """Return context mananger"""
+        return gl_context_vertex_data(self.clothing_mesh.cuda_buffer)
 
     def update_aspect_ratio(self, aspect_ratio: float):
         """Update the aspect ratio of the camera"""
@@ -103,5 +120,7 @@ class DrawingPass:
     def draw(self):
         """Perform a drawing pass"""
         self.shader.use()
-        for mesh in self.meshes:
-            mesh.set_all_globals()
+        if self.body_mesh:
+            self.body_mesh.set_all_globals()
+        if self.clothing_mesh:
+            self.clothing_mesh.set_all_globals()

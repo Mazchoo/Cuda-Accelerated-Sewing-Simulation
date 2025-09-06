@@ -1,6 +1,6 @@
 from functools import update_wrapper
 
-from src.qt.gl_helpers.common.controller_abc import ControllerABC
+from src.qt.common.controller_abc import ControllerABC
 
 
 def CreateQtController(cls):

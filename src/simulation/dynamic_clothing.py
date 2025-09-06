@@ -1,6 +1,6 @@
 """Class containing information to simulate clothing as one mesh"""
 
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pycuda.gl as cudagl
@@ -99,9 +99,10 @@ class DynamicClothing:
         )
         return np.float32(dampening)
 
-    def update_forces(self, step: int):
+    def update_forces(self, step: int, dampening: Optional[float] = None):
         """Update forces from internal interactions within piece"""
-        dampening = self.recalculate_dampening(step)
+        if dampening is None:
+            dampening: float = self.recalculate_dampening(step)
 
         apply_gravity(self.cuda_variables)
         apply_stress(self.cuda_variables)

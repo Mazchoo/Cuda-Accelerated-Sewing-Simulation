@@ -39,7 +39,7 @@ from src.qt.gl_helpers.uploadable_abc import OpenGLUploadable
 from src.qt.shaders.shader_parameters import MATERIAL_PROPERTIES
 
 
-class ObjMesh(OpenGLUploadable):
+class GLMesh(OpenGLUploadable):
     """Store vertex, indices and textures of an object and perform draw (set_all_globals)"""
 
     __slots__ = (
@@ -76,6 +76,11 @@ class ObjMesh(OpenGLUploadable):
             material_iterator.append((material, texture["count"], texture["offset"]))
 
         self.material_iterator = tuple(material_iterator)
+
+    @property
+    def cuda_buffer(self) -> Optional[cudagl.RegisteredBuffer]:
+        """Return handle to vertex data"""
+        return self._cuda_buffer_handle
 
     def _allocate_memory_buffers(self):
         """Delay allocation of vertex buffers as this can only be done in openGL context functions"""

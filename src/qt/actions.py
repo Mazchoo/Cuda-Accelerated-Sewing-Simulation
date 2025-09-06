@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QFileDialog
 
 from src.qt.open_gl_handle import SewingGLWidget
 from src.utils.read_obj import parse_obj, read_json
-from src.simulation.scatter_simulation import FabricSimulationScatter
+from src.simulation.simulation import FabricSimulation
 from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_vertices
 
 from src.parameters import AVATAR_SCALING
@@ -75,7 +75,7 @@ def open_clothing_json(controller: Self):
             clothing_data, avatar_mesh
         )
 
-        open_gl_handle.fabric_simulation = FabricSimulationScatter(
+        open_gl_handle.fabric_simulation = FabricSimulation(
             avatar_mesh, all_pieces, sewing_constraints
         )
         open_gl_handle.add_clothing(open_gl_handle.fabric_simulation.clothing.mesh)

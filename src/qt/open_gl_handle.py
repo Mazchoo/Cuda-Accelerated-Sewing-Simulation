@@ -7,8 +7,10 @@ import OpenGL.GL as gl
 from PyQt5.QtWidgets import QOpenGLWidget, QMainWindow
 
 from src.simulation.mesh import MeshData
-from src.simulation.scatter_simulation import FabricSimulationScatter
+from src.simulation.simulation import FabricSimulation
 from src.qt.gl_helpers.drawing import DrawingPass
+
+from src.parameters import STEPS_PER_FRAME
 
 
 class SewingGLWidget(QOpenGLWidget):
@@ -19,12 +21,14 @@ class SewingGLWidget(QOpenGLWidget):
     """
 
     drawing_pass: Optional[DrawingPass]
-    fabric_simulation: Optional[FabricSimulationScatter]
+    fabric_simulation: Optional[FabricSimulation]
+    frame_count: int
 
     def __init__(self, parent: QMainWindow):
         super().__init__(parent)
         self.drawing_pass = None
         self.fabric_simulation = None
+        self.frame_count = 0
 
     def initializeGL(self):
         """Qt Callback for initial setup"""
@@ -44,19 +48,33 @@ class SewingGLWidget(QOpenGLWidget):
     def add_body(self, body_mesh: MeshData):
         """Append body mesh to rendering"""
         self.drawing_pass.update_body_height(body_mesh.height)
-        self.drawing_pass.add_mesh(body_mesh)
+        self.drawing_pass.add_body_mesh(body_mesh)
 
     def add_clothing(self, mesh: MeshData):
         """Append clothing mesh to rendering"""
-        self.drawing_pass.add_mesh(mesh)
+        self.drawing_pass.add_clothing_mesh(mesh)
+
+    def draw(self):
+        """Draw a frame"""
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        self.drawing_pass.draw()
 
     def paintGL(self):
         """Qt Callback for updating on every frame"""
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         if self.fabric_simulation is not None:
-            pass  # ToDo
+            self.fabric_simulation.step()
 
-        self.drawing_pass.draw()
+            if self.frame_count % STEPS_PER_FRAME == 0:
+                with self.drawing_pass.edit_clothing_vertex_data_context() as buffer:
+                    if buffer is not None:
+                        self.fabric_simulation.write_vertex_data_to_gl_buffer(buffer)
+
+                self.draw()
+
+        else:
+            self.draw()
+
+        self.frame_count += 1
 
     def resizeGL(self, w: int, h: int):
         """Qt Callback for updating viewport"""

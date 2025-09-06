@@ -2,8 +2,8 @@
 
 from PyQt5.QtWidgets import QWidget
 
-from src.qt.gl_helpers.common.window_helpers import set_window_icon
-from src.qt.gl_helpers.common.controller_factory import CreateQtController
+from src.qt.common.window_helpers import set_window_icon
+from src.qt.common.controller_factory import CreateQtController
 
 from src.qt.actions import open_body_mesh, open_clothing_json
 

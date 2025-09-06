@@ -1,6 +1,6 @@
 """Controller that computes steps of a simulation"""
 
-from typing import Dict
+from typing import Dict, Optional
 from time import perf_counter
 
 import pycuda.gl as cudagl
@@ -28,10 +28,9 @@ class FabricSimulation:
     ):
         self.clothing = DynamicClothing(pieces, sewing_constraints, body)
 
-    def step(self, nr_steps: int = 1):
+    def step(self, dampening: Optional[float] = None):
         """Run simulation for a number of steps"""
-        for step in range(nr_steps):
-            self.clothing.update_forces(step)
+        self.clothing.update_forces(1, dampening)
 
     def write_vertex_data_to_gl_buffer(self, open_gl_buffer: cudagl.RegisteredBuffer):
         """Output current vertex data state to open gl"""
