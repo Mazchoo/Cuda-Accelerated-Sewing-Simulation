@@ -110,8 +110,8 @@ class DynamicClothing:
         apply_friction(self.cuda_variables, dampening)
         apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
-        recalculate_normals(self.cuda_variables)
 
     def copy_to_open_gl_data(self, open_gl_buffer: cudagl.RegisteredBuffer):
         """Copy cuda data on gpu from cuda context to open gl vertex buffer object"""
+        recalculate_normals(self.cuda_variables)
         copy_to_opengl_mesh_data(self.cuda_variables, open_gl_buffer)

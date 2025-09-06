@@ -28,6 +28,7 @@ WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
 # Cuda parameters
 DEFAULT_BLOCK_SIZE = 1024  # Default cuda block size
 COLLISION_BLOCK_SIZE = 64  # Block size for ray tracing algorithm
+STEPS_PER_FRAME = 1  # Number of simulation steps to do before rendering a frame
 
 # Display parameters
 MIN_CAMERA_DISTANCE_RATIO = 0.01  # Near camera distance as ratio of avatar height
@@ -56,7 +57,3 @@ VERTEX_SHADER_PATH = (
 FRAGMENT_SHADER_PATH = (
     "./src/qt/shaders/material.frag"  # Determines color transform shader
 )
-
-# Body Data
-BODY_PATH = "./assets/BodyMesh.obj"
-BODY_ANNOTATIONS_PATH = "./assets/BodyMesh.json"

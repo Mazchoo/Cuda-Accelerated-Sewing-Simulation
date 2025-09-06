@@ -3,6 +3,8 @@
 from typing import Dict
 from time import perf_counter
 
+import pycuda.gl as cudagl
+
 from src.utils.read_obj import parse_obj
 from src.utils.file_io import read_json
 from src.simulation.mesh import MeshData
@@ -30,6 +32,10 @@ class FabricSimulation:
         """Run simulation for a number of steps"""
         for step in range(nr_steps):
             self.clothing.update_forces(step)
+
+    def write_vertex_data_to_gl_buffer(self, open_gl_buffer: cudagl.RegisteredBuffer):
+        """Output current vertex data state to open gl"""
+        self.clothing.copy_to_open_gl_data(open_gl_buffer)
 
 
 if __name__ == "__main__":
