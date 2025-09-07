@@ -10,7 +10,7 @@ Simulation runs at approximately: 200 frames per second on a NVIDIA GeForce RTX 
 
 ## Work in Progress
 
-- [ ] Fix unwanted energy added to the system when position based contraints interact with forces
+- [ ] Fix unwanted movement added to the system when position based contraints interact with forces
 - [ ] Add zooming and panning to QT widget display
 - [ ] Added ability to view and edit material properties
 - [ ] Add controls to tweak physics parameters live
