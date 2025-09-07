@@ -14,3 +14,9 @@ shapely==2.0.7
 six==1.17.0
 trimesh==4.6.6
 rtree==1.4.0
+PyQt5==5.15.2
+pyrr==0.10.3
+pycuda==2025.1
+PyOpenGL==3.1.9
+PyOpenGL-accelerate==3.1.9
+pyqss==1.4.1
