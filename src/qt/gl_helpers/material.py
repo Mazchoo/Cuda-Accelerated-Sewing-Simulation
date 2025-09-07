@@ -96,7 +96,7 @@ class Material(OpenGLUploadable):
         )
         glGenerateMipmap(GL_TEXTURE_2D)
 
-    def set_all_globals(self):
+    def draw(self):
         """Update all player properties on the GPU"""
         props = self.material_properties
         glUniform3fv(self.ambient_weighting_glob_id, 1, props.ambient_weighting)

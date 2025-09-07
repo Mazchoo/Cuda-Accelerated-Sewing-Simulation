@@ -66,6 +66,6 @@ class Camera(OpenGLUploadable):
             fovy=fovy, aspect=aspect, near=near, far=far, dtype=np.float32
         )
 
-    def set_all_globals(self):
+    def draw(self):
         """Update all player properties on the GPU"""
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self._projection_matrix)

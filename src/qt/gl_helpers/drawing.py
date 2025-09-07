@@ -2,6 +2,8 @@
 
 from typing import Optional, ContextManager
 
+import OpenGL.GL as gl
+
 from src.qt.gl_helpers.player import Player
 from src.qt.gl_helpers.camera import Camera
 from src.qt.gl_helpers.motion import Motion
@@ -25,6 +27,8 @@ from src.parameters import (
     LIGHT_COLOR,
     LIGHT_REFLECTIVE_STRENGTH,
     LIGHT_AMBIENT_STRENGTH,
+    CLOTHING_Z_FACTOR,
+    CLOTHING_Z_OFFSET
 )
 
 
@@ -83,15 +87,15 @@ class DrawingPass:
         max_distance = max(MAX_CAMERA_DISTANCE_RATIO * height, default_distance)
 
         self.camera.recalculate_projection(near=min_distance, far=max_distance)
-        self.camera.set_all_globals()
+        self.camera.draw()
 
         self.player.set_position(0.0, height / 2, default_distance)
         self.player.set_target(0.0, height / 2, 0.0)
         self.player.recalculate_player_view()
-        self.player.set_all_globals()
+        self.player.draw()
 
         self.light.set_position(0.0, LIGHT_POSITION_RATIO * height, 0)
-        self.light.set_all_globals()
+        self.light.draw()
 
     def add_body_mesh(self, mesh: MeshData):
         """Add a body mesh to the simulation"""
@@ -115,12 +119,17 @@ class DrawingPass:
         """Update the aspect ratio of the camera"""
         self.shader.use()
         self.camera.recalculate_projection(aspect=aspect_ratio)
-        self.camera.set_all_globals()
+        self.camera.draw()
 
     def draw(self):
         """Perform a drawing pass"""
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+
         self.shader.use()
         if self.body_mesh:
-            self.body_mesh.set_all_globals()
+            self.body_mesh.draw()
         if self.clothing_mesh:
-            self.clothing_mesh.set_all_globals()
+            gl.glEnable(gl.GL_POLYGON_OFFSET_FILL)
+            gl.glPolygonOffset(CLOTHING_Z_FACTOR, CLOTHING_Z_OFFSET)
+            self.clothing_mesh.draw()
+            gl.glDisable(gl.GL_POLYGON_OFFSET_FILL)

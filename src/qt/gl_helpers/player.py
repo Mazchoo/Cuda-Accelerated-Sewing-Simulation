@@ -98,6 +98,6 @@ class Player(OpenGLUploadable):
             eye=self._position, target=self._target, up=[0.0, 1.0, 0.0]
         )
 
-    def set_all_globals(self):
+    def draw(self):
         """Update all player properties on the GPU"""
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.view_matrix)

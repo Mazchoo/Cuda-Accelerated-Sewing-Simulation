@@ -56,7 +56,7 @@ class Light(OpenGLUploadable):
         if z:
             self._position[2] = z
 
-    def set_all_globals(self):
+    def draw(self):
         """Update all light properties on the GPU"""
         glUniform3fv(self.position_glob_id, 1, self._position)
         glUniform3fv(self.color_glob_id, 1, self._color)

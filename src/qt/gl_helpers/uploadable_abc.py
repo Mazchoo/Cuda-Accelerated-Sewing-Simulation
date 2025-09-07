@@ -17,7 +17,7 @@ class OpenGLUploadable(ABC):
         for var_name, global_name in self.globals.items():
             global_uniform = glGetUniformLocation(shader.gl_id, global_name)
             setattr(self, var_name, global_uniform)
-        self.set_all_globals()
+        self.draw()
 
     def assert_all_globals_are_set(self):
         """Run a check that all globals are set"""
@@ -26,5 +26,6 @@ class OpenGLUploadable(ABC):
             assert getattr(self, key) is not None
 
     @abstractmethod
-    def set_all_globals(self):
+    def draw(self):
+        """Effect state of object on GPU rendering"""
         pass

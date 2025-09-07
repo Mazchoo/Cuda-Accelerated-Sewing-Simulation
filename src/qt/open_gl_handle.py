@@ -57,7 +57,6 @@ class SewingGLWidget(QOpenGLWidget):
 
     def draw(self):
         """Draw a frame"""
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         self.drawing_pass.draw()
 
     def paintGL(self):

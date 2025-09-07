@@ -141,6 +141,6 @@ class Motion(OpenGLUploadable):
         self.motion_matrix = self._angle_matrix @ self._position_matrix
         return self.motion_matrix
 
-    def set_all_globals(self):
+    def draw(self):
         """Copy object motion matrix to the GPU."""
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.motion_matrix)

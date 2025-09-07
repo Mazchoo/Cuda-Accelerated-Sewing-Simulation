@@ -151,7 +151,7 @@ class GLMesh(OpenGLUploadable):
             ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)),
         )
 
-    def set_all_globals(self):
+    def draw(self):
         """Perform a drawing pass with all materials"""
         if self._vao is None:
             self._allocate_memory_buffers()
@@ -161,7 +161,7 @@ class GLMesh(OpenGLUploadable):
 
         index_bytes = self.mesh_data.index_data.itemsize
         for material, count, offset in self.material_iterator:
-            material.set_all_globals()
+            material.draw()
             glDrawElements(
                 GL_TRIANGLES,
                 count,
