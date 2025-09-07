@@ -14,3 +14,4 @@ Simulation runs at approximately: 200 frames per second on a NVIDIA GeForce RTX 
 - [ ] Add zooming and panning to QT widget display
 - [ ] Added ability to view and edit material properties
 - [ ] Add controls to tweak physics parameters live
+- [ ] Optimize the set-up of clothing and simulation/make a loading animation
