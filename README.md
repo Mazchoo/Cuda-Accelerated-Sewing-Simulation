@@ -1,6 +1,6 @@
 # Cuda Accelerated Sewing Simulation
 
-<img width="1478" height="916" alt="image" src="https://github.com/user-attachments/assets/e073a73e-ea4e-4b6d-a5fe-5f20aa3da7eb" />
+<img width="1488" height="925" alt="Screenshot 2025-09-07 233723" src="https://github.com/user-attachments/assets/27363af6-852c-4a8d-80d6-91b0c5ed5e7f" />
 
 ## Description
 
