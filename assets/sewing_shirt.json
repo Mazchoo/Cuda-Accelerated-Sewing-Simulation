@@ -1175,7 +1175,7 @@
                 }
             },
             "wraps_around_body": true,
-            "material": "./assets/materials/FauxLeather.mtl"
+            "material": "./assets/materials/BlackFelt.mtl"
         },
         "L-3-flip": {
             "contour": [
@@ -1440,7 +1440,7 @@
                 }
             },
             "wraps_around_body": true,
-            "material": "./assets/materials/FauxLeather.mtl"
+            "material": "./assets/materials/BlackFelt.mtl"
         }
     },
     "sewing": [
