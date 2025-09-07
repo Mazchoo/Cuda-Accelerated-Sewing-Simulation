@@ -15,3 +15,26 @@ Simulation runs at approximately: 200 frames per second on a NVIDIA GeForce RTX 
 - [ ] Added ability to view and edit material properties
 - [ ] Add controls to tweak physics parameters live
 - [ ] Optimize the set-up of clothing and simulation/make a loading animation
+
+## Installation
+
+1. This project requires a machine with an nvidia GPU to run (tested with Cuda 12.8)
+2. Install a Visual Studio (Desktop development with C++) to get cl. You may need to add cl to path. Running cl in the command line should give:
+
+```
+usage: cl [ option... ] filename... [ /link linkoption... ]
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+```
+
+3. Install the Cuda framework. The version of cuda must be the one that corresponds with the compiler version.
+4. Download and install pycuda (clone the repo and run pip install . in the path). The following flag must be turned on in setup.py
+
+```
+Switch("CUDA_ENABLE_GL", True, "Enable CUDA GL interoperability")
+```
+
+5. Install the other requirments in requirements.txt in a Python enviornment.
+6. You will need to allow python to use GPU acceleration for rendering.
+
+```NVIDIA Control Panel → Manage 3D settings → Program Settings → Add python.exe → set "Preferred graphics processor" = High-performance NVIDIA processor```
