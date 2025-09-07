@@ -10,11 +10,15 @@ from src.qt.gl_helpers.device_adapter import DeviceAllocationAdapter
 
 @contextmanager
 def gl_context_vertex_data(registered_buffer: Optional[cudagl.RegisteredBuffer]):
+    """Create context of access to open gl memory buffer"""
     try:
-        mapping = registered_buffer.map()
-        ptr, _ = mapping.device_ptr_and_size()
-        yield DeviceAllocationAdapter(ptr)
-    except AttributeError:
-        yield None
+        if registered_buffer is None:
+            yield None
+        else:
+            mapping = registered_buffer.map()
+            ptr, _ = mapping.device_ptr_and_size()
+
+            yield DeviceAllocationAdapter(ptr)
     finally:
-        mapping.unmap()
+        if registered_buffer is not None:
+            mapping.unmap()

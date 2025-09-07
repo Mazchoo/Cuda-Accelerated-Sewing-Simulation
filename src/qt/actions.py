@@ -65,17 +65,17 @@ def open_clothing_json(controller: Self):
             return
 
         open_gl_handle: SewingGLWidget = controller.layout.openGLWidget
-        if not (meshes := open_gl_handle.drawing_pass.meshes):
+        if not (body_mesh := open_gl_handle.drawing_pass.body_mesh):
             print("Avatar is not already present")
             return
 
-        avatar_mesh = meshes[0].mesh_data
+        body_mesh_data = body_mesh.mesh_data
         clothing_data = read_json("./assets/sewing_shirt.json")
         all_pieces, sewing_constraints = extract_all_piece_vertices(
-            clothing_data, avatar_mesh
+            clothing_data, body_mesh_data
         )
 
         open_gl_handle.fabric_simulation = FabricSimulation(
-            avatar_mesh, all_pieces, sewing_constraints
+            body_mesh_data, all_pieces, sewing_constraints
         )
         open_gl_handle.add_clothing(open_gl_handle.fabric_simulation.clothing.mesh)

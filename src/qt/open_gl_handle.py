@@ -23,6 +23,7 @@ class SewingGLWidget(QOpenGLWidget):
     drawing_pass: Optional[DrawingPass]
     fabric_simulation: Optional[FabricSimulation]
     frame_count: int
+    end_frame: float
 
     def __init__(self, parent: QMainWindow):
         super().__init__(parent)
@@ -62,19 +63,20 @@ class SewingGLWidget(QOpenGLWidget):
     def paintGL(self):
         """Qt Callback for updating on every frame"""
         if self.fabric_simulation is not None:
-            self.fabric_simulation.step()
+            self.fabric_simulation.step(self.frame_count)
 
             if self.frame_count % STEPS_PER_FRAME == 0:
+                self.draw()
+
                 with self.drawing_pass.edit_clothing_vertex_data_context() as buffer:
                     if buffer is not None:
                         self.fabric_simulation.write_vertex_data_to_gl_buffer(buffer)
 
-                self.draw()
-
+            self.frame_count += 1
         else:
             self.draw()
 
-        self.frame_count += 1
+        self.update()
 
     def resizeGL(self, w: int, h: int):
         """Qt Callback for updating viewport"""

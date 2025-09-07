@@ -3,11 +3,12 @@
 from typing import Dict, Optional
 
 import numpy as np
-import pycuda.gl as cudagl
 
+from src.qt.gl_helpers.device_adapter import DeviceAllocationAdapter
 from src.simulation.mesh import MeshData
 from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingConstraints
+
 from src.simulation.setup.fuse_piece_relations import (
     get_piece_to_index_range_mapping,
     get_combined_vertex_data,
@@ -90,6 +91,9 @@ class DynamicClothing:
 
     def recalculate_dampening(self, step: int) -> np.float32:
         """Calculate dampening based on step"""
+        if step > NR_STEPS:
+            return np.float32(VELOCITY_DAMPING_END)
+
         dampening_cosine = 0.5 - 0.5 * np.cos(
             np.pi / NR_STEPS * step
         )  # Value between 0 and 1
@@ -112,7 +116,7 @@ class DynamicClothing:
         apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
 
-    def copy_to_open_gl_data(self, open_gl_buffer: cudagl.RegisteredBuffer):
+    def copy_to_open_gl_data(self, open_gl_buffer: DeviceAllocationAdapter):
         """Copy cuda data on gpu from cuda context to open gl vertex buffer object"""
         recalculate_normals(self.cuda_variables)
         copy_to_opengl_mesh_data(self.cuda_variables, open_gl_buffer)

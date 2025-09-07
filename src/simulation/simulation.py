@@ -28,9 +28,9 @@ class FabricSimulation:
     ):
         self.clothing = DynamicClothing(pieces, sewing_constraints, body)
 
-    def step(self, dampening: Optional[float] = None):
+    def step(self, step: int, dampening: Optional[float] = None):
         """Run simulation for a number of steps"""
-        self.clothing.update_forces(1, dampening)
+        self.clothing.update_forces(step, dampening)
 
     def write_vertex_data_to_gl_buffer(self, open_gl_buffer: cudagl.RegisteredBuffer):
         """Output current vertex data state to open gl"""

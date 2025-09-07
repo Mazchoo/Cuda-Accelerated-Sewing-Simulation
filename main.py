@@ -16,6 +16,7 @@ if __name__ == "__main__":
     fmt = QSurfaceFormat()
     fmt.setVersion(3, 3)
     fmt.setProfile(QSurfaceFormat.CoreProfile)
+    fmt.setSwapInterval(0)
     QSurfaceFormat.setDefaultFormat(fmt)
 
     app = QApplication(sys.argv)

@@ -1,9 +1,7 @@
 """Run cuda operations on cuda variables"""
 
 import numpy as np
-import pycuda.gl as cudagl
 
-from src.parameters import DEFAULT_BLOCK_SIZE, COLLISION_BLOCK_SIZE
 from src.simulation.setup.cuda_variables import CudaVariables
 from src.simulation.setup.device_allocation_adapter import DeviceAllocationAdapter
 from src.simulation.setup.cuda_kernels import (
@@ -19,6 +17,8 @@ from src.simulation.setup.cuda_kernels import (
     NORMALIZE_NORMALS_KERNEL,
     COPY_TO_VERTEX_DATA_KERNEL,
 )
+
+from src.parameters import DEFAULT_BLOCK_SIZE, COLLISION_BLOCK_SIZE
 
 DEFAULT_BLOCK_SHAPE = (DEFAULT_BLOCK_SIZE, 1, 1)
 COLLISION_BLOCK_SHAPE = (COLLISION_BLOCK_SIZE, 1, 1)
@@ -149,22 +149,16 @@ def recalculate_normals(variables: CudaVariables):
 
 
 def copy_to_opengl_mesh_data(
-    variables: CudaVariables, cuda_buffer_handle: cudagl.RegisteredBuffer
+    variables: CudaVariables, open_gl_buffer: DeviceAllocationAdapter
 ):
     """Copy cuda data to gpu"""
     vertices_nr_blocks = calculate_nr_blocks(len(variables.normals), DEFAULT_BLOCK_SIZE)
 
-    mapping = cuda_buffer_handle.map()
-    ptr, _ = mapping.device_ptr_and_size()
-
-    try:
-        COPY_TO_VERTEX_DATA_KERNEL(
-            DeviceAllocationAdapter(ptr),
-            variables.vertices.gpu,
-            variables.normals.gpu,
-            variables.vertices.gpu_length,
-            block=DEFAULT_BLOCK_SHAPE,
-            grid=(vertices_nr_blocks, 1, 1),
-        )
-    finally:
-        mapping.unmap()
+    COPY_TO_VERTEX_DATA_KERNEL(
+        open_gl_buffer,
+        variables.vertices.gpu,
+        variables.normals.gpu,
+        variables.vertices.gpu_length,
+        block=DEFAULT_BLOCK_SHAPE,
+        grid=(vertices_nr_blocks, 1, 1),
+    )
