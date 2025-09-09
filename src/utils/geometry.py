@@ -6,6 +6,17 @@ import numpy as np
 from trimesh import Trimesh
 from shapely.geometry import LineString, Point
 
+Point2D = Tuple[float, float]
+
+
+class SewingRange(NamedTuple):
+    """Hold the range of sewing between two points"""
+
+    start: Point2D
+    end: Point2D
+    start_fraction: float
+    end_fraction: float
+
 
 class RotationPlaneData(NamedTuple):
     """Pre-computed information to rotate a point in plane perpendicular to 3d line"""
@@ -17,7 +28,7 @@ class RotationPlaneData(NamedTuple):
 
 
 def get_point_on_contour(
-    contour: LineString, start: list, end: list, marker: float
+    contour: LineString, start: Point2D, end: Point2D, marker: float
 ) -> Point:
     """Get point defined by the fraction between two distinct points on the contour"""
     start_marker = contour.project(Point(start))
@@ -32,12 +43,9 @@ def get_point_on_contour(
     return contour.interpolate(interpolated_marker)
 
 
-def points_along_contour(
+def get_points_along_sewing_range(
     contour: LineString,
-    start: list,
-    end: list,
-    start_fraction: float,
-    end_fraction: float,
+    sewing_range: SewingRange,
     nr_points: int,
 ) -> List[Point]:
     """
@@ -46,28 +54,26 @@ def points_along_contour(
     """
     output = []
 
-    start_marker = contour.project(Point(start))
-    end_marker = contour.project(Point(end))
+    start_marker = contour.project(Point(sewing_range.start))
+    end_marker = contour.project(Point(sewing_range.end))
 
-    for fraction in np.linspace(start_fraction, end_fraction, nr_points):
+    for fraction in np.linspace(
+        sewing_range.start_fraction, sewing_range.end_fraction, nr_points
+    ):
         marker = start_marker + fraction * (end_marker - start_marker)
         output.append(contour.interpolate(marker))
 
     return output
 
 
-def length_along_contour(
-    contour: LineString,
-    start: list,
-    end: list,
-    start_fraction: float,
-    end_fraction: float,
-) -> float:
+def length_along_contour(contour: LineString, sewing_range: SewingRange) -> float:
     """
     Using a contour start and end find length along contour
     """
-    marker_distance = contour.project(Point(end)) - contour.project(Point(start))
-    fraction_difference = end_fraction - start_fraction
+    end = Point(sewing_range.end)
+    start = Point(sewing_range.start)
+    marker_distance = contour.project(end) - contour.project(start)
+    fraction_difference = sewing_range.end_fraction - sewing_range.start_fraction
 
     return abs(marker_distance * fraction_difference)
 
@@ -186,11 +192,11 @@ def get_bend_round_line_adjustment(
 
 
 if __name__ == "__main__":
-    v1 = np.array([0, -1, 0], dtype=np.float64)
-    p1 = np.array([1, 0, 0], dtype=np.float64)
-    v2 = np.array([3 / 5, 0, 4 / 5], dtype=np.float64)
-    p2 = np.array([-4 / 5, 0, 3 / 5], dtype=np.float64)
-    R = get_alignment_matrix(v1, p1, v2, p2)
-    v1 @= R
-    p1 @= R
-    print(v1, p1)
+    vector1 = np.array([0, -1, 0], dtype=np.float64)
+    point1 = np.array([1, 0, 0], dtype=np.float64)
+    vector2 = np.array([3 / 5, 0, 4 / 5], dtype=np.float64)
+    point2 = np.array([-4 / 5, 0, 3 / 5], dtype=np.float64)
+    matrix = get_alignment_matrix(vector1, point1, vector2, point2)
+    vector1 @= matrix
+    point1 @= matrix
+    print(vector1, point1)

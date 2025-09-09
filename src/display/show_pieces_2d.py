@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from src.utils.geometry import points_along_contour
+from src.utils.geometry import get_points_along_sewing_range, SewingRange
 from src.utils.file_io import read_json
 from src.display.common import get_hsv_colors
 from src.simulation.mesh import get_point_location
@@ -19,10 +19,11 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
     tp_end = all_turn_points[sewing_line["piece"]][sewing_line["tp_index_end"]]
     marker_start = sewing_line["marker_start"]
     marker_end = sewing_line["marker_end"]
+    sewing_range = SewingRange(tp_start, tp_end, marker_start, marker_end)
 
     poly_exterior = Polygon(contour).exterior
-    sewing_pts = points_along_contour(
-        poly_exterior, tp_start, tp_end, marker_start, marker_end, NR_SEWING_POINTS
+    sewing_pts = get_points_along_sewing_range(
+        poly_exterior, sewing_range, NR_SEWING_POINTS
     )
 
     xs, ys = zip(*[[p.x, p.y] for p in sewing_pts])

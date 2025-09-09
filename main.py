@@ -1,3 +1,5 @@
+"""Entry point to Qt Program"""
+
 import sys
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
