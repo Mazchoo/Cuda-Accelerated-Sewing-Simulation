@@ -1,9 +1,10 @@
 """Parse material file"""
 
 from src.utils.file_io import check_mtl_file_exists, parse_material
+from src.utils.common_types import Point3D
 
 
-def parse_vertex(line):
+def parse_vertex(line: str) -> Point3D:
     """Parse a vertex line e.g. -5.490000 20.340000 4.410002"""
     vertex = [float(x) for x in line.split(" ")]
 

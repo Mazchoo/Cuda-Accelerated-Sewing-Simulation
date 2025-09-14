@@ -6,7 +6,7 @@ import numpy as np
 from trimesh import Trimesh
 from shapely.geometry import LineString, Point
 
-Point2D = Tuple[float, float]
+from src.utils.common_types import Point2D
 
 
 class SewingRange(NamedTuple):

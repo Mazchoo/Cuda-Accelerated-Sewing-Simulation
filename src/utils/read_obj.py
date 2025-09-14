@@ -1,13 +1,16 @@
 """File reading utilities to process .obj files"""
 
+from typing import Union, List, Dict
+
 import numpy as np
 
 from src.utils.file_io import read_json
 from src.utils.read_mtl import parse_mtl, parse_vertex
 from src.simulation.mesh import MeshData, get_annotated_locations_from_dict
+from src.utils.common_types import Point2D, Point3D, Texture2D, TriangleIndicies
 
 
-def parse_texture_coord(line):
+def parse_texture_coord(line: str) -> Point2D:
     """Parse value of the form texture coordinares, e.g. 0.491723 -0.123703"""
     vertex = [float(x) for x in line.split(" ")]
 
@@ -17,7 +20,7 @@ def parse_texture_coord(line):
     return vertex
 
 
-def parse_face(line):
+def parse_face(line: str) -> List[TriangleIndicies]:
     """
     parse face coordinates e.g. 4/4/4 5/5/5 6/6/6,
     expect all three vertex, texture and normal coordinates to be present
@@ -38,7 +41,13 @@ def parse_face(line):
     return output
 
 
-def convert_parsed_data_to_numpy(faces, vertices, textures, normals, mtl_dict):
+def convert_parsed_data_to_numpy(
+    faces: Dict[str, List[TriangleIndicies]],
+    vertices: List[Point3D],
+    textures: List[Texture2D],
+    normals: List[Point3D],
+    mtl_dict,
+):
     """Create an array of all vertices to draw in triplets for every face."""
     texture_data = [
         {"key": key, "count": 0, "offset": 0, "mtl": mtl_dict[key]}
@@ -81,7 +90,7 @@ def convert_parsed_data_to_numpy(faces, vertices, textures, normals, mtl_dict):
     )
 
 
-def parse_obj(file_path: str, annotation_path: str):
+def parse_obj(file_path: str, annotation_path: str) -> Union[MeshData, Exception]:
     """Parse every line of an .obj file into material dict and vertex numpy array"""
     mtl_dict = parse_mtl(file_path)
     annotations = read_json(annotation_path)
@@ -127,14 +136,14 @@ def parse_obj(file_path: str, annotation_path: str):
 
 
 if __name__ == "__main__":
-    mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
-    print(len(mesh.vertex_data), "vertice parsed")
-    x_min = mesh.vertex_data[:, 0].min()
-    x_max = mesh.vertex_data[:, 0].max()
-    y_min = mesh.vertex_data[:, 1].min()
-    y_max = mesh.vertex_data[:, 1].max()
-    z_min = mesh.vertex_data[:, 2].min()
-    z_max = mesh.vertex_data[:, 2].max()
+    body_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
+    print(len(body_mesh.vertex_data), "vertice parsed")
+    x_min = body_mesh.vertex_data[:, 0].min()
+    x_max = body_mesh.vertex_data[:, 0].max()
+    y_min = body_mesh.vertex_data[:, 1].min()
+    y_max = body_mesh.vertex_data[:, 1].max()
+    z_min = body_mesh.vertex_data[:, 2].min()
+    z_max = body_mesh.vertex_data[:, 2].max()
     print(
         f"Vertex range x {x_max - x_min:.3f}, y: {y_max - y_min:.3f}, z: {z_max - z_min:.3f}"
     )
