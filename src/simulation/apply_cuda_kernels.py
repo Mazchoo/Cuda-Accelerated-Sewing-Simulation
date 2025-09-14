@@ -113,6 +113,8 @@ def apply_collisions(variables: CudaVariables):
         variables.body_triangles.gpu,
         variables.body_triangles.gpu_length,
         variables.vertices.gpu,
+        variables.velocities.gpu,
+        variables.accelerations.gpu,
         variables.vertices.gpu_length,
         variables.body_triangle_normals.gpu,
         variables.body_triangle_centers.gpu,

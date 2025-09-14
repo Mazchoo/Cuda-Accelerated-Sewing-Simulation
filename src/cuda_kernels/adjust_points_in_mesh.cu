@@ -56,6 +56,15 @@ __device__ __inline__ float3 get_edge2(const float* const triangles, int idx) {
     );
 }
 
+__device__ __inline__ float3 projection(const float3& a, const float3& b) {
+    // Get remove projection updated assumes b has norm 1
+    float dot_ab = dot_product(a, b);
+    return make_float3(
+        dot_ab * b.x,
+        dot_ab * b.y,
+        dot_ab * b.z
+    );
+}
 
 __device__ int ray_intersects_triangle(float3& query, const float3& dir,
                                        float3 v0, float3 edge1, float3 edge2) {
@@ -155,7 +164,9 @@ __device__ float3 closest_point_on_triangle(const float3 p,
 
 __global__ void adjust_point_in_mesh(const float* const triangles,
                                      const unsigned int num_triangles,
-                                     float* points,
+                                     float* vertices,
+                                     float* velocities,
+                                     float* accelerations,
                                      const unsigned int num_points,
                                      const float* const normals,
                                      const float* const centers) {
@@ -164,9 +175,9 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
     const float EPSILON = 1e-7f;
 
     float3 query = make_float3(
-        points[pt_idx * 3],
-        points[pt_idx * 3 + 1],
-        points[pt_idx * 3 + 2]
+        vertices[pt_idx * 3],
+        vertices[pt_idx * 3 + 1],
+        vertices[pt_idx * 3 + 2]
     );
     const float3 ray_dir = make_float3(1.0f, 1.0f, 1.0f);
 
@@ -220,8 +231,32 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
         );
         float3 adjustment = scalar_multiply(normal, closest_distance);
 
-        points[pt_idx * 3] += adjustment.x;
-        points[pt_idx * 3 + 1] = max(query.y + adjustment.y, 0.0f);
-        points[pt_idx * 3 + 2] += adjustment.z;
+        vertices[pt_idx * 3] += adjustment.x;
+        vertices[pt_idx * 3 + 1] = max(query.y + adjustment.y, 0.0f);
+        vertices[pt_idx * 3 + 2] += adjustment.z;
+
+        // Velocity removed along normal
+        float3 velocity = make_float3(
+            velocities[pt_idx * 3],
+            velocities[pt_idx * 3 + 1],
+            velocities[pt_idx * 3 + 2]
+        );
+        adjustment = projection(velocity, normal);
+
+        velocities[pt_idx * 3] -= adjustment.x;
+        velocities[pt_idx * 3 + 1] -= adjustment.y;
+        velocities[pt_idx * 3 + 2] -= adjustment.z;
+
+        // Force removed along normal
+        float3 accerlation = make_float3(
+            accelerations[pt_idx * 3],
+            accelerations[pt_idx * 3 + 1],
+            accelerations[pt_idx * 3 + 2]
+        );
+        adjustment = projection(accerlation, normal);
+
+        accelerations[pt_idx * 3] -= adjustment.x;
+        accelerations[pt_idx * 3 + 1] -= adjustment.y;
+        accelerations[pt_idx * 3 + 2] -= adjustment.z;
     }
 }

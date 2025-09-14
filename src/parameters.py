@@ -1,7 +1,7 @@
 """Common place to put all parameters of simulation"""
 
 # Simulation parameters
-NR_STEPS = 300  # Number of time steps to simulate for a sample
+NR_STEPS = 1000  # Number of time steps to simulate for a sample
 AVATAR_SCALING = 0.7  # Amount to change avatar by
 VERTEX_RESOLUTION = 1  # Resolution to take number of points
 GRAVITY = 9.81  # Acceleration downwards due to gravity
