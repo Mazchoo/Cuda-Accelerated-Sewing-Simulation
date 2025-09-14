@@ -80,7 +80,7 @@ def apply_bend(variables: CudaVariables):
     )
 
 
-def apply_friction(variables: CudaVariables, dampening: np.float32):
+def propagate_forces(variables: CudaVariables, dampening: np.float32):
     """Update position and velocity, taking friction into account"""
     nr_blocks = calculate_nr_blocks(len(variables.vertices), DEFAULT_BLOCK_SIZE)
     UPDATE_POSITION_KERNEL(
@@ -99,6 +99,8 @@ def apply_sewing(variables: CudaVariables):
     nr_blocks = calculate_nr_blocks(len(variables.sewing_indices), DEFAULT_BLOCK_SIZE)
     SEWING_KERNEL(
         variables.vertices.gpu,
+        variables.velocities.gpu,
+        variables.accelerations.gpu,
         variables.sewing_indices.gpu,
         variables.sewing_indices.gpu_length,
         block=DEFAULT_BLOCK_SHAPE,

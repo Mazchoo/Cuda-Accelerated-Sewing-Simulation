@@ -23,7 +23,7 @@ from src.simulation.apply_cuda_kernels import (
     apply_stress,
     apply_shear,
     apply_bend,
-    apply_friction,
+    propagate_forces,
     apply_sewing,
     apply_collisions,
     recalculate_normals,
@@ -112,7 +112,7 @@ class DynamicClothing:
         apply_stress(self.cuda_variables)
         apply_shear(self.cuda_variables)
         apply_bend(self.cuda_variables)
-        apply_friction(self.cuda_variables, dampening)
+        propagate_forces(self.cuda_variables, dampening)
         apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
 
