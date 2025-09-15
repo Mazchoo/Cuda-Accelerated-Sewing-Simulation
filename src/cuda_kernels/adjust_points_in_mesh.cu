@@ -243,9 +243,9 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
         );
         adjustment = projection(velocity, normal);
 
-        velocities[pt_idx * 3] -= adjustment.x;
-        velocities[pt_idx * 3 + 1] -= adjustment.y;
-        velocities[pt_idx * 3 + 2] -= adjustment.z;
+        velocities[pt_idx * 3] = adjustment.x;
+        velocities[pt_idx * 3 + 1] = adjustment.y;
+        velocities[pt_idx * 3 + 2] = adjustment.z;
 
         // Force removed along normal
         float3 accerlation = make_float3(
@@ -255,8 +255,8 @@ __global__ void adjust_point_in_mesh(const float* const triangles,
         );
         adjustment = projection(accerlation, normal);
 
-        accelerations[pt_idx * 3] -= adjustment.x;
-        accelerations[pt_idx * 3 + 1] -= adjustment.y;
-        accelerations[pt_idx * 3 + 2] -= adjustment.z;
+        accelerations[pt_idx * 3] = adjustment.x;
+        accelerations[pt_idx * 3 + 1] = adjustment.y;
+        accelerations[pt_idx * 3 + 2] = adjustment.z;
     }
 }

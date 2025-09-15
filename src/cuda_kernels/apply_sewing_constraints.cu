@@ -3,16 +3,6 @@ __device__ __inline__ float dot_product(float3 a, float3 b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-__device__ __inline__ float3 projection(const float3& a, const float3& b) {
-    // Get remove projection updated assumes b has norm 1
-    float dot_ab = dot_product(a, b);
-    return make_float3(
-        dot_ab * b.x,
-        dot_ab * b.y,
-        dot_ab * b.z
-    );
-}
-
 __device__ __inline__ float3 subtract(float3 a, float3 b) {
     return make_float3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
@@ -57,31 +47,19 @@ __global__ void apply_sewing_constraints(float* vertices,
         return;
     }
 
-    float3 vectorNormalised = make_float3(vector.x, vector.y, vector.z);
-    scaleVector(vectorNormalised, (1.0f / vectorNorm));
-
     float adjustment = min(vectorNorm / 2, SEWING_MAX_ADJUSTMENT);
 
     scaleVector(vector, (adjustment / vectorNorm));
 
-    vertices[from_ind * 3] += vector.x;
-    vertices[from_ind * 3 + 1] += vector.y;
-    vertices[from_ind * 3 + 2] += vector.z;
+    if (vectorNorm > SEWING_MAX_ADJUSTMENT) {
+        vertices[from_ind * 3] += vector.x;
+        vertices[from_ind * 3 + 1] += vector.y;
+        vertices[from_ind * 3 + 2] += vector.z;
 
-    vertices[to_ind * 3] -= vector.x;
-    vertices[to_ind * 3 + 1] -= vector.y;
-    vertices[to_ind * 3 + 2] -= vector.z;
-
-    from_vertex = make_float3(
-        velocities[from_ind * 3],
-        velocities[from_ind * 3 + 1],
-        velocities[from_ind * 3 + 2]
-    );
-
-    vector = projection(from_vertex, vectorNormalised);
-    velocities[from_ind * 3] -= vector.x;
-    velocities[from_ind * 3 + 1] -= vector.y;
-    velocities[from_ind * 3 + 2] -= vector.z;
+        vertices[to_ind * 3] -= vector.x;
+        vertices[to_ind * 3 + 1] -= vector.y;
+        vertices[to_ind * 3 + 2] -= vector.z;
+    }
 
     from_vertex = make_float3(
         accelerations[from_ind * 3],
@@ -89,21 +67,9 @@ __global__ void apply_sewing_constraints(float* vertices,
         accelerations[from_ind * 3 + 2]
     );
 
-    vector = projection(from_vertex, vectorNormalised);
-    accelerations[from_ind * 3] -= vector.x;
-    accelerations[from_ind * 3 + 1] -= vector.y;
-    accelerations[from_ind * 3 + 2] -= vector.z;
-
-    to_vertex = make_float3(
-        velocities[to_ind * 3],
-        velocities[to_ind * 3 + 1],
-        velocities[to_ind * 3 + 2]
-    );
-
-    vector = projection(to_vertex, vectorNormalised);
-    velocities[to_ind * 3] -= vector.x;
-    velocities[to_ind * 3 + 1] -= vector.y;
-    velocities[to_ind * 3 + 2] -= vector.z;
+    accelerations[from_ind * 3] -= vector.x * 0.25f;
+    accelerations[from_ind * 3 + 1] -= vector.y * 0.25f;
+    accelerations[from_ind * 3 + 2] -= vector.z * 0.25f;
 
     to_vertex = make_float3(
         accelerations[to_ind * 3],
@@ -111,8 +77,7 @@ __global__ void apply_sewing_constraints(float* vertices,
         accelerations[to_ind * 3 + 2]
     );
 
-    vector = projection(to_vertex, vectorNormalised);
-    accelerations[to_ind * 3] -= vector.x;
-    accelerations[to_ind * 3 + 1] -= vector.y;
-    accelerations[to_ind * 3 + 2] -= vector.z;
+    accelerations[to_ind * 3] += vector.x * 0.25f;
+    accelerations[to_ind * 3 + 1] += vector.y * 0.25f;
+    accelerations[to_ind * 3 + 2] += vector.z * 0.25f;
 }

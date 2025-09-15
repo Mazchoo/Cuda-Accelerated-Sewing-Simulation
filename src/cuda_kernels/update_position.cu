@@ -27,6 +27,10 @@ __global__ void update_position_with_friction(const float* const accelerations,
         accelerations[idx * 3 + 2]
     );
 
+    vertices[idx * 3] += velocity.x * TIME_DELTA;
+    vertices[idx * 3 + 1] += velocity.y * TIME_DELTA;
+    vertices[idx * 3 + 2] += velocity.z * TIME_DELTA;
+
     velocity.x += acceleration.x * TIME_DELTA;
     velocity.y += acceleration.y * TIME_DELTA;
     velocity.z += acceleration.z * TIME_DELTA;
@@ -45,8 +49,4 @@ __global__ void update_position_with_friction(const float* const accelerations,
     velocities[idx * 3] = velocity.x;
     velocities[idx * 3 + 1] = velocity.y;
     velocities[idx * 3 + 2] = velocity.z;
-
-    vertices[idx * 3] += velocity.x * TIME_DELTA;
-    vertices[idx * 3 + 1] += velocity.y * TIME_DELTA;
-    vertices[idx * 3 + 2] += velocity.z * TIME_DELTA;
 }

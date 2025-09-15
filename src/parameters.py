@@ -7,15 +7,15 @@ VERTEX_RESOLUTION = 1  # Resolution to take number of points
 GRAVITY = 9.81  # Acceleration downwards due to gravity
 TERMINAL_VELOCITY = 20.0  # Terminal velocity from tensile forces
 TIME_DELTA = 0.01  # Time increment to make update to each piece
-STRESS_WEIGHTING = 600  # Weight to apply to the stress force
+STRESS_WEIGHTING = 1000  # Weight to apply to the stress force
 STRESS_THRESHOLD = 0.1  # Percentage of resting distance where stress starts applying
-SHEAR_WEIGHTING = 600  # Weight to apply to the shear force
+SHEAR_WEIGHTING = 1000  # Weight to apply to the shear force
 SHEAR_THRESHOLD = 0.1  # Percentage of resting distance where shear starts applying
-BEND_WEIGHTING = 600  # Weight to apply to bend force
+BEND_WEIGHTING = 1000  # Weight to apply to bend force
 BEND_THRESHOLD = 0.1  # Sin of angle where bending is applied
 CM_PER_M = 100  # Scale of coordinates in clothing to world coordinates
 VELOCITY_DAMPING_START = (
-    1.0  # Amount to reduce velocity by in every step at the beginning
+    0.5  # Amount to reduce velocity by in every step at the beginning
 )
 VELOCITY_DAMPING_END = 0.0  # Amount to reduce velocity by in every step at the end
 DISTANCE_FROM_BODY = 0.025  # Default distance along normal of alignment point on avatar
@@ -36,8 +36,8 @@ DEFAULT_CAMERA_DISTANCE_RATIO = 1.5  # Initial camera distance as ratio of avata
 MAX_CAMERA_DISTANCE_RATIO = 5.0  # Far camera distance as ratio of avatar height
 FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 # The following two parameters stop floating point errors, more negative increases priority
-CLOTHING_Z_OFFSET = -5.0  # Priority offset for clothing
-CLOTHING_Z_FACTOR = -5.0  # Priority factor for clothing in terms of polygon gradient
+CLOTHING_Z_OFFSET = -10.0  # Priority offset for clothing
+CLOTHING_Z_FACTOR = -10.0  # Priority factor for clothing in terms of polygon gradient
 
 # Default light properties
 LIGHT_POSITION_RATIO = 1.2  # Default light position above avatar
