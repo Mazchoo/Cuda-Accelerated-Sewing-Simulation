@@ -63,8 +63,8 @@ def get_combined_vertex_data(
         all_textures.extend(texture_data)
 
     return (
-        np.concatenate(all_vertices, dtype=np.float32),
-        np.concatenate(all_indices, dtype=np.uint32),
+        np.concatenate(all_vertices),
+        np.concatenate(all_indices),
         all_textures,
     )
 

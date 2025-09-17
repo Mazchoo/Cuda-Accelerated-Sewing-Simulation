@@ -25,6 +25,7 @@ class ControllerABC(metaclass=ABCMeta):
         """Set-up UI properties"""
         raise NotImplementedError
 
+    # pylint: disable=too-many-return-statements
     @classmethod
     def __subclasshook__(cls, sub):
         if not hasattr(sub, "setupCallbacks"):

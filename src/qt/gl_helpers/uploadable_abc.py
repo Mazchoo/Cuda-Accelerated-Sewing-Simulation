@@ -9,6 +9,8 @@ from src.qt.gl_helpers.shader_program import ShaderProgram
 
 
 class OpenGLUploadable(ABC):
+    """Template to provide way to upload variables to the current shader"""
+
     shader_var_names: Dict[str, str]
 
     def bind_global_variable_names(self, shader: ShaderProgram):
@@ -28,4 +30,4 @@ class OpenGLUploadable(ABC):
     @abstractmethod
     def draw(self):
         """Effect state of object on GPU rendering"""
-        pass
+        raise NotImplementedError

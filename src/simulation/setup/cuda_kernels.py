@@ -1,6 +1,6 @@
 """All compiled cuda kernels"""
 
-import pycuda.autoinit  # noqa
+import pycuda.autoinit  # noqa pylint: disable=unused-import
 from pycuda.compiler import SourceModule
 import numpy as np
 

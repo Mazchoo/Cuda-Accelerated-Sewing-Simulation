@@ -29,7 +29,7 @@ from OpenGL.GL import (
 
 import pycuda.gl as cudagl
 
-import src.simulation.apply_cuda_kernels  # noqa: F401
+import src.simulation.apply_cuda_kernels  # noqa: F401 pylint: disable=unused-import
 from src.simulation.mesh import MeshData
 from src.qt.gl_helpers.material import Material
 from src.qt.gl_helpers.shader_program import ShaderProgram

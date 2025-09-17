@@ -38,7 +38,7 @@ class ShaderProgram:
     @staticmethod
     def read_shader_file(path: str):
         """Read shader source code from file and return as list of strings"""
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             source = f.readlines()
         return source
 

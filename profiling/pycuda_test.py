@@ -1,4 +1,6 @@
-import pycuda.autoinit  # noqa
+"""Minimal example of runing a CUDA kernel"""
+
+import pycuda.autoinit  # noqa pylint: disable=unused-import
 import pycuda.driver as drv
 import numpy as np
 from pycuda.compiler import SourceModule

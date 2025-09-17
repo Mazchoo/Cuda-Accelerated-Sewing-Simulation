@@ -16,17 +16,19 @@ class SewingSimulationController(QWidget):
         super().__init__()
 
     @staticmethod
-    def setupCallbacks(self):
+    def setupCallbacks(controller):
         """Override add callbacks to layout of controller"""
-        self.layout.actionOpen_Body.triggered.connect(lambda _: open_body_mesh(self))
-        self.layout.actionOpen_Clothing.triggered.connect(
-            lambda _: open_clothing_json(self)
+        controller.layout.actionOpen_Body.triggered.connect(
+            lambda _: open_body_mesh(controller)
+        )
+        controller.layout.actionOpen_Clothing.triggered.connect(
+            lambda _: open_clothing_json(controller)
         )
 
     @staticmethod
-    def initializeModels(controller):
+    def initializeModels(_controller):
         """Setup models"""
-        pass
+        return
 
     @staticmethod
     def initializeUi(controller):

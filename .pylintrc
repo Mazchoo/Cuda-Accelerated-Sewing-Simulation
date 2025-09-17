@@ -9,7 +9,7 @@ extension-pkg-allow-list=
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code. (This is an alternative name to extension-pkg-allow-list
 # for backward compatibility.)
-extension-pkg-whitelist=PyQt5, pygments
+extension-pkg-whitelist=PyQt5, pygments, pycuda
 
 # Return non-zero exit code if any of these messages/categories are detected,
 # even if score is above --fail-under value. Syntax same as enable. Messages
@@ -90,6 +90,7 @@ disable=raw-checker-failed,
         too-many-instance-attributes,  # Some GUI classes have a lot of boiler plate attributes
         pointless-string-statement,  # Commented out code blocks do this
         import-error, # Environment issue
+        duplicate-code, # Too strict IMO
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
