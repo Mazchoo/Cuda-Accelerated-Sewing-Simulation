@@ -1,14 +1,19 @@
 """Dispatch to annotate a mesh from different sources"""
 
+from typing import List, Tuple
+
 import numpy as np
+from shapely.geometry import Polygon, LineString
 
 from src.utils.geometry import get_point_on_contour
-from shapely.geometry import Polygon
 
 from src.parameters import CM_PER_M
 
 
-def get_point_location(point_data, contour, all_turn_points):
+def get_point_location(
+    point_data: dict, contour: LineString, all_turn_points: List[Tuple[float, float]]
+):
+    """Get location using distance long contour between two points"""
     tp_start = all_turn_points[point_data["tp_begin"]]
     tp_end = all_turn_points[point_data["tp_end"]]
     snap_marker = point_data["marker"]

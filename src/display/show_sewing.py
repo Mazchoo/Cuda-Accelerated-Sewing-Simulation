@@ -39,7 +39,7 @@ def add_sewing_points_to_plotly_fig(
                 z=ys,
                 mode="markers",
                 name=f"sewing {i}",
-                marker=dict(color=float_rgb_to_str(colors[i])),
+                marker={"color": float_rgb_to_str(colors[i])},
                 **kwargs,
             )
         )

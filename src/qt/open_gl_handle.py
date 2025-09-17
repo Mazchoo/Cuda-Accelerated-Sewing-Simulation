@@ -43,7 +43,7 @@ class SewingGLWidget(QOpenGLWidget):
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
         gl.glClearColor(0.2, 0.3, 0.4, 1.0)
 
-        w, h = self.width(), self.height()  # ToDo - make this dynamic
+        w, h = self.width(), self.height()
         self.drawing_pass = DrawingPass(w / h)
 
     def add_body(self, body_mesh: MeshData):

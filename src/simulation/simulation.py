@@ -42,9 +42,9 @@ if __name__ == "__main__":
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json("./assets/sewing_shirt.json")
-    all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
+    all_pieces, sewing = extract_all_piece_vertices(clothing_data)
 
-    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing_constraints)
+    simulation = FabricSimulation(avatar_mesh, all_pieces, sewing)
     start = perf_counter()
     simulation.step(1)
     print(f"Time taken to run 1 piece {1} steps = {perf_counter() - start:.3}")

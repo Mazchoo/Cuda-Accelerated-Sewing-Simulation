@@ -24,20 +24,20 @@ def show_meshes(meshes: List[go.Mesh3d]):
     """Display plotly 3D meshes"""
     fig = go.Figure(data=meshes)
     fig.update_layout(
-        scene=dict(
-            xaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            yaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            zaxis=dict(nticks=4, range=[0, 2]),
-            aspectmode="cube",
-        ),
+        scene={
+            "xaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "yaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "zaxis": {"nticks": 4, "range": [0, 2]},
+            "aspectmode": "cube",
+        },
         width=1200,
-        margin=dict(r=20, l=10, b=10, t=10),
+        margin={"r": 20, "l": 10, "b": 10, "t": 10},
     )
     fig.show()
 
@@ -53,20 +53,20 @@ def show_meshes_with_annotations(
         add_annotations_to_plotly_fig(mesh, fig, **annotation_kwargs)
 
     fig.update_layout(
-        scene=dict(
-            xaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            yaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            zaxis=dict(nticks=4, range=[0, 2]),
-            aspectmode="cube",
-        ),
+        scene={
+            "xaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "yaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "zaxis": {"nticks": 4, "range": [0, 2]},
+            "aspectmode": "cube",
+        },
         width=1200,
-        margin=dict(r=20, l=10, b=10, t=10),
+        margin={"r": 20, "l": 10, "b": 10, "t": 10},
     )
     fig.show()
 
@@ -81,20 +81,20 @@ def show_meshes_with_sewing_points(
     add_sewing_points_to_plotly_fig(dynamic_pieces, sewing, fig)
 
     fig.update_layout(
-        scene=dict(
-            xaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            yaxis=dict(
-                nticks=4,
-                range=[-1, 1],
-            ),
-            zaxis=dict(nticks=4, range=[0, 2.5]),
-            aspectmode="cube",
-        ),
+        scene={
+            "xaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "yaxis": {
+                "nticks": 4,
+                "range": [-1, 1],
+            },
+            "zaxis": {"nticks": 4, "range": [0, 2.5]},
+            "aspectmode": "cube",
+        },
         width=1200,
-        margin=dict(r=20, l=10, b=10, t=10),
+        margin={"r": 20, "l": 10, "b": 10, "t": 10},
     )
     fig.show()
     return fig
@@ -105,6 +105,7 @@ def show_each_mesh_different_colors(
     dynamic_pieces: Dict[str, DynamicPiece],
     sewing_constraints: SewingConstraints,
 ):
+    """Show each piece in different colors"""
     avatar_plotly = create_plotly_mesh(
         avatar_mesh, color="lightblue", name="avatar", opacity=1.0
     )
@@ -143,12 +144,10 @@ def show_each_mesh_different_colors(
 
 
 if __name__ == "__main__":
-    avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
-    avatar_mesh.scale_vertices(AVATAR_SCALING)
+    body_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
+    body_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json("./assets/sewing_shirt.json")
-    dynamic_pieces, sewing_constraints = extract_all_piece_vertices(
-        clothing_data, avatar_mesh
-    )
+    pieces_shirt, sewing_shirt = extract_all_piece_vertices(clothing_data, body_mesh)
 
-    show_each_mesh_different_colors(avatar_mesh, dynamic_pieces, sewing_constraints)
+    show_each_mesh_different_colors(body_mesh, pieces_shirt, sewing_shirt)

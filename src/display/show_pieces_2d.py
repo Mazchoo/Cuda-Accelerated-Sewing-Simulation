@@ -42,7 +42,7 @@ def display_turnpoints(turn_points: np.ndarray):
         plt.text(x, y, str(i))
 
 
-def display_alignment(contour, body_points, all_turn_points):
+def display_alignment(contour, body_points: dict, all_turn_points):
     snap_point = get_point_location(body_points["snap"], contour, all_turn_points)
     alignment_point = get_point_location(
         body_points["alignment"], contour, all_turn_points

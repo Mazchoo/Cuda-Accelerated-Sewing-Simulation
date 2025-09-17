@@ -17,7 +17,8 @@ __device__ __inline__ void scaleVector(float3 &v, float s) {
     v.z *= s;
 }
 
-// ToDo - Some other check is needed to ensure that vertices are not sewn twice
+// ToDo - Some other check is needed to ensure that vertices are not sewn twi
+// ToDo - Don't pass velcity and set a parameter for acceleration modifier
 __global__ void apply_sewing_constraints(float* vertices,
                                          float* velocities,
                                          float* accelerations,

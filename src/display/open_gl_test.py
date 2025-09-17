@@ -1,6 +1,8 @@
+# pylint: skip-file
 import sys
-import numpy as np
 import ctypes
+
+import numpy as np
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 from OpenGL.GL import (
     glCreateProgram,

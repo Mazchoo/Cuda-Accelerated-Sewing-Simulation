@@ -13,6 +13,7 @@ class MeshData:
     Texture data indicates where to use in each material in a render pass
     """
 
+    # ToDo: consider putting vertex, index and texture data in struct
     def __init__(
         self,
         vertex_data: np.ndarray,
@@ -26,6 +27,7 @@ class MeshData:
         self._texture_data = texture_data
 
         self._trimesh = None
+        self._origin_array = None
         self._annotations = annotations if annotations is not None else {}
         self._turn_points = turn_points
 
@@ -91,6 +93,13 @@ class MeshData:
         """Get max difference in y coordinate"""
         return self._vertex_data[:, 1].max() - self._vertex_data[:, 1].min()
 
+    @property
+    def origin(self) -> np.ndarray:
+        """Offset used to place stored vertices so x, z is centered and y is at bottom"""
+        if self._origin_array is not None:
+            return self._origin_array
+        return np.zeros(2, dtype=np.float32)
+
     def place_at_origin(self):
         """Ensure object is stood upright (bottom at y=0) center x, z at 0, 0"""
         x_mean = self._vertex_data[:, 0].mean()
@@ -131,10 +140,8 @@ class MeshData:
 
         # Once we start running the simulation, stop updating turn-points as they are not phsyical points
         # Another way to handle this is for turn-points ect. to index a vertex
-        if (
-            (isinstance(offset, np.ndarray) and len(offset.shape) == 1)
-            or isinstance(offset, tuple)
-            or isinstance(offset, list)
+        if (isinstance(offset, np.ndarray) and len(offset.shape) == 1) or isinstance(
+            offset, (tuple, list)
         ):
             for annotation_point in self._annotations.values():
                 annotation_point += offset

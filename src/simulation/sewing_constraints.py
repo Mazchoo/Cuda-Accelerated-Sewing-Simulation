@@ -21,6 +21,7 @@ class SewingConstraints:
             sewing_pair.recalculate_adjustment(from_vertices, to_vertices)
 
     def get_adjustment_for_piece(self, piece_name: str) -> DistanceAdjustment:
+        """Get amount to adjust vertices by to move closer to sewing constraint"""
         indices, amounts = [], []
         for sewing_pair in self:
             if sewing_pair.from_piece == piece_name:

@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-import matplotlib.cm as cm
+from matplotlib import cm
 import numpy as np
 
 

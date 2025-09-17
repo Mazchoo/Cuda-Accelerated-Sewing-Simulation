@@ -228,7 +228,7 @@ def get_offset_contour_3d(piece_mesh: MeshData, piece_data: dict) -> np.ndarray:
         np.array([[x, y, 0] for x, y in piece_data["contour"]], dtype=np.float64)
         / CM_PER_M
     )
-    contour -= piece_mesh._origin_array
+    contour -= piece_mesh.origin
     return Polygon(contour).exterior
 
 
@@ -324,7 +324,7 @@ def extract_all_piece_vertices(
 
 
 if __name__ == "__main__":
-    clothing_data = read_json("./assets/sewing_shirt.json")
+    shirt_clothing_data = read_json("./assets/sewing_shirt.json")
     avatar_mesh = parse_obj("./assets/BodyMesh.obj", "./assets/BodyMesh.json")
     avatar_mesh.scale_vertices(AVATAR_SCALING)
-    extract_all_piece_vertices(clothing_data, avatar_mesh)
+    extract_all_piece_vertices(shirt_clothing_data, avatar_mesh)

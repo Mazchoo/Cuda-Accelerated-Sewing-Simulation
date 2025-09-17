@@ -33,7 +33,7 @@ class FabricSimulationScatter:
         self.add_vertices_to_frames()
 
         self.body_scatter_plot = create_mesh_scatter_plot(
-            body, marker=dict(color="grey", size=6), name="Body"
+            body, marker={"color": "grey", "size": 6}, name="Body"
         )
         self.colors = [float_rgb_to_str(c) for c in get_hsv_colors(len(pieces))]
 
@@ -69,7 +69,7 @@ class FabricSimulationScatter:
                     y=vertices[start_ind:end_ind, 2],
                     z=vertices[start_ind:end_ind, 1],
                     mode="markers",
-                    marker=dict(color=self.colors[j], size=6),
+                    marker={"color": self.colors[j], "size": 6},
                     name=piece_name,
                 )
             )
@@ -82,9 +82,9 @@ if __name__ == "__main__":
     avatar_mesh.scale_vertices(AVATAR_SCALING)
 
     clothing_data = read_json("./assets/sewing_shirt.json")
-    all_pieces, sewing_constraints = extract_all_piece_vertices(clothing_data)
+    all_pieces, sewing = extract_all_piece_vertices(clothing_data)
 
-    simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing_constraints)
+    simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing)
     start = perf_counter()
     simulation.step(1)
     print(f"Time taken to run 1 piece {1} steps = {perf_counter() - start:.3}")

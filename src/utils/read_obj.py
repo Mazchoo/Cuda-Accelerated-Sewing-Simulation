@@ -101,7 +101,7 @@ def parse_obj(file_path: str, annotation_path: str) -> Union[MeshData, Exception
     vertices = []
     textures = []
     normals = []
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         while line := f.readline():
             line = line.strip()
             flag = line[: line.find(" ")]
