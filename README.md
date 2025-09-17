@@ -39,7 +39,7 @@ Copyright (C) Microsoft Corporation.  All rights reserved.
 Switch("CUDA_ENABLE_GL", True, "Enable CUDA GL interoperability")
 ```
 
-5. Install the other requirments in requirements.txt in a Python enviornment.
+5. Install the other requirements in requirements.txt in a Python enviornment.
 6. You will need to allow python to use GPU acceleration for rendering.
 
 ```NVIDIA Control Panel → Manage 3D settings → Program Settings → Add python.exe → set "Preferred graphics processor" = High-performance NVIDIA processor```
