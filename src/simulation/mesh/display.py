@@ -3,7 +3,7 @@
 import plotly.graph_objects as go
 from matplotlib.collections import LineCollection
 
-from src.simulation.mesh import MeshData
+from src.simulation.mesh.mesh import MeshData
 
 
 def create_plotly_mesh(mesh: MeshData, **kwargs) -> go.Mesh3d:

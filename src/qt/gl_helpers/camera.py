@@ -20,7 +20,7 @@ class Camera(OpenGLUploadable):
         "far",
         "object_id",
         "_projection_matrix",
-        "globals",
+        "shader_var_names",
     )
     fovy: float
     aspect: float
@@ -28,11 +28,13 @@ class Camera(OpenGLUploadable):
     far: float
 
     object_id: Optional[int]
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
 
     _projection_matrix: ndarray
 
-    def __init__(self, fovy: float, aspect: float, near: float, far: float, **globals):
+    def __init__(
+        self, fovy: float, aspect: float, near: float, far: float, **shader_var_names
+    ):
         """
         fovy: The vertical field of view angle in degrees
         aspect: The aspect ratio (width/height) of the viewport
@@ -40,7 +42,7 @@ class Camera(OpenGLUploadable):
         far: The distance to the far clipping plane (z is mapped to the valid range [-1, 1])
         """
         self.object_id = None
-        self.globals = globals
+        self.shader_var_names = shader_var_names
 
         self.fovy = fovy
         self.aspect = aspect

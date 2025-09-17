@@ -41,7 +41,7 @@ class Material(OpenGLUploadable):
     slot: int
     material_properties: MaterialParameters
 
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
     ambient_weighting_glob_id: Optional[int]
     diffuse_weighting_glob_id: Optional[int]
     specular_weighting_glob_id: Optional[int]
@@ -54,11 +54,11 @@ class Material(OpenGLUploadable):
         texture_source: Union[str, ColorRGB],
         params: MaterialParameters,
         slot: int = GL_TEXTURE0,
-        **globals,
+        **shader_var_names,
     ):
         """Source can a file name or a single color"""
         self.material_properties = params
-        self.globals = globals
+        self.shader_var_names = shader_var_names
 
         self.slot = slot
         self.texture = glGenTextures(1)

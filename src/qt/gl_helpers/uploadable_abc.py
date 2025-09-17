@@ -9,20 +9,20 @@ from src.qt.gl_helpers.shader_program import ShaderProgram
 
 
 class OpenGLUploadable(ABC):
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
 
     def bind_global_variable_names(self, shader: ShaderProgram):
         """For an object that implements GL container upload all variables to GPU"""
         shader.use()
-        for var_name, global_name in self.globals.items():
+        for var_name, global_name in self.shader_var_names.items():
             global_uniform = glGetUniformLocation(shader.gl_id, global_name)
             setattr(self, var_name, global_uniform)
         self.draw()
 
     def assert_all_globals_are_set(self):
-        """Run a check that all globals are set"""
-        assert isinstance(getattr(self, "globals"), dict)
-        for key in self.globals.keys():
+        """Run a check that all shader_var_names are set"""
+        assert isinstance(getattr(self, "shader_var_names"), dict)
+        for key in self.shader_var_names.keys():
             assert getattr(self, key) is not None
 
     @abstractmethod

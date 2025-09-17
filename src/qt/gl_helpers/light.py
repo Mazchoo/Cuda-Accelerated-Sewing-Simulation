@@ -17,7 +17,7 @@ class Light(OpenGLUploadable):
     _reflective_strength: float
     _ambient_strength: float
 
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
     position_glob_id: Optional[int]
     color_glob_id: Optional[int]
     reflective_strength_glob_id: Optional[int]
@@ -29,14 +29,14 @@ class Light(OpenGLUploadable):
         color: ColorRGB,
         reflective_strength: float,
         ambient_strength: float,
-        **globals,
+        **shader_var_names,
     ):
         self._position = np.array(position, dtype=np.float32)
         self._color = np.array(color, dtype=np.float32)
         self._reflective_strength = reflective_strength
         self._ambient_strength = ambient_strength
 
-        self.globals = globals
+        self.shader_var_names = shader_var_names
         self.position_glob_id = None
         self.color_glob_id = None
         self.reflective_strength_glob_id = None

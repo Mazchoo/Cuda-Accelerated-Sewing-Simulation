@@ -20,12 +20,12 @@ class Motion(OpenGLUploadable):
         "_position_matrix",
         "object_id",
         "motion_matrix",
-        "globals",
+        "shader_var_names",
     )
 
     object_id: Optional[int]
     motion_matrix: Matrix4x4
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
 
     _angles: Angles3D
     _position: Position3D
@@ -36,7 +36,7 @@ class Motion(OpenGLUploadable):
         self,
         position: Position3D = (0.0, 0.0, 0.0),
         angles: Angles3D = (0.0, 0.0, 0.0),
-        **globals,
+        **shader_var_names,
     ):
         """
         Initialize a Motion object with position and orientation.
@@ -44,10 +44,10 @@ class Motion(OpenGLUploadable):
         Args:
             position: 3D position as (x, y, z) tuple
             angles: 3D Euler angles as (pitch, yaw, roll) tuple in radians
-            **globals: Global variable mappings for shader uniforms
+            **shader_var_names: Global variable mappings for shader uniforms
         """
         self.object_id = None
-        self.globals = globals
+        self.shader_var_names = shader_var_names
         self._angles = angles
         self._position = position
 

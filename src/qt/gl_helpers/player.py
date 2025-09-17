@@ -22,11 +22,11 @@ class Player(OpenGLUploadable):
         "view_matrix",
         "camera",
         "object_id",
-        "globals",
+        "shader_var_names",
     )
 
     object_id: Optional[int]
-    globals: Dict[str, str]
+    shader_var_names: Dict[str, str]
     view_matrix: Matrix4x4
 
     _position: np.ndarray
@@ -36,11 +36,11 @@ class Player(OpenGLUploadable):
         self,
         target: Position3D = (0.0, 0.0, 0.0),
         position: Position3D = (0.0, 0.0, 0.0),
-        **globals,
+        **shader_var_names,
     ):
         """Initialize player view transformation"""
         self.object_id = None
-        self.globals = globals
+        self.shader_var_names = shader_var_names
 
         self._position = np.array(position, dtype=np.float32)
         self._target = np.array(target, dtype=np.float32)

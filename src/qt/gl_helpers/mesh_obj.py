@@ -58,7 +58,7 @@ class GLMesh(OpenGLUploadable):
 
     material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData
-    globals: Dict[str, str] = {}  # Empty
+    shader_var_names: Dict[str, str] = {}  # Empty
 
     def __init__(self, mesh_data: MeshData):
         self.mesh_data = mesh_data
