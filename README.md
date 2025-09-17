@@ -11,13 +11,15 @@ Simulation runs at approximately: 200 frames per second on a NVIDIA GeForce RTX 
 ## Work in Progress
 
 - [ ] Fix unwanted movement added to the system when position based contraints interact with forces
-    - Remove velocity and acceleration in plane collision and/or gravity
-    - Try applying Coulomb friction on collision
-    - Try RMS prop and momentum for gradient change
+    - ~~Remove velocity and acceleration in plane collision and/or gravity~~
+    - ~~Try applying Coulomb friction on collision~~
+    - Try RMS prop and momentum for dynamic friction change, apply friction to acceleration
 - [ ] Add zooming and panning to QT widget display
 - [ ] Added ability to view and edit material properties
 - [ ] Add controls to tweak physics parameters live
 - [ ] Optimize the set-up of clothing and simulation/make a loading animation
+- [ ] Add a shader that displays normal as a color and kernels that display properties such as stress, energy, shear and bend
+- [ ] Add a pause update button and forward one frame button
 
 ## Installation
 
