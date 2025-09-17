@@ -22,7 +22,7 @@ def plot_line_collection(*args: List[LineCollection]):
 
 def get_hsv_colors(n) -> List[Tuple[np.float64, np.float64, np.float64, np.float64]]:
     """Get n colors in RGB format"""
-    return [cm.hsv(i / n) for i in range(n)]
+    return [cm.get_cmap("hsv")(i / n) for i in range(n)]
 
 
 def float_rgb_to_str(

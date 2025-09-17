@@ -1,4 +1,5 @@
 """Parse material file"""
+from typing import Union, Optional
 
 from src.utils.file_io import check_mtl_file_exists, parse_material
 from src.utils.common_types import Point3D
@@ -14,12 +15,13 @@ def parse_vertex(line: str) -> Point3D:
     return vertex
 
 
-def get_texture(current_dict):
+def get_texture(current_dict) -> Optional[Union[str, Point3D]]:
     """Texture will either be a previously read image or a colour from the diffuse weighting"""
     if texture := current_dict.get("texture"):
         return texture
     if texture := current_dict.get("diffuse_weighting"):
         return tuple(texture)
+    return None
 
 
 def parse_material_name(current_material, current_dict, mtl_dict):
@@ -41,7 +43,7 @@ def parse_mtl(obj_path: str):
     current_material = ""
 
     mtl_dict = {}
-    with open(mtl_path, "r") as f:
+    with open(mtl_path, "r", encoding="utf-8") as f:
         while line := f.readline():
             line = line.strip()
             flag = line[: line.find(" ")]

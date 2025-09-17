@@ -14,6 +14,7 @@ class MeshData:
     """
 
     # ToDo: consider putting vertex, index and texture data in struct
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         vertex_data: np.ndarray,

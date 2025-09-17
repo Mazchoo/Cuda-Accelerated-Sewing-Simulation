@@ -4,8 +4,8 @@ from pathlib import Path
 import json
 
 from pygments import highlight
-from pygments.lexers import CppLexer
-from pygments.formatters import HtmlFormatter
+from pygments.lexers.c_cpp import CppLexer
+from pygments.formatters.html import HtmlFormatter
 from IPython.core.display import HTML
 
 FORMATTER = HtmlFormatter(style="colorful", full=True, noclasses=True)
@@ -43,15 +43,17 @@ def parse_material(line, file_path):
 
 def read_file_str(path: str) -> str:
     """Return file contents as string"""
-    return Path(path).open().read()
+    return Path(path).open(encoding="utf-8").read()
 
 
 def show_formatted_cpp(kernel_code: str) -> HTML:
+    """Turn raw file contents in cpp formatted html"""
     highlighted_code = highlight(kernel_code, CppLexer(), FORMATTER)
     return HTML(highlighted_code)
 
 
 def replace_constants_in_kernel(kernel_code: str, variables: dict) -> str:
+    """Replace a value in some kernel code, like a macro for constants"""
     for key, value in variables.items():
         kernel_code = kernel_code.replace(key, f"{float(value)}f")
     return kernel_code

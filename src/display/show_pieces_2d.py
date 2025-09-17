@@ -1,8 +1,10 @@
 """Show all pieces in 2D to inspect shape and turn-points"""
 
+from typing import List, Tuple, Dict
+
 import matplotlib.pyplot as plt
 import numpy as np
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, LineString
 
 from src.utils.geometry import get_points_along_sewing_range, SewingRange
 from src.utils.file_io import read_json
@@ -13,7 +15,13 @@ NR_SEWING_POINTS = 10
 FONT_SIZE = 16
 
 
-def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
+def show_sewing_line(
+    sewing_line: dict,
+    all_contours: Dict[str, LineString],
+    all_turn_points: List[Tuple[float, float]],
+    color: Tuple[float, float, float, float],
+):
+    """Draw a pair of sewing lines in the same color"""
     contour = all_contours[sewing_line["piece"]]
     tp_start = all_turn_points[sewing_line["piece"]][sewing_line["tp_index_start"]]
     tp_end = all_turn_points[sewing_line["piece"]][sewing_line["tp_index_end"]]
@@ -33,16 +41,20 @@ def show_sewing_line(sewing_line, all_contours, all_turn_points, color):
         "",
         xy=(xs[-1], ys[-1]),
         xytext=(xs[-2], ys[-2]),
-        arrowprops=dict(arrowstyle="->", color=color, lw=2),
+        arrowprops={"arrowstyle": "->", "color": color, "lw": 2},
     )
 
 
 def display_turnpoints(turn_points: np.ndarray):
+    """Plot all turn-points on current axes"""
     for i, (x, y) in enumerate(turn_points):
         plt.text(x, y, str(i))
 
 
-def display_alignment(contour, body_points: dict, all_turn_points):
+def display_alignment(
+    contour: LineString, body_points: dict, all_turn_points: List[Tuple[float, float]]
+):
+    """Draw alignment arrow on current axes"""
     snap_point = get_point_location(body_points["snap"], contour, all_turn_points)
     alignment_point = get_point_location(
         body_points["alignment"], contour, all_turn_points
@@ -66,11 +78,12 @@ def display_alignment(contour, body_points: dict, all_turn_points):
         "",
         xy=(xs[-1], ys[-1]),
         xytext=(xs[-2], ys[-2]),
-        arrowprops=dict(arrowstyle=arrow_style, color="grey", lw=2),
+        arrowprops={"arrowstyle": arrow_style, "color": "grey", "lw": 2},
     )
 
 
 def show_pattern(clothing_data: dict, offset: tuple):
+    """Draw all pieces in 2D"""
     current_offset = np.array([0, 0], dtype=np.float64)
     all_contours = {}
     all_turn_points = {}
@@ -115,5 +128,5 @@ def show_pattern(clothing_data: dict, offset: tuple):
 
 
 if __name__ == "__main__":
-    clothing_data = read_json("./assets/sewing_shirt.json")
-    show_pattern(clothing_data, (100, 0))
+    shirt_clothing_data = read_json("./assets/sewing_shirt.json")
+    show_pattern(shirt_clothing_data, (100, 0))

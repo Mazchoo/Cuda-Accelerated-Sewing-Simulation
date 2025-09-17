@@ -4,7 +4,7 @@ import pycuda.autoinit  # noqa pylint: disable=unused-import
 from pycuda.compiler import SourceModule
 import numpy as np
 
-from profiling.common import read_file_str, replace_constants_in_kernel
+from src.utils.file_io import read_file_str, replace_constants_in_kernel
 
 from src.parameters import (
     GRAVITY,

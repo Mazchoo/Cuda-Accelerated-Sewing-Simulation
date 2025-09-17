@@ -19,12 +19,12 @@ def show_3d_scatter_simulation(simulation: FabricSimulationScatter):
     fig = go.Figure(
         data=frames[0].data,
         layout=go.Layout(
-            scene=dict(
-                aspectmode="cube",
-                xaxis=dict(nticks=4, range=[-0.8, 0.8], autorange=False),
-                yaxis=dict(nticks=4, range=[-0.8, 0.8], autorange=False),
-                zaxis=dict(nticks=4, range=[0, 2.4], autorange=False),
-            ),
+            scene={
+                "aspectmode": "cube",
+                "xaxis": {"nticks": 4, "range": [-0.8, 0.8], "autorange": False},
+                "yaxis": {"nticks": 4, "range": [-0.8, 0.8], "autorange": False},
+                "zaxis": {"nticks": 4, "range": [0, 2.4], "autorange": False},
+            },
             updatemenus=[
                 {
                     "type": "buttons",
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     clothing_data = read_json("./assets/sewing_shirt.json")
     all_pieces, sewing = extract_all_piece_vertices(clothing_data, avatar_mesh)
 
-    simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing)
-    simulation.step(NR_STEPS)
+    scatter_simulation = FabricSimulationScatter(avatar_mesh, all_pieces, sewing)
+    scatter_simulation.step(NR_STEPS)
 
-    show_3d_scatter_simulation(simulation)
+    show_3d_scatter_simulation(scatter_simulation)
