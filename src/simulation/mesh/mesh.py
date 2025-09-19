@@ -5,6 +5,8 @@ from typing import Tuple, Union, Optional
 import numpy as np
 from trimesh import Trimesh
 
+from src.utils.common_types import TriangleMeshArrays
+
 
 class MeshData:
     """
@@ -13,19 +15,15 @@ class MeshData:
     Texture data indicates where to use in each material in a render pass
     """
 
-    # ToDo: consider putting vertex, index and texture data in struct
-    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
-        vertex_data: np.ndarray,
-        index_data: np.ndarray,
-        texture_data: dict,
+        triangle_mesh_arrays: TriangleMeshArrays,
         annotations: Optional[dict] = None,
         turn_points: Optional[np.ndarray] = None,
     ):
-        self._vertex_data = vertex_data
-        self._index_data = index_data
-        self._texture_data = texture_data
+        self._vertex_data = triangle_mesh_arrays.vertex_data
+        self._index_data = triangle_mesh_arrays.index_data
+        self._texture_data = triangle_mesh_arrays.texture_data
 
         self._trimesh = None
         self._origin_array = None

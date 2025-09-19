@@ -47,10 +47,9 @@ class DynamicClothing:
     ):
         self.piece_to_index_range = get_piece_to_index_range_mapping(pieces)
 
-        vertices, indices, textures = get_combined_vertex_data(
-            pieces, self.piece_to_index_range
+        self.mesh = MeshData(
+            get_combined_vertex_data(pieces, self.piece_to_index_range)
         )
-        self.mesh = MeshData(vertices, indices, textures)
         self.body_mesh = body_mesh
         body_triangles, body_centers, body_normals = get_body_mesh_arrays(
             body_mesh.trimesh
@@ -70,7 +69,7 @@ class DynamicClothing:
         self.cuda_variables = CudaVariables(
             vertices=CudaVariable(self.mesh.vertices_3d.copy()),
             normals=CudaVariable(self.mesh.normals.copy()),
-            indices=CudaVariable(indices),
+            indices=CudaVariable(self.mesh.index_data.copy()),
             velocities=CudaVariable(velocities),
             accelerations=CudaVariable(accelerations),
             stress_indices=CudaVariable(stress),

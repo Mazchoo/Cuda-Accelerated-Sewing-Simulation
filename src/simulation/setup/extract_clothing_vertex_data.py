@@ -13,6 +13,7 @@ from src.utils.geometry import (
 )
 from src.utils.read_obj import parse_obj
 from src.utils.read_mtl import parse_mtl
+from src.utils.common_types import TriangleMeshArrays
 
 from src.simulation.mesh import MeshData, get_annotation_dict_from_piece_data
 from src.simulation.setup.alignment import snap_and_align_piece_to_body
@@ -147,9 +148,7 @@ def convert_rows_of_vertices_into_triangles(
     turn_points /= CM_PER_M
 
     mesh = MeshData(
-        vertex_data,
-        faces,
-        texture_data,
+        TriangleMeshArrays(vertex_data, faces, texture_data),
         annotations=get_annotation_dict_from_piece_data(piece_data),
         turn_points=turn_points,
     )

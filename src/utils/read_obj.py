@@ -7,7 +7,13 @@ import numpy as np
 from src.utils.file_io import read_json
 from src.utils.read_mtl import parse_mtl, parse_vertex
 from src.simulation.mesh import MeshData, get_annotated_locations_from_dict
-from src.utils.common_types import Point2D, Point3D, Texture2D, TriangleIndicies
+from src.utils.common_types import (
+    Point2D,
+    Point3D,
+    Texture2D,
+    TriangleIndicies,
+    TriangleMeshArrays,
+)
 
 
 def parse_texture_coord(line: str) -> Point2D:
@@ -46,8 +52,8 @@ def convert_parsed_data_to_numpy(
     vertices: List[Point3D],
     textures: List[Texture2D],
     normals: List[Point3D],
-    mtl_dict,
-):
+    mtl_dict: dict,
+) -> TriangleMeshArrays:
     """Create an array of all vertices to draw in triplets for every face."""
     texture_data = [
         {"key": key, "count": 0, "offset": 0, "mtl": mtl_dict[key]}
@@ -83,7 +89,7 @@ def convert_parsed_data_to_numpy(
 
         texture["count"] = len(index_data) * 3 - texture["offset"]
 
-    return (
+    return TriangleMeshArrays(
         np.array(vertex_data, dtype=np.float32),
         np.array(index_data, dtype=np.uint32),
         texture_data,
@@ -120,14 +126,12 @@ def parse_obj(file_path: str, annotation_path: str) -> Union[MeshData, Exception
             elif flag == "f":
                 faces[current_texture].extend(parse_face(line_content))
 
-    vertex_data, index_data, texture_data = convert_parsed_data_to_numpy(
+    triangle_mesh_arrays = convert_parsed_data_to_numpy(
         faces, vertices, textures, normals, mtl_dict
     )
 
     mesh = MeshData(
-        vertex_data,
-        index_data,
-        texture_data,
+        triangle_mesh_arrays,
         annotations=get_annotated_locations_from_dict(annotations),
     )
     mesh.place_at_origin()

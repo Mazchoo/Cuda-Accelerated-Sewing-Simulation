@@ -1,6 +1,6 @@
 """Functions that fuse vertex data and piece relationships"""
 
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple
 from copy import deepcopy
 
 import numpy as np
@@ -8,6 +8,8 @@ from trimesh import Trimesh
 
 from src.simulation.dynamic_piece import DynamicPiece
 from src.simulation.sewing_constraints import SewingConstraints
+
+from src.utils.common_types import TriangleMeshArrays
 
 PieceIndexRanges = Dict[str, Tuple[int, int]]
 
@@ -38,7 +40,7 @@ def get_piece_to_index_range_mapping(
 
 def get_combined_vertex_data(
     pieces: Dict[str, DynamicPiece], index_ranges: PieceIndexRanges
-) -> Tuple[np.ndarray, np.ndarray, List[Dict]]:
+) -> TriangleMeshArrays:
     """
     Combine the vertex information, triangle and texture information for
     multiple pieces using pre-calculated index ranges
@@ -62,7 +64,7 @@ def get_combined_vertex_data(
         total_texture_count += piece_texture_count
         all_textures.extend(texture_data)
 
-    return (
+    return TriangleMeshArrays(
         np.concatenate(all_vertices),
         np.concatenate(all_indices),
         all_textures,
