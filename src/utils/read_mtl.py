@@ -1,4 +1,5 @@
 """Parse material file"""
+
 from typing import Union, Optional
 
 from src.utils.file_io import check_mtl_file_exists, parse_material
@@ -24,25 +25,27 @@ def get_texture(current_dict) -> Optional[Union[str, Point3D]]:
     return None
 
 
-def parse_material_name(current_material, current_dict, mtl_dict):
+def parse_material_name(
+    current_material: str, current_mtl_data: dict, all_materials: dict
+):
     """Texture will be a coordinate or an image or an explicit color vt 0.491723 -0.123703"""
     if current_material:
-        current_dict["texture"] = get_texture(current_dict)
+        current_mtl_data["texture"] = get_texture(current_mtl_data)
 
-        if current_dict["texture"] is None:
+        if current_mtl_data["texture"] is None:
             raise KeyError("End of material reached with no texture present.")
 
-        mtl_dict[current_material] = current_dict
+        all_materials[current_material] = current_mtl_data
 
 
-def parse_mtl(obj_path: str):
+def parse_mtl(obj_path: str) -> dict:
     """Read mtl file into a dictionary"""
     mtl_path = check_mtl_file_exists(obj_path)
 
-    current_dict = {}
+    current_mtl_data = {}
     current_material = ""
 
-    mtl_dict = {}
+    all_materials = {}
     with open(mtl_path, "r", encoding="utf-8") as f:
         while line := f.readline():
             line = line.strip()
@@ -50,31 +53,31 @@ def parse_mtl(obj_path: str):
             line_content = line[len(flag) + 1 :]
 
             if flag == "newmtl":
-                parse_material_name(current_material, current_dict, mtl_dict)
+                parse_material_name(current_material, current_mtl_data, all_materials)
 
                 current_material = line_content
-                current_dict = {}
+                current_mtl_data = {}
             elif flag == "Ns":
-                current_dict["specular_exponent"] = float(line_content)
+                current_mtl_data["specular_exponent"] = float(line_content)
             elif flag == "Ka":
-                current_dict["ambient_weighting"] = parse_vertex(line_content)
+                current_mtl_data["ambient_weighting"] = parse_vertex(line_content)
             elif flag == "Kd":
-                current_dict["diffuse_weighting"] = parse_vertex(line_content)
+                current_mtl_data["diffuse_weighting"] = parse_vertex(line_content)
             elif flag == "Ks":
-                current_dict["specular_weighting"] = parse_vertex(line_content)
+                current_mtl_data["specular_weighting"] = parse_vertex(line_content)
             elif flag == "Ke":
-                current_dict["emission_weighting"] = parse_vertex(line_content)
+                current_mtl_data["emission_weighting"] = parse_vertex(line_content)
             elif flag == "Ni":
-                current_dict["refractive_index"] = float(line_content)
+                current_mtl_data["refractive_index"] = float(line_content)
             elif flag == "d":
-                current_dict["opacity"] = float(line_content)
+                current_mtl_data["opacity"] = float(line_content)
             elif flag == "illum":
-                current_dict["illumination_model"] = int(line_content)
+                current_mtl_data["illumination_model"] = int(line_content)
             elif flag == "map_Kd":
-                current_dict["texture"] = parse_material(line_content, mtl_path)
+                current_mtl_data["texture"] = parse_material(line_content, mtl_path)
             elif flag == "Ti":
-                current_dict["specular_tint"] = float(line_content)
+                current_mtl_data["specular_tint"] = float(line_content)
 
-        parse_material_name(current_material, current_dict, mtl_dict)
+        parse_material_name(current_material, current_mtl_data, all_materials)
 
-    return mtl_dict
+    return all_materials
