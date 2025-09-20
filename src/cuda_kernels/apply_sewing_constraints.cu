@@ -21,8 +21,7 @@ __device__ __inline__ void scaleVector(float3 &v, float s) {
 __global__ void apply_sewing_constraints(float* vertices,
                                          float* accelerations,
                                          const unsigned int* const sewing_indices,
-                                         const unsigned int nr_sewing,
-                                         const float acceleration_multiplier) {
+                                         const unsigned int nr_sewing) {
     int pair_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pair_idx >= nr_sewing) return;
     const float EPSILON = 1e-2f;
@@ -67,9 +66,9 @@ __global__ void apply_sewing_constraints(float* vertices,
         accelerations[from_ind * 3 + 2]
     );
 
-    accelerations[from_ind * 3] -= vector.x * acceleration_multiplier;
-    accelerations[from_ind * 3 + 1] -= vector.y * acceleration_multiplier;
-    accelerations[from_ind * 3 + 2] -= vector.z * acceleration_multiplier;
+    accelerations[from_ind * 3] -= vector.x * SEWING_FORCE_MULTIPLIER;
+    accelerations[from_ind * 3 + 1] -= vector.y * SEWING_FORCE_MULTIPLIER;
+    accelerations[from_ind * 3 + 2] -= vector.z * SEWING_FORCE_MULTIPLIER;
 
     to_vertex = make_float3(
         accelerations[to_ind * 3],
@@ -77,7 +76,7 @@ __global__ void apply_sewing_constraints(float* vertices,
         accelerations[to_ind * 3 + 2]
     );
 
-    accelerations[to_ind * 3] += vector.x * acceleration_multiplier;
-    accelerations[to_ind * 3 + 1] += vector.y * acceleration_multiplier;
-    accelerations[to_ind * 3 + 2] += vector.z * acceleration_multiplier;
+    accelerations[to_ind * 3] += vector.x * SEWING_FORCE_MULTIPLIER;
+    accelerations[to_ind * 3 + 1] += vector.y * SEWING_FORCE_MULTIPLIER;
+    accelerations[to_ind * 3 + 2] += vector.z * SEWING_FORCE_MULTIPLIER;
 }

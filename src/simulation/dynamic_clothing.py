@@ -34,8 +34,6 @@ from src.parameters import (
     VELOCITY_DAMPING_START,
     VELOCITY_DAMPING_END,
     NR_STEPS,
-    SEWING_FORCE_MULTIPLIER,
-    TIME_DELTA,
 )
 
 
@@ -121,9 +119,7 @@ class DynamicClothing:
         apply_shear(self.cuda_variables)
         apply_bend(self.cuda_variables)
         propagate_forces(self.cuda_variables, current_dampening)
-        apply_sewing(
-            self.cuda_variables, np.float32(SEWING_FORCE_MULTIPLIER * TIME_DELTA)
-        )
+        apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
 
     def copy_to_open_gl_data(self, open_gl_buffer: DeviceAllocationAdapter):

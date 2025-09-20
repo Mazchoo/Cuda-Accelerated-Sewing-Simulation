@@ -19,6 +19,7 @@ from src.parameters import (
     TIME_DELTA,
     TERMINAL_VELOCITY,
     SEWING_ADJUSTMENT_STEP,
+    SEWING_FORCE_MULTIPLIER,
 )
 
 # Update acceleration with gravity
@@ -72,7 +73,11 @@ UPDATE_POSITION_KERNEL = SourceModule(
 SEWING_KERNEL = SourceModule(
     replace_constants_in_kernel(
         read_file_str("./src/cuda_kernels/apply_sewing_constraints.cu"),
-        {"TIME_DELTA": TIME_DELTA, "SEWING_MAX_ADJUSTMENT": SEWING_ADJUSTMENT_STEP},
+        {
+            "TIME_DELTA": TIME_DELTA,
+            "SEWING_MAX_ADJUSTMENT": SEWING_ADJUSTMENT_STEP,
+            "SEWING_FORCE_MULTIPLIER": SEWING_FORCE_MULTIPLIER * TIME_DELTA,
+        },
     )
 ).get_function("apply_sewing_constraints")
 
