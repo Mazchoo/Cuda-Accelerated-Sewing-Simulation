@@ -39,18 +39,29 @@ __global__ void update_position_with_friction(float* accelerations,
     velocity.y *= dampening;
     velocity.z *= dampening;
 
-    float velocity_norm = normL2(velocity);
-    if (velocity_norm > TERMINAL_VELOCITY) {
-        velocity.x *= TERMINAL_VELOCITY / velocity_norm;
-        velocity.y *= TERMINAL_VELOCITY / velocity_norm;
-        velocity.z *= TERMINAL_VELOCITY / velocity_norm;
+    float norm = normL2(velocity);
+    if (norm > TERMINAL_VELOCITY) {
+        velocity.x *= TERMINAL_VELOCITY / norm;
+        velocity.y *= TERMINAL_VELOCITY / norm;
+        velocity.z *= TERMINAL_VELOCITY / norm;
     }
 
     velocities[idx * 3] = velocity.x;
     velocities[idx * 3 + 1] = velocity.y;
     velocities[idx * 3 + 2] = velocity.z;
 
-    accelerations[idx * 3] *= dampening;
-    accelerations[idx * 3 + 1] *= dampening;
-    accelerations[idx * 3 + 2] *= dampening;
+    acceleration.x *= dampening;
+    acceleration.y *= dampening;
+    acceleration.z *= dampening;
+
+    norm = normL2(acceleration);
+    if (norm > TERMINAL_VELOCITY) {
+        acceleration.x *= TERMINAL_VELOCITY / norm;
+        acceleration.y *= TERMINAL_VELOCITY / norm;
+        acceleration.z *= TERMINAL_VELOCITY / norm;
+    }
+
+    accelerations[idx * 3] = acceleration.x;
+    accelerations[idx * 3 + 1] = acceleration.y;
+    accelerations[idx * 3 + 2] = acceleration.z;
 }
