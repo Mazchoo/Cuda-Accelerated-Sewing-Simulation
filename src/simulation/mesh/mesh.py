@@ -38,6 +38,8 @@ class MeshData:
     @property
     def nr_turn_points(self) -> int:
         """Get number of turn points"""
+        if self._turn_points is None:
+            return 0
         return len(self._turn_points)
 
     @property
@@ -83,7 +85,7 @@ class MeshData:
         return self._index_data
 
     @property
-    def texture_data(self) -> dict:
+    def texture_data(self) -> list:
         """Return information that links textures to consecutive vertex indices"""
         return self._texture_data
 
@@ -104,7 +106,7 @@ class MeshData:
         x_mean = self._vertex_data[:, 0].mean()
         y_min = self._vertex_data[:, 1].min()
         z_mean = self._vertex_data[:, 2].mean()
-        origin_array = (x_mean, y_min, z_mean)
+        origin_array = np.array([x_mean, y_min, z_mean], dtype=np.float32)
 
         self._vertex_data[:, :3] -= origin_array
 
@@ -181,13 +183,15 @@ class MeshData:
             self._turn_points @= matrix
             self._turn_points += offset
 
-    def get_annotation(self, name: str) -> np.ndarray:
+    def get_annotation(self, name: str) -> Optional[np.ndarray]:
         """Get 3d location by name or None"""
+        if self._annotations is None:
+            return None
         return self._annotations.get(name)
 
     def get_turn_point_by_ind(self, ind: int) -> Optional[np.ndarray]:
         """Get 3d location of turn-point if in index range else None"""
-        if ind not in range(self.nr_turn_points):
+        if self._turn_points is None or ind not in range(self.nr_turn_points):
             return None
         return self._turn_points[ind]
 

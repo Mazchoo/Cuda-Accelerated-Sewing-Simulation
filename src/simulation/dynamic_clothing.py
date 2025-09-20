@@ -104,14 +104,17 @@ class DynamicClothing:
 
     def update_forces(self, step: int, dampening: Optional[float] = None):
         """Update forces from internal interactions within piece"""
-        if dampening is None:
-            dampening: float = self.recalculate_dampening(step)
+        current_dampening: np.float32 = (
+            self.recalculate_dampening(step)
+            if dampening is None
+            else np.float32(dampening)
+        )
 
         apply_gravity(self.cuda_variables)
         apply_stress(self.cuda_variables)
         apply_shear(self.cuda_variables)
         apply_bend(self.cuda_variables)
-        propagate_forces(self.cuda_variables, dampening)
+        propagate_forces(self.cuda_variables, current_dampening)
         apply_sewing(self.cuda_variables)
         apply_collisions(self.cuda_variables)
 
