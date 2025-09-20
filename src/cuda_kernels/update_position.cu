@@ -3,7 +3,7 @@ __device__ __inline__ float normL2(float3 v) {
     return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-__global__ void update_position_with_friction(const float* const accelerations,
+__global__ void update_position_with_friction(float* accelerations,
                                               float* velocities,
                                               float* vertices,
                                               const unsigned int nr_vertices,
@@ -49,4 +49,8 @@ __global__ void update_position_with_friction(const float* const accelerations,
     velocities[idx * 3] = velocity.x;
     velocities[idx * 3 + 1] = velocity.y;
     velocities[idx * 3 + 2] = velocity.z;
+
+    accelerations[idx * 3] *= dampening;
+    accelerations[idx * 3 + 1] *= dampening;
+    accelerations[idx * 3 + 2] *= dampening;
 }

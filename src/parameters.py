@@ -23,6 +23,10 @@ SEWING_SPACING = 0.005  # Spacing between two points while doing sewing
 SEWING_ADJUSTMENT_STEP = (
     0.01  # Maximum distance per second to get closer to sewing adjustment
 )
+SEWING_FORCE_MULTIPLIER = (
+    100.0  # Force applied as multiple of distance between two sewing points
+)
+# The force comes into effect when sewing is within SEWING_ADJUSTMENT_STEP
 WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
 
 # Cuda parameters

@@ -94,15 +94,15 @@ def propagate_forces(variables: CudaVariables, dampening: np.float32):
     )
 
 
-def apply_sewing(variables: CudaVariables):
+def apply_sewing(variables: CudaVariables, sewing_force_mutliplier: np.float32):
     """Update positions for sewing constraints"""
     nr_blocks = calculate_nr_blocks(len(variables.sewing_indices), DEFAULT_BLOCK_SIZE)
     SEWING_KERNEL(
         variables.vertices.gpu,
-        variables.velocities.gpu,
         variables.accelerations.gpu,
         variables.sewing_indices.gpu,
         variables.sewing_indices.gpu_length,
+        sewing_force_mutliplier,
         block=DEFAULT_BLOCK_SHAPE,
         grid=(nr_blocks, 1, 1),
     )

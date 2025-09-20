@@ -5,8 +5,11 @@ __device__ __forceinline__ float square_dist(float3 a, float3 b) {
     return dx * dx + dy * dy + dz * dz;
 }
 
-__global__ void find_min_distance_index(const float *points, const float *query, int *min_idx,
-                                        float *min_distance, int num_points) {
+__global__ void find_min_distance_index(const float *points,
+                                        const float *query,
+                                        int *min_idx,
+                                        float *min_distance,
+                                        int num_points) {
     __shared__ float shared_distances[1024];
     __shared__ int shared_idx[1024];
 
