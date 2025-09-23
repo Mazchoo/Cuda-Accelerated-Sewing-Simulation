@@ -52,9 +52,9 @@ class GLMesh(OpenGLUploadable):
     )
 
     _vao: Optional[int]
-    _vbo: int
-    _ebo: int
-    _cuda_buffer_handle: cudagl.RegisteredBuffer
+    _vbo: Optional[int]
+    _ebo: Optional[int]
+    _cuda_buffer_handle: Optional[cudagl.RegisteredBuffer]
 
     material_iterator: Tuple[Tuple[Material, int, int], ...]
     mesh_data: MeshData

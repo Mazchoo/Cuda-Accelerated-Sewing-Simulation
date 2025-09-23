@@ -15,6 +15,7 @@ from src.qt.gl_helpers.device_adapter import DeviceAllocationAdapter
 from src.qt.gl_helpers.copy_to_gl_context import gl_context_vertex_data
 
 from src.simulation.mesh import MeshData
+
 from src.qt.shaders.shader_parameters import LIGHT_PROPERTIES
 from src.parameters import (
     VERTEX_SHADER_PATH,
@@ -56,14 +57,14 @@ class DrawingPass:
         self.camera.bind_global_variable_names(self.shader)
 
         # Viewing position is middle of body at default distance
-        view_position = [0, 0.5, default_distance]
-        view_target = [0, 0.5, 0]
+        view_position = (0.0, 0.5, default_distance)
+        view_target = (0.0, 0.5, 0.0)
         self.player = Player(
             position=view_position, target=view_target, object_id="projection"
         )
         self.player.bind_global_variable_names(self.shader)
 
-        light_position = [0, LIGHT_POSITION_RATIO, 0]
+        light_position = (0.0, LIGHT_POSITION_RATIO, 0.0)
         self.light = Light(
             light_position,
             LIGHT_COLOR,
@@ -113,7 +114,7 @@ class DrawingPass:
         self,
     ) -> ContextManager[Optional[DeviceAllocationAdapter]]:
         """Return context mananger"""
-        return gl_context_vertex_data(self.clothing_mesh.cuda_buffer)
+        return gl_context_vertex_data(self.clothing_mesh.cuda_buffer)  # type: ignore
 
     def update_aspect_ratio(self, aspect_ratio: float):
         """Update the aspect ratio of the camera"""
@@ -123,7 +124,7 @@ class DrawingPass:
 
     def draw(self):
         """Perform a drawing pass"""
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)  # type: ignore
 
         self.shader.use()
         if self.body_mesh:
