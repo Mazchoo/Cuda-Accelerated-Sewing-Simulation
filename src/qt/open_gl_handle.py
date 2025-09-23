@@ -33,10 +33,10 @@ class SewingGLWidget(QOpenGLWidget):
 
     def initializeGL(self):
         """Qt Callback for initial setup"""
-        print("GL version:", gl.glGetString(gl.GL_VERSION).decode())
-        print("GLSL version:", gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION).decode())
-        print("Renderer:", gl.glGetString(gl.GL_RENDERER).decode())
-        print("Vendor:", gl.glGetString(gl.GL_VENDOR).decode())
+        print("GL version:", gl.glGetString(gl.GL_VERSION).decode())  # type: ignore
+        print("GLSL version:", gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION).decode())  # type: ignore
+        print("Renderer:", gl.glGetString(gl.GL_RENDERER).decode())  # type: ignore
+        print("Vendor:", gl.glGetString(gl.GL_VENDOR).decode())  # type: ignore
 
         gl.glEnable(gl.GL_DEPTH_TEST)
         gl.glEnable(gl.GL_BLEND)
@@ -48,28 +48,31 @@ class SewingGLWidget(QOpenGLWidget):
 
     def add_body(self, body_mesh: MeshData):
         """Append body mesh to rendering"""
-        self.drawing_pass.update_body_height(body_mesh.height)
-        self.drawing_pass.add_body_mesh(body_mesh)
+        if drawing_pass := self.drawing_pass:
+            drawing_pass.update_body_height(body_mesh.height)
+            drawing_pass.add_body_mesh(body_mesh)
 
     def add_clothing(self, mesh: MeshData):
         """Append clothing mesh to rendering"""
-        self.drawing_pass.add_clothing_mesh(mesh)
+        if drawing_pass := self.drawing_pass:
+            drawing_pass.add_clothing_mesh(mesh)
 
     def draw(self):
         """Draw a frame"""
-        self.drawing_pass.draw()
+        if drawing_pass := self.drawing_pass:
+            drawing_pass.draw()
 
     def paintGL(self):
         """Qt Callback for updating on every frame"""
-        if self.fabric_simulation is not None:
-            self.fabric_simulation.step(self.frame_count)
+        if (simulation := self.fabric_simulation) and (drawing_pass := self.drawing_pass):
+            simulation.step(self.frame_count)
 
             if self.frame_count % STEPS_PER_FRAME == 0:
                 self.draw()
 
-                with self.drawing_pass.edit_clothing_vertex_data_context() as buffer:
+                with drawing_pass.edit_clothing_vertex_data_context() as buffer:
                     if buffer is not None:
-                        self.fabric_simulation.write_vertex_data_to_gl_buffer(buffer)
+                        simulation.write_vertex_data_to_gl_buffer(buffer)
 
             self.frame_count += 1
         else:
@@ -80,4 +83,5 @@ class SewingGLWidget(QOpenGLWidget):
     def resizeGL(self, w: int, h: int):
         """Qt Callback for updating viewport"""
         gl.glViewport(0, 0, w, h)
-        self.drawing_pass.update_aspect_ratio(w / h)
+        if drawing_pass := self.drawing_pass:
+            drawing_pass.update_aspect_ratio(w / h)
