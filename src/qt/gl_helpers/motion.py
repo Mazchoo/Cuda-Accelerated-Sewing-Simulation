@@ -142,5 +142,8 @@ class Motion(OpenGLUploadable):
         return self.motion_matrix
 
     def draw(self):
-        """Copy object motion matrix to the GPU."""
+        """
+        Copy object motion matrix to the GPU.
+        Do not call from thread outside GL context
+        """
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.motion_matrix)

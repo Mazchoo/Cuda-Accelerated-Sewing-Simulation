@@ -1,6 +1,6 @@
 """Highest level of implementations of actions"""
 
-from typing import Self
+from typing import TYPE_CHECKING
 from pathlib import Path
 
 from PyQt5.QtWidgets import QFileDialog
@@ -12,8 +12,11 @@ from src.simulation.setup.extract_clothing_vertex_data import extract_all_piece_
 
 from src.parameters import AVATAR_SCALING
 
+if TYPE_CHECKING:
+    from src.qt.controller import SewingSimulationController
 
-def open_body_mesh(controller: Self):
+
+def open_body_mesh(controller: "SewingSimulationController"):
     """Adds a body mesh to the simulation (tries to find annotations as well)"""
     file_dialog = QFileDialog()
     file_dialog.setNameFilter("OBJ files (*.obj)")
@@ -47,7 +50,7 @@ def open_body_mesh(controller: Self):
         controller.layout.actionOpen_Clothing.setEnabled(True)
 
 
-def open_clothing_json(controller: Self):
+def open_clothing_json(controller: "SewingSimulationController"):
     """Opens a file dialog to select a JSON file for clothing."""
     file_dialog = QFileDialog()
     file_dialog.setNameFilter("JSON files (*.json)")

@@ -99,5 +99,8 @@ class Player(OpenGLUploadable):
         )
 
     def draw(self):
-        """Update all player properties on the GPU"""
+        """
+        Update all player properties on the GPU
+        Do not call from thread outside GL context
+        """
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self.view_matrix)

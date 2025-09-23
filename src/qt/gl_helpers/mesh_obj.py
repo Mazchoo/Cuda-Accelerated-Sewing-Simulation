@@ -152,7 +152,10 @@ class GLMesh(OpenGLUploadable):
         )
 
     def draw(self):
-        """Perform a drawing pass with all materials"""
+        """
+        Perform a drawing pass with all materials
+        Do not call from thread outside GL context
+        """
         if self._vao is None:
             self._allocate_memory_buffers()
 

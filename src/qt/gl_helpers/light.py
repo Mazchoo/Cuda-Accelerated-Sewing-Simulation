@@ -57,7 +57,10 @@ class Light(OpenGLUploadable):
             self._position[2] = z
 
     def draw(self):
-        """Update all light properties on the GPU"""
+        """
+        Update all light properties on the GPU
+        Do not call from thread outside GL context
+        """
         glUniform3fv(self.position_glob_id, 1, self._position)
         glUniform3fv(self.color_glob_id, 1, self._color)
         glUniform1f(self.reflective_strength_glob_id, self._reflective_strength)

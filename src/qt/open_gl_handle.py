@@ -58,13 +58,18 @@ class SewingGLWidget(QOpenGLWidget):
             drawing_pass.add_clothing_mesh(mesh)
 
     def draw(self):
-        """Draw a frame"""
+        """
+        Draw a frame
+        Do not call from thread outside GL context
+        """
         if drawing_pass := self.drawing_pass:
             drawing_pass.draw()
 
     def paintGL(self):
         """Qt Callback for updating on every frame"""
-        if (simulation := self.fabric_simulation) and (drawing_pass := self.drawing_pass):
+        if (simulation := self.fabric_simulation) and (
+            drawing_pass := self.drawing_pass
+        ):
             simulation.step(self.frame_count)
 
             if self.frame_count % STEPS_PER_FRAME == 0:

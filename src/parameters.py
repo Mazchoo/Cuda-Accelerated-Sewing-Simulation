@@ -24,7 +24,7 @@ SEWING_ADJUSTMENT_STEP = (
     0.01  # Maximum distance per second to get closer to sewing adjustment
 )
 SEWING_FORCE_MULTIPLIER = (
-    100.0  # Force applied as multiple of distance between two sewing points
+    1000.0  # Force applied as multiple of distance between two sewing points
 )
 # The force comes into effect when sewing is within SEWING_ADJUSTMENT_STEP
 WRAP_RADIANS = 0.4  # angle in radians to rotate point when attempting to wrap
@@ -40,8 +40,8 @@ DEFAULT_CAMERA_DISTANCE_RATIO = 1.5  # Initial camera distance as ratio of avata
 MAX_CAMERA_DISTANCE_RATIO = 5.0  # Far camera distance as ratio of avatar height
 FIELD_OF_VIEW = 45.0  # Field of view of camera in degrees
 # The following two parameters stop floating point errors, more negative increases priority
-CLOTHING_Z_OFFSET = -10.0  # Priority offset for clothing
-CLOTHING_Z_FACTOR = -10.0  # Priority factor for clothing in terms of polygon gradient
+CLOTHING_Z_OFFSET = -15.0  # Priority offset for clothing
+CLOTHING_Z_FACTOR = -15.0  # Priority factor for clothing in terms of polygon gradient
 
 # Default light properties
 LIGHT_POSITION_RATIO = 1.2  # Default light position above avatar

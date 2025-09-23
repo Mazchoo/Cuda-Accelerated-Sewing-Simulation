@@ -69,5 +69,8 @@ class Camera(OpenGLUploadable):
         )
 
     def draw(self):
-        """Update all player properties on the GPU"""
+        """
+        Do not call from thread outside GL context
+        Update all player properties on the GPU
+        """
         glUniformMatrix4fv(self.object_id, 1, GL_FALSE, self._projection_matrix)

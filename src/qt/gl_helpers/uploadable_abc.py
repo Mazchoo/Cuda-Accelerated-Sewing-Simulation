@@ -29,5 +29,8 @@ class OpenGLUploadable(ABC):
 
     @abstractmethod
     def draw(self):
-        """Effect state of object on GPU rendering"""
+        """
+        Effect state of object on GPU rendering
+        Do not call from thread outside GL context
+        """
         raise NotImplementedError

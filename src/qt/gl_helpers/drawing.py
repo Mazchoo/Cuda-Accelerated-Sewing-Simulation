@@ -44,6 +44,8 @@ class DrawingPass:
     body_mesh: Optional[GLMesh]
     clothing_mesh: Optional[GLMesh]
 
+    redraw_player: bool = False
+
     def __init__(self, aspect_ratio: float):
         self.shader = ShaderProgram(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH)
 
@@ -90,7 +92,7 @@ class DrawingPass:
         self.camera.recalculate_projection(near=min_distance, far=max_distance)
         self.camera.draw()
 
-        self.player.set_position(0.0, height / 2, default_distance)
+        self.player.set_position(0.0, height / 2, -default_distance)
         self.player.set_target(0.0, height / 2, 0.0)
         self.player.recalculate_player_view()
         self.player.draw()
@@ -123,12 +125,21 @@ class DrawingPass:
         self.camera.draw()
 
     def draw(self):
-        """Perform a drawing pass"""
+        """
+        Perform a drawing pass
+        Do not call from thread outside GL context
+        """
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)  # type: ignore
 
         self.shader.use()
+
+        if self.redraw_player:
+            self.player.draw()
+            self.redraw_player = False
+
         if self.body_mesh:
             self.body_mesh.draw()
+
         if self.clothing_mesh:
             gl.glEnable(gl.GL_POLYGON_OFFSET_FILL)
             gl.glPolygonOffset(CLOTHING_Z_FACTOR, CLOTHING_Z_OFFSET)

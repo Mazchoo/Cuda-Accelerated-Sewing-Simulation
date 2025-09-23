@@ -76,7 +76,7 @@ SEWING_KERNEL = SourceModule(
         {
             "TIME_DELTA": TIME_DELTA,
             "SEWING_MAX_ADJUSTMENT": SEWING_ADJUSTMENT_STEP,
-            "SEWING_FORCE_MULTIPLIER": SEWING_FORCE_MULTIPLIER * TIME_DELTA,
+            "SEWING_FORCE_MULTIPLIER": SEWING_FORCE_MULTIPLIER,
         },
     )
 ).get_function("apply_sewing_constraints")
