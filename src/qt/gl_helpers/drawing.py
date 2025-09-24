@@ -92,8 +92,8 @@ class DrawingPass:
         self.camera.recalculate_projection(near=min_distance, far=max_distance)
         self.camera.draw()
 
-        self.player.set_position(0.0, height / 2, -default_distance)
-        self.player.set_target(0.0, height / 2, 0.0)
+        self.player.set_position(0.0, height * 0.75, -default_distance)
+        self.player.set_target(0.0, height * 0.75, 0.0)
         self.player.recalculate_player_view()
         self.player.draw()
 
