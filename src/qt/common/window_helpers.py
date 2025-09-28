@@ -8,7 +8,7 @@ except ImportError:
     print("Warning: pyqss not installed")
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QWidget, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 
 from src.qt.ui.SewingSimulationUI import Ui_MainWindow
 from src.qt.open_gl_handle import SewingGLWidget
@@ -18,7 +18,7 @@ CWD = os.getcwd()
 QSS_CACHE = {}
 
 
-def load_qss(component: QWidget, file_name: str):
+def load_qss(component: QApplication, file_name: str):
     """Replace the qss of a component"""
     path = f"{CWD}/{file_name}"
 
