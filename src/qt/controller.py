@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QWidget
 from src.qt.common.window_helpers import set_window_icon
 from src.qt.common.controller_factory import CreateQtController
 
+from src.qt.mouse_drag import MouseDrag
 from src.qt.actions import open_body_mesh, open_clothing_json
 from src.qt.events import handle_wheel_event
 
@@ -29,6 +30,9 @@ class SewingSimulationController(QWidget):
         controller.layout.openGLWidget.wheelEvent = lambda event: handle_wheel_event(
             event, controller
         )
+
+        controller.layout.openGLWidget.mousePressEvent = MouseDrag.mouse_press_handler
+        controller.layout.openGLWidget.mouseReleaseEvent = MouseDrag.mouse_release_handler
 
     @staticmethod
     def initializeModels(_controller):

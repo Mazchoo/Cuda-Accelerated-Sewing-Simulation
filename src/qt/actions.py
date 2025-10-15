@@ -39,7 +39,7 @@ def open_body_mesh(controller: "SewingSimulationController"):
             return
 
         try:
-            avatar_mesh = parse_obj(body_path, annotations_path)
+            avatar_mesh = parse_obj(str(body_path), str(annotations_path))
         except FileNotFoundError:
             print(f"Could not read file {body_path} annotations {annotations_path}")
             return
